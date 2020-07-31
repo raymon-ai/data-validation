@@ -1,6 +1,6 @@
 import abc
 
-from rdv import Serializable, CCAble
+from rdv.globals import Serializable, CCAble
 
 class FeatureExtractor(Serializable, CCAble):
 

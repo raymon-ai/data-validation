@@ -1,7 +1,15 @@
 import abc
 import json
 from pydoc import locate
+import os
+import sys
+import time
+import webbrowser
+from multiprocessing import Process
+from pathlib import Path
+import dash
 
+from rdv.extractors.vision.dashapps.similarity import dash_fsps
 from rdv import Serializable, CCAble, ClassNotFoundError
 
 class Schema(Serializable, CCAble):
@@ -61,6 +69,35 @@ class Schema(Serializable, CCAble):
 
         return unconfigureds
 
-    def configure(self):
-        unconfigs = self.get_unconfigured()
-        print(f"{len(unconfigs)} Components need to be configured")
+    def configure_interact(self, loaded_data):
+        
+        p = Process(target=dash_process, args=(loaded_data, 'output', False))
+        p.start()
+        time.sleep(0.5)
+        webbrowser.open_new('http://127.0.0.1:8050/')
+        p.join()
+        # For Selenium (to be able to close the tabs from Python)
+        # Requires extra config (Chrome driver in path)
+        # from selenium import webdriver
+        # browser = webdriver.Chrome()
+        # browser.get('http://127.0.0.1:8050/')
+        # browser.quit()
+
+        print("Continuing...")
+
+
+
+def dash_process(loaded_data, raymon_output, null_stderr=True):
+    if null_stderr:
+        f = open(os.devnull, 'w')
+        sys.stderr = f
+
+    app = dash.Dash("Data Schema Config", external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
+    
+    """Add Raymon callbacks:
+    - One to close the browser tab
+    - One to return the state
+    We expect the state to be in a div (as child) in json-format with id xxx
+    We expect there is a button with id yyy that should trigger the shutdown.
+    """
+    dash_fsps(app, loaded_data)

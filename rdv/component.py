@@ -3,7 +3,7 @@ import json
 from pydoc import locate
 import imagehash
 
-from rdv import Serializable, CCAble
+from rdv.globals import Serializable, CCAble, ClassNotFoundError
 from rdv.extractors import NoneExtractor
 
 
@@ -75,7 +75,7 @@ class NumericComponent(Serializable, CCAble):
         return self
 
     def validate(self, data):
-        feature = extractor.extract(data)
+        feature = self.extractor.extract(data)
 
 
 class CategoricComponent:
