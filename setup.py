@@ -18,9 +18,11 @@ setuptools.setup(
     ],
     python_requires='>=3.6',
     install_requires=[
-        "streamlit>=0.64.0",
+        # "streamlit>=0.64.0",
         "inquirer>=2.7.0"
-        "click"
+        "click",
+        "selenium",
+        "dash"
     ],
     # entry_points='''
     #     [console_scripts]
