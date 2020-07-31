@@ -10,7 +10,7 @@ from pathlib import Path
 import dash
 
 from rdv.extractors.vision.dashapps.similarity import dash_fsps
-from rdv import Serializable, CCAble, ClassNotFoundError
+from rdv.globals import Serializable, CCAble, ClassNotFoundError
 
 class Schema(Serializable, CCAble):
     _config_attrs = ['name', 'version']
@@ -86,6 +86,17 @@ class Schema(Serializable, CCAble):
         print("Continuing...")
 
 
+def load_data(dpath, lim):
+    from PIL import Image
+
+    files = dpath.glob('*.jpeg')
+    images = []
+    for n, fpath in enumerate(files):
+        if n == lim:
+            break
+        img = Image.open(fpath)
+        images.append(img)
+    return images
 
 def dash_process(loaded_data, raymon_output, null_stderr=True):
     if null_stderr:
@@ -93,11 +104,19 @@ def dash_process(loaded_data, raymon_output, null_stderr=True):
         sys.stderr = f
 
     app = dash.Dash("Data Schema Config", external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
-    
-    """Add Raymon callbacks:
-    - One to close the browser tab
-    - One to return the state
-    We expect the state to be in a div (as child) in json-format with id xxx
-    We expect there is a button with id yyy that should trigger the shutdown.
-    """
-    dash_fsps(app, loaded_data)
+    dash_fsps(app, loaded_images=loaded_data, output_path=raymon_output)
+
+
+DATA_PATH = Path("/Users/kv/Raymon/Data/casting_data/train/ok_front/")
+LIM = 50
+if __name__ == '__main__':
+
+    loaded_data = load_data(DATA_PATH, LIM)
+    print(len(loaded_data))
+    p = Process(target=dash_process, args=(loaded_data, 'output.json'))
+    p.start()
+    time.sleep(0.5)
+    webbrowser.open_new('http://127.0.0.1:8050/')
+    p.join()
+
+    print("Continuing...")
