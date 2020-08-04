@@ -8,9 +8,11 @@ import webbrowser
 from multiprocessing import Process
 from pathlib import Path
 import dash
+import tempfile
 
 from rdv.extractors.vision.dashapps.similarity import dash_fsps
 from rdv.globals import Serializable, CCAble, ClassNotFoundError
+
 
 class Schema(Serializable, CCAble):
     _config_attrs = ['name', 'version']
@@ -32,7 +34,7 @@ class Schema(Serializable, CCAble):
         components = []
         for comp in self.components:
             components.append({'component_class': self.class2str(comp),
-                        'component': comp.to_jcr()})
+                               'component': comp.to_jcr()})
         jcr['components'] = components
         return jcr
 
@@ -69,34 +71,62 @@ class Schema(Serializable, CCAble):
 
         return unconfigureds
 
-    def configure_interact(self, loaded_data):
+    def configure_components(self, loaded_data):
+        """This will configure the components extractors and stats, and will compile the extracotrs using the loaded data.
+        Steps: 
+        1. Find components with unconfigured extractors
+        2. Select component to configure
+            1. Config extractor
+            2. Compile extractor & propose stats config
+            3. Inspect stat config
+
+        Args:
+            loaded_data ([type]): [description]
+        """
+        # Find unconfigured components
         
-        p = Process(target=dash_process, args=(loaded_data, 'output', False))
-        p.start()
-        time.sleep(0.5)
-        webbrowser.open_new('http://127.0.0.1:8050/')
-        p.join()
-        # For Selenium (to be able to close the tabs from Python)
-        # Requires extra config (Chrome driver in path)
-        # from selenium import webdriver
-        # browser = webdriver.Chrome()
-        # browser.get('http://127.0.0.1:8050/')
-        # browser.quit()
+        # Configure extractor, process loaded data (compile extractor), configure stats
+        unconfigs = self.get_unconfigured()
+        for comp in unconfigs:
+            # Configure extractor
+            comp.configure_extractor(loaded_data)
+            # Compile extractor
+            comp.compile_extractor(loaded_data)
+            
+            # Configure stats
+            comp.configure_stats(loaded_data)
+            
+            # Compile stats
+            comp.compile_stats(loaded_data)
+            
 
-        print("Continuing...")
+    def warmup_compile(self, sample):
+        """With a configured schema, this will add a sample to it's compilation.
 
+        Args:
+            sample ([type]): [description]
+        """
+        
+        pass
+    
+    def compile(self):
+        """Compile the schema.
+        """
+        pass
+    
 
-def load_data(dpath, lim):
-    from PIL import Image
+# def load_data(dpath, lim):
+#     from PIL import Image
 
-    files = dpath.glob('*.jpeg')
-    images = []
-    for n, fpath in enumerate(files):
-        if n == lim:
-            break
-        img = Image.open(fpath)
-        images.append(img)
-    return images
+#     files = dpath.glob('*.jpeg')
+#     images = []
+#     for n, fpath in enumerate(files):
+#         if n == lim:
+#             break
+#         img = Image.open(fpath)
+#         images.append(img)
+#     return images
+
 
 def dash_process(loaded_data, raymon_output, null_stderr=True):
     if null_stderr:
@@ -107,16 +137,16 @@ def dash_process(loaded_data, raymon_output, null_stderr=True):
     dash_fsps(app, loaded_images=loaded_data, output_path=raymon_output)
 
 
-DATA_PATH = Path("/Users/kv/Raymon/Data/casting_data/train/ok_front/")
-LIM = 50
-if __name__ == '__main__':
+# DATA_PATH = Path("/Users/kv/Raymon/Data/casting_data/train/ok_front/")
+# LIM = 50
+# if __name__ == '__main__':
 
-    loaded_data = load_data(DATA_PATH, LIM)
-    print(len(loaded_data))
-    p = Process(target=dash_process, args=(loaded_data, 'output.json'))
-    p.start()
-    time.sleep(0.5)
-    webbrowser.open_new('http://127.0.0.1:8050/')
-    p.join()
+#     loaded_data = load_data(DATA_PATH, LIM)
+#     print(len(loaded_data))
+#     p = Process(target=dash_process, args=(loaded_data, 'output.json'))
+#     p.start()
+#     time.sleep(0.5)
+#     webbrowser.open_new('http://127.0.0.1:8050/')
+#     p.join()
 
-    print("Continuing...")
+#     print("Continuing...")

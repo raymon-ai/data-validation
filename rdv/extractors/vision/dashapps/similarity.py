@@ -1,5 +1,4 @@
 import json
-import os
 
 import dash_core_components as dcc
 import dash_html_components as html
@@ -7,8 +6,6 @@ import numpy as np
 import plotly.graph_objects as go
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-from flask import request
-from PIL import Image
 
 from rdv.dash_helpers import register_shutdown, register_close, styles
 
@@ -42,30 +39,30 @@ def dash_fsps(app, loaded_images, output_path):
 
     def render_patch_page(loaded_images, active_img_idx, state):
         return (
-        html.Div([
             html.Div([
-                 html.H5('Global controls'),
-                 html.Label("Select the image to view:"),
-                 dcc.Input(
-                     id="img-selector", type="number", value=0,
-                     min=0, max=len(loaded_images)-1, step=1,
-                 ),
-                 html.Label("Patch Location:"),
-                 html.Pre(json.dumps(state, indent=4), id="raymon-state", style=styles['pre']),
-                 html.Label("Patch Shape:"),
-                 html.Pre(str(state2shape(state)), id="patch-shape", style=styles['pre']),
-                 html.Button("Continue", id="patch-setup-complete", n_clicks=0)
+                html.Div([
+                    html.H5('Global controls'),
+                    html.Label("Select the image to view:"),
+                    dcc.Input(
+                        id="img-selector", type="number", value=0,
+                        min=0, max=len(loaded_images)-1, step=1,
+                    ),
+                    html.Label("Patch Location:"),
+                    html.Pre(json.dumps(state, indent=4), id="raymon-state", style=styles['pre']),
+                    html.Label("Patch Shape:"),
+                    html.Pre(str(state2shape(state)), id="patch-shape", style=styles['pre']),
+                    html.Button("Continue", id="patch-setup-complete", n_clicks=0)
 
-                 ], className="three columns", id="left-column-div"),
-            html.Div([
-                html.H5('Example'),
-                dcc.Graph(id='graph-image',
-                          figure=create_image_fig(active_img_idx=active_img_idx,
-                                                  patch=state),
-                          ),
-                html.Div(id='hidden-dummy')
-            ], className="nine columns"),
-        ], className="row"))
+                ], className="three columns", id="left-column-div"),
+                html.Div([
+                    html.H5('Example'),
+                    dcc.Graph(id='graph-image',
+                              figure=create_image_fig(active_img_idx=active_img_idx,
+                                                      patch=state),
+                              ),
+                    html.Div(id='hidden-dummy')
+                ], className="nine columns"),
+            ], className="row"))
 
     def state2shape(state):
         if state is None:
@@ -121,14 +118,14 @@ def dash_fsps(app, loaded_images, output_path):
         html.Div([
             html.H2("Configuring Extractor"),
             html.Div(render_patch_page(loaded_images=loaded_images,
-                                   active_img_idx=0,
-                                   state={
-                                       'x0': 0,
-                                       'y0': 0,
-                                       'x1': 64,
-                                       'y1': 64
-                                   })),
+                                       active_img_idx=0,
+                                       state={
+                                           'x0': 0,
+                                           'y0': 0,
+                                           'x1': 64,
+                                           'y1': 64
+                                       })),
         ], id="page-body")
-        )
+    )
 
     app.run_server(debug=False)

@@ -19,8 +19,6 @@ class FeatureExtractor(Serializable, CCAble):
             setattr(self, attr, config['attr'])
         return self
 
-    def configure_interact(self, st, output):
-        pass
 
 
 class NoneExtractor(FeatureExtractor):
