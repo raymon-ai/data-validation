@@ -189,9 +189,9 @@ class NumericComponent(Serializable, CCAble):
         elif np.isnan(feature):
             return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is NaN")
         elif feature > self.stats.max:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value above schema max")
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} above schema max")
         elif feature < self.stats.min:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value below schema min")
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} below schema min")
         else:
             return None
 
