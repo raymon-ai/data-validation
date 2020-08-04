@@ -1,15 +1,44 @@
 import json
-from pydoc import locate
 import tempfile
-from multiprocessing import Process
 import time
 import webbrowser
+from multiprocessing import Process
+from pydoc import locate
+from enum import Enum
 import numpy as np
 
+from rdv.globals import CCAble, ClassNotFoundError, Serializable, NoneExtractor
 
-from rdv.globals import Serializable, CCAble, ClassNotFoundError
-from rdv.extractors import NoneExtractor
+class TagType(Enum):
+    SEGM = 0
+    IND = 1
+    ERROR = 2 
 
+class Tag(Serializable):
+    def __init__(self, name, value, tagtype, msg=None):
+        self.name = name
+        self.value = value
+        self.tagtype = tagtype
+        self.msg = msg
+      
+    def to_jcr(self):
+        jcr = {
+            'tagtype': self.tagtype,
+            'name': self.name,
+            'value': self.value,
+            'msg': self.msg
+        }
+        return jcr
+    
+    def load_jcr(self, jcr):
+        self.__init__(**jcr)
+        return self
+    
+    def __str__(self):
+        return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
+    
+    def __repr__(self):
+        return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
 
 class Stats(Serializable, CCAble):
     _config_attrs = ['min', 'max']
@@ -37,20 +66,23 @@ class Stats(Serializable, CCAble):
             setattr(self, attr, jcr[attr])
         return self
 
-    def configure(self, features):
-        self.min = float(np.min(features))
-        self.max = float(np.max(features))
+    def configure(self, data):
+        self.min = float(np.min(data))
+        self.max = float(np.max(data))
         
-    def compile(self, features):
-        features = np.array(features)
-        self.mean = float(np.mean(features))
-        self.std = float(np.std(features))
-        hist, _ = np.histogram(features, bins=self.nbins, range=(self.min, self.max), density=True)
+    def compile(self, data):
+        data = np.array(data)
+        self.mean = float(np.mean(data))
+        self.std = float(np.std(data))
+        hist, _ = np.histogram(data, bins=self.nbins, range=(self.min, self.max), density=True)
         self.hist = hist.tolist()
-        invalids = np.logical_or(features > self.max, 
-                                 features < self.min, 
-                                 np.isnan(features))
-        self.pinv = int(np.sum(invalids)) / len(features)
+        invalids = np.logical_or(data > self.max,
+                                 data < self.min,
+                                 np.isnan(data))
+        self.pinv = int(np.sum(invalids)) / len(data)
+        
+   
+
 
 class NumericComponent(Serializable, CCAble):
     _config_attrs = []
@@ -66,7 +98,6 @@ class NumericComponent(Serializable, CCAble):
             self.extractor = extractor
         if stats is None:
             self.stats = Stats()
-
         else:
             self.stats = stats
 
@@ -74,7 +105,7 @@ class NumericComponent(Serializable, CCAble):
         data = {
             'name': self.name,
             'extractor_class': self.class2str(self.extractor),
-            'extractor_config': self.extractor.to_jcr(),
+            'extractor': self.extractor.to_jcr(),
             'stats': self.stats.to_jcr(),
         }
         return data
@@ -82,22 +113,29 @@ class NumericComponent(Serializable, CCAble):
     def load_jcr(self, jcr):
 
         classpath = jcr['extractor_class']
-        config = jcr['extractor_config']
         extr_class = locate(classpath)
         if extr_class is None:
             raise ClassNotFoundError(f"Could not locate {classpath}")
 
-        self.extractor = extr_class(**config)
+        self.extractor = extr_class().load_jcr(jcr['extractor'])
         self.stats = Stats().load_jcr(jcr['stats'])
         self.name = jcr['name']
         return self
     
     def configure_extractor(self, loaded_data):
+        if self.extractor.is_interactive:
+            print(f"Configure extractor for {self.name}")
+            loaded = self.interact_config(loaded_data)
+            self.extractor.configure(loaded)
+        else:
+            print(f"No configuration interaction available")
+            self.extractor.configure(loaded_data)
+        
+    def interact_config(self, loaded_data):
         _, output_fpath = tempfile.mkstemp()
-        print(f"Configure extractor for {self.name}")
         print(f"Saving to: {output_fpath}")
         # Crease new process
-        p = Process(target=self.extractor.__class__.configure_interactive, args=(loaded_data, output_fpath, False))
+        p = Process(target=self.extractor.configure_interactive, args=(loaded_data, output_fpath))
         p.start()
         time.sleep(0.5)
         webbrowser.open_new('http://127.0.0.1:8050/')
@@ -105,9 +143,9 @@ class NumericComponent(Serializable, CCAble):
         # Load saved config and save to extractor
         with open(output_fpath, 'r') as f:
             loaded = json.load(f)
-            print(f"loaded: {loaded}")
-            self.extractor.load_config(loaded)
-    
+        return loaded
+
+
     def compile_extractor(self, loaded_data):
         self.extractor.compile(loaded_data)
     
@@ -122,14 +160,42 @@ class NumericComponent(Serializable, CCAble):
         for data in loaded_data:
             features.append(self.extractor.extract_feature(data))
         self.stats.compile(features)
-        
-        
-    def validate(self, data):
-        feature = self.extractor.extract_feature(data)
+    
+    def configure(self, data):
+        # Configure extractor
+        self.configure_extractor(data)
+        # Compile extractor
+        self.compile_extractor(data)
+        # Configure stats
+        self.configure_stats(data)
 
+    def compile(self, data):
+        self.compile_stats(data)
+
+        
+    def check(self, data):
+        feature = self.extractor.extract_feature(data)
+        # Check min, max, nan or None and raise data error
+        tag = self.check_invalid(feature)
+        # If all pass, calc z score
+        if tag is None:
+            zscore = (feature - self.stats.mean) / self.stats.std
+            tag = Tag(name=self.name, value=zscore, tagtype=TagType.IND, msg="Valid Sample with given zscore")
+        return tag
+
+    def check_invalid(self, feature):
+        if feature is None:
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is None")
+        elif np.isnan(feature):
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is NaN")
+        elif feature > self.stats.max:
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value above schema max")
+        elif feature < self.stats.min:
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value below schema min")
+        else:
+            return None
 
 class CategoricComponent:
 
     # Domain, domain distribution
     pass
-
