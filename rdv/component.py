@@ -123,12 +123,12 @@ class NumericComponent(Serializable, CCAble):
         return self
     
     def configure_extractor(self, loaded_data):
-        if self.extractor.is_interactive:
+        if hasattr(self.extractor, 'configure_interactive'):
             print(f"Configure extractor for {self.name}")
             loaded = self.interact_config(loaded_data)
             self.extractor.configure(loaded)
         else:
-            print(f"No configuration interaction available")
+            print(f"No configuration interaction available for {self.name}")
             self.extractor.configure(loaded_data)
         
     def interact_config(self, loaded_data):

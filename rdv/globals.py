@@ -73,8 +73,9 @@ class CCAble(ABC):
         has_attrs = self.check_has_attrs(self._config_attrs + self._ccable_deps)
         if not has_attrs:
             return False
-        return self.check_deps(func='is_configured')
-
+        # Dependencies need to be configured and compiled
+        return self.check_deps(func='is_configured') and self.check_deps(func='is_compiled')  
+    
     def is_compiled(self):
         has_attrs = self.check_has_attrs(self._compile_attrs + self._ccable_deps)
         if not has_attrs:

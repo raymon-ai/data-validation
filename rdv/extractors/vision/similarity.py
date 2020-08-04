@@ -17,15 +17,14 @@ class FixedSubpatchSimilarity(FeatureExtractor):
 
     patch_keys = ['x0', 'y0', 'x1', 'y1']
 
-    def __init__(self, patch=None, refs=None):
+    def __init__(self, patch=None, refs=None, nrefs=10):
         """[summary]
 
         Args:
             patch ([int], optional): [description]. The x0, y0, x1, y1 of the patch to look at.
             refs ([np.array], optional): [description]. References of what the patch should look like
         """
-        self.nrefs = 10
-        self.is_interactive = True
+        self.nrefs = nrefs
         self._patch = None
         self._refs = None
         
@@ -57,8 +56,9 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             self._refs = None
             return 
         
-        if not isinstance(value, list):
-            raise ValueError("refs should be a list")
+        if not (isinstance(value, list) and len(value) == self.nrefs):
+            raise ValueError(f"refs should be a list of length {self.nrefs}")
+
         
         parsed_refs = []
         for ref in value:
