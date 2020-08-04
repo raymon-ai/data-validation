@@ -22,7 +22,9 @@ setuptools.setup(
         "inquirer>=2.7.0"
         "click",
         "selenium",
-        "dash"
+        "dash",
+        "numpy",
+        "imagehash"
     ],
     # entry_points='''
     #     [console_scripts]

@@ -24,11 +24,54 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             patch ([int], optional): [description]. The x0, y0, x1, y1 of the patch to look at.
             refs ([np.array], optional): [description]. References of what the patch should look like
         """
-        self.patch = patch
-        self.refs = refs
         self.nrefs = 10
         self.is_interactive = True
+        self._patch = None
+        self._refs = None
+        
+        self.patch = patch
+        self.refs = refs
 
+    @property
+    def patch(self):
+        return self._patch
+    
+    @patch.setter
+    def patch(self, value):
+        if value is None:
+            self._patch = None
+            return
+        
+        if not isinstance(value, dict):
+            raise ValueError(f"patch must be a dict, not {type(value)}")
+        # make sure the correct keys are there
+        self._patch = {key: value[key] for key in self.patch_keys}
+    
+    @property    
+    def refs(self):
+        return self._refs
+    
+    @refs.setter
+    def refs(self, value):
+        if value is None:
+            self._refs = None
+            return 
+        
+        if not isinstance(value, list):
+            raise ValueError("refs should be a list")
+        
+        parsed_refs = []
+        for ref in value:
+            if isinstance(ref, imagehash.ImageHash):
+                parsed_refs.append(ref)
+            elif isinstance(ref, str):
+                parsed_refs.append(imagehash.hex_to_hash(ref))
+            else:
+                raise ValueError(f"refs should either be str or ImageHash, not {type(ref)}")
+        
+        self._refs = parsed_refs
+    
+    
     def to_jcr(self):
         data = {
             'patch': self.patch,
@@ -37,15 +80,12 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         return data
 
     def load_jcr(self, jcr):
-        if 'patch' in jcr and jcr['patch'] is not None:
-            self.patch = {key: jcr['patch'][key] for key in self.patch_keys
-                          }
-        else:
-            self.patch = None
-        if 'refs' in jcr and jcr['refs'] is not None:
-            self.refs = [imagehash.hex_to_hash(ref) for ref in jcr['refs']]
-        else:
-            self.refs = None
+        if 'patch' in jcr:
+            self.patch = jcr['patch']
+        
+        if 'refs' in jcr:
+            self.refs = jcr['refs']
+
         return self
 
     def configure(self, data):

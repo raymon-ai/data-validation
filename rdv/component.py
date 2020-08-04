@@ -35,7 +35,7 @@ class Tag(Serializable):
         return self
     
     def __str__(self):
-        return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
+        return f"'{self.name}:{self.value}"
     
     def __repr__(self):
         return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
