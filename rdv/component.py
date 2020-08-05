@@ -6,7 +6,7 @@ from multiprocessing import Process
 from pydoc import locate
 from enum import Enum
 import numpy as np
-
+from scipy.stats import wasserstein_distance
 from rdv.globals import CCAble, ClassNotFoundError, Serializable, NoneExtractor
 
 class TagType(Enum):
@@ -39,6 +39,7 @@ class Tag(Serializable):
     
     def __repr__(self):
         return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
+    
 
 class Stats(Serializable, CCAble):
     _config_attrs = ['min', 'max']
@@ -81,8 +82,11 @@ class Stats(Serializable, CCAble):
                                  np.isnan(data))
         self.pinv = int(np.sum(invalids)) / len(data)
         
-   
-
+    def distance(self, other):
+        if self.min != other.min or self.max != other.max:
+            raise ValueError("Cannot compare Stats that have unequal min and/or max.")
+        return wasserstein_distance(self.hist, other.hist)
+    
 
 class NumericComponent(Serializable, CCAble):
     _config_attrs = []
