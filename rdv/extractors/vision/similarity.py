@@ -24,11 +24,12 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             patch ([int], optional): [description]. The x0, y0, x1, y1 of the patch to look at.
             refs ([np.array], optional): [description]. References of what the patch should look like
         """
-        self.nrefs = nrefs
+        self._nrefs = None
         self._patch = None
         self._refs = None
         
         self.patch = patch
+        self.nrefs = nrefs
         self.refs = refs
     """
     PROPERTIES
@@ -72,6 +73,19 @@ class FixedSubpatchSimilarity(FeatureExtractor):
                 raise ValueError(f"refs should either be str or ImageHash, not {type(ref)}")
         
         self._refs = parsed_refs
+        
+    @property
+    def nrefs(self):
+        return self._nrefs
+
+    @nrefs.setter
+    def nrefs(self, value):
+        value = int(value)
+        if not (isinstance(value, int) and value > 0):
+            self._nrefs = None
+            raise ValueError(f"nrefs should be a an int > 0")
+        self._nrefs = value
+        
     
     """
     SERIALISATION
@@ -79,14 +93,16 @@ class FixedSubpatchSimilarity(FeatureExtractor):
     def to_jcr(self):
         data = {
             'patch': self.patch,
-            'refs': [str(ref) for ref in self.refs] if self.refs is not None else None
+            'refs': [str(ref) for ref in self.refs] if self.refs is not None else None,
+            'nrefs': self.nrefs
         }
         return data
 
     def load_jcr(self, jcr):
         if 'patch' in jcr:
             self.patch = jcr['patch']
-        
+        if 'nrefs' in jcr:
+            self.nrefs = jcr['nrefs']
         if 'refs' in jcr:
             self.refs = jcr['refs']
 
