@@ -4,6 +4,8 @@ from abc import ABC, abstractmethod
 class ClassNotFoundError(Exception):
     pass
 
+class NotSupportedException(Exception):
+    pass
 
 class Serializable(ABC):
 

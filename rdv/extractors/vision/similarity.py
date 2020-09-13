@@ -30,7 +30,9 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         
         self.patch = patch
         self.refs = refs
-
+    """
+    PROPERTIES
+    """
     @property
     def patch(self):
         return self._patch
@@ -71,7 +73,9 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         
         self._refs = parsed_refs
     
-    
+    """
+    SERIALISATION
+    """
     def to_jcr(self):
         data = {
             'patch': self.patch,

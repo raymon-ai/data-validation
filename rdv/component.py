@@ -6,8 +6,11 @@ from multiprocessing import Process
 from pydoc import locate
 from enum import Enum
 import numpy as np
+import pandas as pd
 from scipy.stats import wasserstein_distance
-from rdv.globals import CCAble, ClassNotFoundError, Serializable, NoneExtractor
+from rdv.globals import CCAble, Serializable, NoneExtractor
+from rdv.globals import NotSupportedException, ClassNotFoundError
+from collections.abc import Iterable
 
 class TagType(Enum):
     SEGM = 0
@@ -41,7 +44,7 @@ class Tag(Serializable):
         return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
     
 
-class Stats(Serializable, CCAble):
+class NumericStats(Serializable, CCAble):
     _config_attrs = ['min', 'max']
     _compile_attrs = ['mean', 'std', 'pinv', 'hist']
     _ccable_deps = []
@@ -88,28 +91,52 @@ class Stats(Serializable, CCAble):
         return wasserstein_distance(self.hist, other.hist)
     
 
-class NumericComponent(Serializable, CCAble):
+class CategoricStats(Serializable, CCAble):
     _config_attrs = []
-    _compile_attrs = []
-    _ccable_deps = ['extractor', 'stats']
+    _compile_attrs = ['domain_counts', 'pinv']
+    _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
-    def __init__(self, name="default_name", extractor=None, stats=None):
+    def __init__(self, domain_counts=None, pinv=None):
+        self.domain_counts = domain_counts
+        self.pinv = pinv
+
+    def to_jcr(self):
+        data = {}
+        for attr in self._config_attrs + self._compile_attrs:
+            data[attr] = getattr(self, attr)
+        return data
+
+    def load_jcr(self, jcr):
+        for attr in self._config_attrs + self._compile_attrs:
+            setattr(self, attr, jcr[attr])
+        return self
+
+    def configure(self, data):
+        pass
+
+    def compile(self, data):
+        data = pd.Series(data)
+        self.pinv = sum(pd.isna(data)) / len(data)
+        self.domain_counts = data.value_counts().to_dict()
+
+    def distance(self, other):
+        raise NotImplementedError
+    
+
+class Component(Serializable, CCAble):
+    def __init__(self, name="default_name", extractor=None):
         self.name = str(name)
         if extractor is None:
             self.extractor = NoneExtractor()
         else:
             self.extractor = extractor
-        if stats is None:
-            self.stats = Stats()
-        else:
-            self.stats = stats
-
+        
     def to_jcr(self):
         data = {
             'name': self.name,
             'extractor_class': self.class2str(self.extractor),
-            'extractor': self.extractor.to_jcr(),
+            'extractor_state': self.extractor.to_jcr(),
             'stats': self.stats.to_jcr(),
         }
         return data
@@ -121,7 +148,7 @@ class NumericComponent(Serializable, CCAble):
         if extr_class is None:
             raise ClassNotFoundError(f"Could not locate {classpath}")
 
-        self.extractor = extr_class().load_jcr(jcr['extractor'])
+        self.extractor = extr_class().load_jcr(jcr['extractor_state'])
         self.stats = Stats().load_jcr(jcr['stats'])
         self.name = jcr['name']
         return self
@@ -134,7 +161,7 @@ class NumericComponent(Serializable, CCAble):
         else:
             print(f"No configuration interaction available for {self.name}")
             self.extractor.configure(loaded_data)
-        
+
     def interact_config(self, loaded_data):
         _, output_fpath = tempfile.mkstemp()
         print(f"Saving to: {output_fpath}")
@@ -149,21 +176,29 @@ class NumericComponent(Serializable, CCAble):
             loaded = json.load(f)
         return loaded
 
-
     def compile_extractor(self, loaded_data):
         self.extractor.compile(loaded_data)
-    
+
     def configure_stats(self, loaded_data):
-        features = []
-        for data in loaded_data:
-            features.append(self.extractor.extract_feature(data))
+        print(f"Configuring {self.name}")
+        features = self.extract_features(loaded_data)
         self.stats.configure(features)
-        
+
     def compile_stats(self, loaded_data):
-        features = []
-        for data in loaded_data:
-            features.append(self.extractor.extract_feature(data))
+        print(f"Compiling {self.name}")
+        features = self.extract_features(loaded_data)
         self.stats.compile(features)
+
+    def extract_features(self, loaded_data):
+        features = []
+        if isinstance(loaded_data, pd.DataFrame):
+            features = self.extractor.extract_feature(loaded_data)
+        elif isinstance(loaded_data, Iterable):
+            for data in loaded_data:
+                features.append(self.extractor.extract_feature(data))
+        else:
+            raise NotSupportedException("loaded_data should be a DataFrame of Iterable")
+        return features
     
     def configure(self, data):
         # Configure extractor
@@ -176,7 +211,22 @@ class NumericComponent(Serializable, CCAble):
     def compile(self, data):
         self.compile_stats(data)
 
-        
+
+class NumericComponent(Component):
+    _config_attrs = []
+    _compile_attrs = []
+    _ccable_deps = ['extractor', 'stats']
+    _attrs = _config_attrs + _compile_attrs + _ccable_deps
+
+
+    def __init__(self, name="default_name", extractor=None, stats=None):
+        super().__init__(name=name, extractor=extractor)
+        # TODO: make stats a property and check type before setting!
+        if stats is None:
+            self.stats = NumericStats()
+        else:
+            self.stats = stats
+    
     def check(self, data):
         feature = self.extractor.extract_feature(data)
         # Check min, max, nan or None and raise data error
@@ -199,7 +249,27 @@ class NumericComponent(Serializable, CCAble):
         else:
             return None
 
-class CategoricComponent:
+
+class CategoricComponent(Component):
 
     # Domain, domain distribution
-    pass
+    def __init__(self, name="default_name", extractor=None, stats=None):
+        super().__init__(name=name, extractor=extractor)
+        if stats is None:
+            self.stats = CategoricStats()
+        else:
+            self.stats = stats
+    
+    def check(self, data):
+        feature = self.extractor.extract_feature(data)
+        # Check min, max, nan or None and raise data error
+        tag = self.check_invalid(feature)
+        # If all pass, calc z score
+        raise NotImplementedError
+        if tag is None:
+            zscore = (feature - self.stats.mean) / self.stats.std
+            tag = Tag(name=self.name, value=zscore, tagtype=TagType.IND, msg="Valid Sample with given zscore")
+        return tag
+            
+    def check_invalid(self, feature):
+        raise NotImplementedError
