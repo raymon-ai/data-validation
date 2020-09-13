@@ -1,0 +1,52 @@
+{
+    "name": "Testing",
+    "version": "1.0.0",
+    "components": [
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "testcomponent",
+                "extractor_class": "rdv.extractors.vision.similarity.FixedSubpatchSimilarity",
+                "extractor_state": {
+                    "patch": {
+                        "x0": 102,
+                        "y0": 87,
+                        "x1": 232,
+                        "y1": 220
+                    },
+                    "refs": [
+                        "aa4b3d2d943491f3",
+                        "ab4a3729b2c7d90c",
+                        "ad4a37269b3ef810",
+                        "a6029931df1df8e4",
+                        "ab49b53eceb23089",
+                        "aa463738b2c5d837",
+                        "aa9a3d70f4cad328",
+                        "a94a342df265c937",
+                        "aa083722f28fc33f",
+                        "aa483d0dd6373e31"
+                    ]
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 26.0,
+                    "mean": 14.698,
+                    "std": 4.671897111733372,
+                    "pinv": 0.0,
+                    "hist": [
+                        0.005384615384615384,
+                        0.0015384615384615382,
+                        0.009999999999999998,
+                        0.06730769230769232,
+                        0.053846153846153856,
+                        0.060769230769230735,
+                        0.1096153846153847,
+                        0.042692307692307675,
+                        0.0246153846153846,
+                        0.008846153846153854
+                    ]
+                }
+            }
+        }
+    ]
+}

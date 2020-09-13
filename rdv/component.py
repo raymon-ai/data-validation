@@ -2,20 +2,24 @@ import json
 import tempfile
 import time
 import webbrowser
+from collections.abc import Iterable
+from enum import Enum
 from multiprocessing import Process
 from pydoc import locate
-from enum import Enum
+
 import numpy as np
 import pandas as pd
-from scipy.stats import wasserstein_distance
-from rdv.globals import CCAble, Serializable, NoneExtractor
-from rdv.globals import NotSupportedException, ClassNotFoundError
-from collections.abc import Iterable
+
+from rdv.globals import (CCAble, ClassNotFoundError, NoneExtractor,
+                         NotSupportedException, Serializable)
+from rdv.stats import CategoricStats, NumericStats
+
 
 class TagType(Enum):
     SEGM = 0
     IND = 1
-    ERROR = 2 
+    ERROR = 2
+
 
 class Tag(Serializable):
     def __init__(self, name, value, tagtype, msg=None):
@@ -23,7 +27,7 @@ class Tag(Serializable):
         self.value = value
         self.tagtype = tagtype
         self.msg = msg
-      
+
     def to_jcr(self):
         jcr = {
             'tagtype': self.tagtype,
@@ -32,106 +36,33 @@ class Tag(Serializable):
             'msg': self.msg
         }
         return jcr
-    
+
     def load_jcr(self, jcr):
         self.__init__(**jcr)
         return self
-    
+
     def __str__(self):
         return f"'{self.name}:{self.value}"
-    
+
     def __repr__(self):
         return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
-    
 
-class NumericStats(Serializable, CCAble):
-    _config_attrs = ['min', 'max']
-    _compile_attrs = ['mean', 'std', 'pinv', 'hist']
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
-
-    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, nbins=10, hist=None):
-        self.min = min
-        self.max = max
-        self.mean = mean
-        self.std = std
-        self.pinv = pinv
-        self.nbins = nbins
-        self.hist = hist
-
-    def to_jcr(self):
-        data = {}
-        for attr in self._config_attrs + self._compile_attrs:
-            data[attr] = getattr(self, attr)
-        return data
-
-    def load_jcr(self, jcr):
-        for attr in self._config_attrs + self._compile_attrs:
-            setattr(self, attr, jcr[attr])
-        return self
-
-    def configure(self, data):
-        self.min = float(np.min(data))
-        self.max = float(np.max(data))
-        
-    def compile(self, data):
-        data = np.array(data)
-        self.mean = float(np.mean(data))
-        self.std = float(np.std(data))
-        hist, _ = np.histogram(data, bins=self.nbins, range=(self.min, self.max), density=True)
-        self.hist = hist.tolist()
-        invalids = np.logical_or(data > self.max,
-                                 data < self.min,
-                                 np.isnan(data))
-        self.pinv = int(np.sum(invalids)) / len(data)
-        
-    def distance(self, other):
-        if self.min != other.min or self.max != other.max:
-            raise ValueError("Cannot compare Stats that have unequal min and/or max.")
-        return wasserstein_distance(self.hist, other.hist)
-    
-
-class CategoricStats(Serializable, CCAble):
-    _config_attrs = []
-    _compile_attrs = ['domain_counts', 'pinv']
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
-
-    def __init__(self, domain_counts=None, pinv=None):
-        self.domain_counts = domain_counts
-        self.pinv = pinv
-
-    def to_jcr(self):
-        data = {}
-        for attr in self._config_attrs + self._compile_attrs:
-            data[attr] = getattr(self, attr)
-        return data
-
-    def load_jcr(self, jcr):
-        for attr in self._config_attrs + self._compile_attrs:
-            setattr(self, attr, jcr[attr])
-        return self
-
-    def configure(self, data):
-        pass
-
-    def compile(self, data):
-        data = pd.Series(data)
-        self.pinv = sum(pd.isna(data)) / len(data)
-        self.domain_counts = data.value_counts().to_dict()
-
-    def distance(self, other):
-        raise NotImplementedError
-    
 
 class Component(Serializable, CCAble):
+
+    _config_attrs = []
+    _compile_attrs = []
+    _ccable_deps = ['extractor', 'stats']
+    _attrs = _config_attrs + _compile_attrs + _ccable_deps
+
     def __init__(self, name="default_name", extractor=None):
         self.name = str(name)
         if extractor is None:
             self.extractor = NoneExtractor()
         else:
             self.extractor = extractor
-        
+        self.stats = None
+
     def to_jcr(self):
         data = {
             'name': self.name,
@@ -141,18 +72,6 @@ class Component(Serializable, CCAble):
         }
         return data
 
-    def load_jcr(self, jcr):
-
-        classpath = jcr['extractor_class']
-        extr_class = locate(classpath)
-        if extr_class is None:
-            raise ClassNotFoundError(f"Could not locate {classpath}")
-
-        self.extractor = extr_class().load_jcr(jcr['extractor_state'])
-        self.stats = Stats().load_jcr(jcr['stats'])
-        self.name = jcr['name']
-        return self
-    
     def configure_extractor(self, loaded_data):
         if hasattr(self.extractor, 'configure_interactive'):
             print(f"Configure extractor for {self.name}")
@@ -199,7 +118,7 @@ class Component(Serializable, CCAble):
         else:
             raise NotSupportedException("loaded_data should be a DataFrame of Iterable")
         return features
-    
+
     def configure(self, data):
         # Configure extractor
         self.configure_extractor(data)
@@ -213,11 +132,6 @@ class Component(Serializable, CCAble):
 
 
 class NumericComponent(Component):
-    _config_attrs = []
-    _compile_attrs = []
-    _ccable_deps = ['extractor', 'stats']
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
-
 
     def __init__(self, name="default_name", extractor=None, stats=None):
         super().__init__(name=name, extractor=extractor)
@@ -226,7 +140,7 @@ class NumericComponent(Component):
             self.stats = NumericStats()
         else:
             self.stats = stats
-    
+
     def check(self, data):
         feature = self.extractor.extract_feature(data)
         # Check min, max, nan or None and raise data error
@@ -249,6 +163,17 @@ class NumericComponent(Component):
         else:
             return None
 
+    def load_jcr(self, jcr):
+        classpath = jcr['extractor_class']
+        extr_class = locate(classpath)
+        if extr_class is None:
+            raise ClassNotFoundError(f"Could not locate {classpath}")
+
+        self.extractor = extr_class().load_jcr(jcr['extractor_state'])
+        self.stats = NumericStats().load_jcr(jcr['stats'])
+        self.name = jcr['name']
+        return self
+
 
 class CategoricComponent(Component):
 
@@ -259,7 +184,7 @@ class CategoricComponent(Component):
             self.stats = CategoricStats()
         else:
             self.stats = stats
-    
+
     def check(self, data):
         feature = self.extractor.extract_feature(data)
         # Check min, max, nan or None and raise data error
@@ -270,6 +195,17 @@ class CategoricComponent(Component):
             zscore = (feature - self.stats.mean) / self.stats.std
             tag = Tag(name=self.name, value=zscore, tagtype=TagType.IND, msg="Valid Sample with given zscore")
         return tag
-            
+
     def check_invalid(self, feature):
         raise NotImplementedError
+
+    def load_jcr(self, jcr):
+        classpath = jcr['extractor_class']
+        extr_class = locate(classpath)
+        if extr_class is None:
+            raise ClassNotFoundError(f"Could not locate {classpath}")
+
+        self.extractor = extr_class().load_jcr(jcr['extractor_state'])
+        self.stats = CategoricStats().load_jcr(jcr['stats'])
+        self.name = jcr['name']
+        return self
