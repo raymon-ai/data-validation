@@ -1,11 +1,12 @@
-from PIL import Image, ImageFilter
+from PIL import ImageFilter
 import numpy as np
 
 from rdv.globals import FeatureExtractor
 
 
 class Sharpness(FeatureExtractor):
-    """Measures the blurryness or sharpness of an iamge. Based on https://www.pyimagesearch.com/2015/09/07/blur-detection-with-opencv/
+    """Measures the blurryness or sharpness of an iamge. Based on
+     https://www.pyimagesearch.com/2015/09/07/blur-detection-with-opencv/
     """
 
     _config_attrs = []

@@ -69,7 +69,8 @@ def test_fsps_extractor_ccable():
     assert extractor.is_configured()
     assert not extractor.is_compiled()
 
-    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, refs=["adf8d224cb8786cc"])
+    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, refs=["adf8d224cb8786cc"],
+                                         nrefs=1)
     assert extractor.is_configured()
     assert extractor.is_compiled()
     
@@ -80,13 +81,15 @@ def test_component_ccable():
     assert not component.is_configured()
     assert not component.is_compiled()
     
-    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64})
+    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, 
+                                        refs=["adf8d224cb8786cc"], nrefs=1)
     stats = NumericStats(min=0, max=1, nbins=10)
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
     assert not component.is_compiled()
     
-    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, refs=["adf8d224cb8786cc"])
+    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, 
+                                        refs=["adf8d224cb8786cc"], nrefs=1)
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
@@ -99,7 +102,8 @@ def test_schema_ccable():
     assert not schema.is_configured()
     assert not schema.is_compiled()
 
-    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64})
+    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64},
+                                        refs=["adf8d224cb8786cc"], nrefs=1)
     stats = NumericStats(min=0, max=1, nbins=10)
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version='1.0.0', components=[component])
@@ -107,7 +111,7 @@ def test_schema_ccable():
     assert schema.is_configured()
     assert not schema.is_compiled()
 
-    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, refs=["adf8d224cb8786cc"])
+    extractor = FixedSubpatchSimilarity(patch={'x0': 0, 'y0': 0, 'x1': 64, 'y1': 64}, refs=["adf8d224cb8786cc"], nrefs=1)
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version='1.0.0', components=[component, component])

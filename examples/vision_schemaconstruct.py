@@ -82,8 +82,6 @@ str(tags[0])
 
 
 # %%
-
-
 def load_configured_schema():
     schema = Schema(name="Testing", version='1.0.0', components=[
         NumericComponent(name="patch_similarity",

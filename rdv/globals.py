@@ -4,8 +4,10 @@ from abc import ABC, abstractmethod
 class ClassNotFoundError(Exception):
     pass
 
+
 class NotSupportedException(Exception):
     pass
+
 
 class Serializable(ABC):
 
@@ -72,17 +74,18 @@ class CCAble(ABC):
         return True
 
     def is_configured(self):
+        # Overwritten in component
         has_attrs = self.check_has_attrs(self._config_attrs + self._ccable_deps)
         if not has_attrs:
             return False
         # Dependencies need to be configured and compiled
-        return self.check_deps(func='is_configured') and self.check_deps(func='is_compiled')  
-    
+        return self.check_deps(func='is_configured')
+
     def is_compiled(self):
         has_attrs = self.check_has_attrs(self._compile_attrs + self._ccable_deps)
         if not has_attrs:
             return False
-        return self.check_deps(func='is_compiled')
+        return self.check_deps(func='is_configured') and self.check_deps(func='is_compiled')
 
     def __eq__(self, other):
         for attr in self._attrs:
@@ -134,6 +137,6 @@ class NoneExtractor(FeatureExtractor):
 
     def compile(self, data):
         pass
-    
+
     def extract_feature(self, data):
         pass

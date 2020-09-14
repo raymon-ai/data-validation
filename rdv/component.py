@@ -3,7 +3,6 @@ import tempfile
 import time
 import webbrowser
 from collections.abc import Iterable
-from enum import Enum
 from multiprocessing import Process
 from pydoc import locate
 
@@ -13,39 +12,7 @@ import pandas as pd
 from rdv.globals import (CCAble, ClassNotFoundError, NoneExtractor,
                          NotSupportedException, Serializable)
 from rdv.stats import CategoricStats, NumericStats
-
-
-class TagType(Enum):
-    SEGM = 0
-    IND = 1
-    ERROR = 2
-
-
-class Tag(Serializable):
-    def __init__(self, name, value, tagtype, msg=None):
-        self.name = name
-        self.value = value
-        self.tagtype = tagtype
-        self.msg = msg
-
-    def to_jcr(self):
-        jcr = {
-            'tagtype': self.tagtype,
-            'name': self.name,
-            'value': self.value,
-            'msg': self.msg
-        }
-        return jcr
-
-    def load_jcr(self, jcr):
-        self.__init__(**jcr)
-        return self
-
-    def __str__(self):
-        return f"'{self.name}:{self.value}"
-
-    def __repr__(self):
-        return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
+from rdv.tags import Tag, TagType
 
 
 class Component(Serializable, CCAble):
@@ -72,15 +39,6 @@ class Component(Serializable, CCAble):
         }
         return data
 
-    def configure_extractor(self, loaded_data):
-        if hasattr(self.extractor, 'configure_interactive'):
-            print(f"Configure extractor for {self.name}")
-            loaded = self.interact_config(loaded_data)
-            self.extractor.configure(loaded)
-        else:
-            print(f"No configuration interaction available for {self.name}")
-            self.extractor.configure(loaded_data)
-
     def interact_config(self, loaded_data):
         _, output_fpath = tempfile.mkstemp()
         print(f"Saving to: {output_fpath}")
@@ -95,16 +53,25 @@ class Component(Serializable, CCAble):
             loaded = json.load(f)
         return loaded
 
+    def configure_extractor(self, loaded_data):
+        if hasattr(self.extractor, 'configure_interactive'):
+            print(f"Configure extractor for {self.name}")
+            loaded = self.interact_config(loaded_data)
+            self.extractor.configure(loaded)
+        else:
+            print(f"No configuration interaction available for {self.name}")
+            self.extractor.configure(loaded_data)
+
     def compile_extractor(self, loaded_data):
         self.extractor.compile(loaded_data)
 
     def configure_stats(self, loaded_data):
-        print(f"Configuring {self.name}")
+        print(f"Configuring stats for {self.name}")
         features = self.extract_features(loaded_data)
         self.stats.configure(features)
 
     def compile_stats(self, loaded_data):
-        print(f"Compiling {self.name}")
+        print(f"Compiling stats for {self.name}")
         features = self.extract_features(loaded_data)
         self.stats.compile(features)
 
@@ -126,6 +93,13 @@ class Component(Serializable, CCAble):
         self.compile_extractor(data)
         # Configure stats
         self.configure_stats(data)
+        
+    def is_configured(self):
+        has_attrs = self.check_has_attrs(self._config_attrs + self._ccable_deps)
+        if not has_attrs:
+            return False
+        # Dependencies need to be configured and compiled
+        return self.check_deps(func='is_configured') and self.extractor.is_compiled()
 
     def compile(self, data):
         self.compile_stats(data)
@@ -135,11 +109,25 @@ class NumericComponent(Component):
 
     def __init__(self, name="default_name", extractor=None, stats=None):
         super().__init__(name=name, extractor=extractor)
-        # TODO: make stats a property and check type before setting!
-        if stats is None:
-            self.stats = NumericStats()
+        self._stats = None
+        self.stats = stats
+
+    """
+    PROPERTIES
+    """
+    @property
+    def stats(self):
+        return self._stats
+
+    @stats.setter
+    def stats(self, value):
+        if value is None:
+            self._stats = NumericStats()
+        elif isinstance(value, NumericStats):
+            self._stats = value
         else:
-            self.stats = stats
+            raise NotSupportedException(
+                f"stats for a NumericComponant should be of type NumericStats, not {type(value)}")
 
     def check(self, data):
         feature = self.extractor.extract_feature(data)
@@ -180,24 +168,45 @@ class CategoricComponent(Component):
     # Domain, domain distribution
     def __init__(self, name="default_name", extractor=None, stats=None):
         super().__init__(name=name, extractor=extractor)
-        if stats is None:
-            self.stats = CategoricStats()
+        self._stats = None
+        self.stats = stats
+
+    """
+    PROPERTIES
+    """
+    @property
+    def stats(self):
+        return self._stats
+
+    @stats.setter
+    def stats(self, value):
+        if value is None:
+            self._stats = CategoricStats()
+        elif isinstance(value, CategoricStats):
+            self._stats = value
         else:
-            self.stats = stats
+            raise NotSupportedException(
+                f"stats for a NumericComponant should be of type CategoricStats, not {type(value)}")
 
     def check(self, data):
         feature = self.extractor.extract_feature(data)
         # Check min, max, nan or None and raise data error
         tag = self.check_invalid(feature)
-        # If all pass, calc z score
-        raise NotImplementedError
+        # If all pass, return the probability the feature occurs according to the schema
         if tag is None:
-            zscore = (feature - self.stats.mean) / self.stats.std
-            tag = Tag(name=self.name, value=zscore, tagtype=TagType.IND, msg="Valid Sample with given zscore")
+            p = self.stats.domain_counts[feature]
+            tag = Tag(name=self.name, value=p, tagtype=TagType.IND, msg="Valid Sample with given probability")
         return tag
 
     def check_invalid(self, feature):
-        raise NotImplementedError
+        if feature is None:
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is None")
+        elif np.isnan(feature):
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is NaN")
+        elif feature not in self.stats.domain:
+            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} not in schema domain")
+        else:
+            return None
 
     def load_jcr(self, jcr):
         classpath = jcr['extractor_class']

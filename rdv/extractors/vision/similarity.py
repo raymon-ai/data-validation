@@ -1,11 +1,12 @@
-import abc
-import imagehash
 import os
-import sys
-import dash
 import random
-from rdv.globals import FeatureExtractor, NoneExtractor
+import sys
+
+import dash
+import imagehash
+
 from rdv.extractors.vision.dashapps.similarity import dash_fsps
+from rdv.globals import FeatureExtractor
 
 
 class FixedSubpatchSimilarity(FeatureExtractor):
@@ -27,7 +28,7 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         self._nrefs = None
         self._patch = None
         self._refs = None
-        
+
         self.patch = patch
         self.nrefs = nrefs
         self.refs = refs
@@ -37,32 +38,31 @@ class FixedSubpatchSimilarity(FeatureExtractor):
     @property
     def patch(self):
         return self._patch
-    
+
     @patch.setter
     def patch(self, value):
         if value is None:
             self._patch = None
             return
-        
+
         if not isinstance(value, dict):
             raise ValueError(f"patch must be a dict, not {type(value)}")
         # make sure the correct keys are there
         self._patch = {key: value[key] for key in self.patch_keys}
-    
-    @property    
+
+    @property
     def refs(self):
         return self._refs
-    
+
     @refs.setter
     def refs(self, value):
         if value is None:
             self._refs = None
-            return 
-        
+            return
+
         if not (isinstance(value, list) and len(value) == self.nrefs):
             raise ValueError(f"refs should be a list of length {self.nrefs}")
 
-        
         parsed_refs = []
         for ref in value:
             if isinstance(ref, imagehash.ImageHash):
@@ -71,9 +71,9 @@ class FixedSubpatchSimilarity(FeatureExtractor):
                 parsed_refs.append(imagehash.hex_to_hash(ref))
             else:
                 raise ValueError(f"refs should either be str or ImageHash, not {type(ref)}")
-        
+
         self._refs = parsed_refs
-        
+
     @property
     def nrefs(self):
         return self._nrefs
@@ -85,11 +85,11 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             self._nrefs = None
             raise ValueError(f"nrefs should be a an int > 0")
         self._nrefs = value
-        
-    
+
     """
     SERIALISATION
     """
+
     def to_jcr(self):
         data = {
             'patch': self.patch,
@@ -132,7 +132,7 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         crop = data.crop(box=patch)
         phash = imagehash.phash(crop)
         return phash
-    
+
     def configure_interactive(self, loaded_data, raymon_output, null_stderr=True):
         print(f"null_strerr: {null_stderr}")
         if null_stderr:

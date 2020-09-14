@@ -5,9 +5,7 @@ from rdv.globals import FeatureExtractor
 
 
 class AvgIntensity(FeatureExtractor):
-    """Measures the blurryness or sharpness of an iamge. Based on https://www.pyimagesearch.com/2015/09/07/blur-detection-with-opencv/
-    """
-
+    
     _config_attrs = []
     _compile_attrs = []
     _ccable_deps = []

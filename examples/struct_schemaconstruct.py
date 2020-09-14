@@ -12,7 +12,7 @@ from rdv.extractors.structured import ElementExtractor
 pd.set_option('display.max_rows', 500)
 
 
-DATA_PATH = Path("/Users/kv/Raymon/Code/rdv/dev/subset-cheap.csv")
+DATA_PATH = Path("/Users/kv/Raymon/Code/rdv/examples/subset-cheap.csv")
 
 all_data = pd.read_csv(DATA_PATH).drop("Id", axis='columns')
 row = all_data.iloc[0, :]
@@ -31,29 +31,36 @@ def construct_components(dtypes):
         components.append(component)
     return components
 
+
+def print_status(scehma):
+    print(f"Schema configured? {schema.is_configured()}")
+    print(f"Schema compiled? {schema.is_compiled()}")
+
+
+
 components = construct_components(all_data.dtypes)
 schema = Schema(components=components)
 schema.save("houses-cheap-empty.json")
+print_status(schema)
 
 
 # %%
 schema.configure(data=all_data)
 schema.save("houses-cheap-configured.json")
+print_status(schema)
 
 #%%
 schema.compile(data=all_data)
 schema.save("houses-cheap-compiled.json")
-# %%
+print_status(schema)
 
-fullschema_path = "schema-compiled.json"
-schema.save(fullschema_path)
-
+#%%
+row = all_data.iloc[-1, :]
+row
 # %%
-schema = Schema().load(fullschema_path)
-tags = schema.check(loaded_data[-1])
+tags = schema.check(row)
 tags
 # %%
-str(tags[0])
 
 
 # %%

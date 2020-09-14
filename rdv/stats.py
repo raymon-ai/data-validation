@@ -67,16 +67,23 @@ class CategoricStats(Serializable, CCAble):
     def to_jcr(self):
         data = {}
         for attr in self._config_attrs + self._compile_attrs:
-            data[attr] = getattr(self, attr)
+            value = getattr(self, attr)
+            if attr == 'domain' and value is not None:
+                data[attr] = list(value)
+            else:
+                data[attr] = value
         return data
 
     def load_jcr(self, jcr):
         for attr in self._config_attrs + self._compile_attrs:
-            setattr(self, attr, jcr[attr])
+            value = jcr[attr]
+            if attr == 'domain' and value is not None:
+                setattr(self, attr, set(value))
+            else:
+                setattr(self, attr, value)
         return self
 
     def configure(self, data):
-        # TODO: Set domain here? cfr min and max in NumericComponent? Would allow to easiliy edit the domain...
         unique = data.unique()
         unique = unique[~pd.isnull(unique)]
         self.domain = list(set(unique))
@@ -88,7 +95,6 @@ class CategoricStats(Serializable, CCAble):
         self.domain_counts = data_filt.value_counts(normalize=True).to_dict()
         # Invalids are data outside domain
         invalids = data[~data.isin(self.domain) | pd.isna(data)]
-        print(f"Invalids: {invalids}")
         self.pinv = len(invalids) / len(data)
 
     def distance(self, other):
