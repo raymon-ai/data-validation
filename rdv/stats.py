@@ -40,7 +40,8 @@ class NumericStats(Serializable, CCAble):
         data = pd.Series(data)
         self.mean = float(data.mean())
         self.std = float(data.std())
-        hist, _ = np.histogram(data, bins=self.nbins, range=(self.min, self.max), density=True)
+        hist, edges = np.histogram(data, bins=self.nbins, range=(self.min, self.max))
+        hist = hist / np.sum(hist)
         self.hist = hist.tolist()
         invalids = np.logical_or(data > self.max,
                                  data < self.min,

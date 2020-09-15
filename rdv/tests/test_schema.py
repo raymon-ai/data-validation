@@ -95,7 +95,6 @@ def test_component_ccable():
     assert component.is_configured()
     assert component.is_compiled()
 
-
 def test_schema_ccable():
     component = NumericComponent(name="testcomponent")
     schema = Schema(name="Testing", version='1.0.0',components=[component])

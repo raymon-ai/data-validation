@@ -13,6 +13,7 @@ from rdv.globals import (CCAble, ClassNotFoundError, NoneExtractor,
                          NotSupportedException, Serializable)
 from rdv.stats import CategoricStats, NumericStats
 from rdv.tags import Tag, TagType
+from rdv.extractors.structured import ElementExtractor
 
 
 class Component(Serializable, CCAble):
@@ -201,7 +202,7 @@ class CategoricComponent(Component):
     def check_invalid(self, feature):
         if feature is None:
             return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is None")
-        elif np.isnan(feature):
+        elif pd.isnull(feature):
             return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is NaN")
         elif feature not in self.stats.domain:
             return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} not in schema domain")
@@ -218,3 +219,16 @@ class CategoricComponent(Component):
         self.stats = CategoricStats().load_jcr(jcr['stats'])
         self.name = jcr['name']
         return self
+
+
+def construct_components(dtypes):
+    components = []
+    for key in dtypes.index:
+        # Check type: Numeric or categoric
+        extractor = ElementExtractor(element=key)
+        if dtypes[key] == np.dtype('O'):
+            component = CategoricComponent(name=f"{key}_check", extractor=extractor)
+        else:
+            component = NumericComponent(name=key, extractor=extractor)
+        components.append(component)
+    return components

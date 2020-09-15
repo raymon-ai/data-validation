@@ -1,0 +1,1604 @@
+{
+    "name": "default",
+    "version": "0.0.0",
+    "components": [
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "MSSubClass",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MSSubClass"
+                },
+                "stats": {
+                    "min": 20.0,
+                    "max": 190.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "MSZoning_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MSZoning"
+                },
+                "stats": {
+                    "domain": [
+                        "FV",
+                        "RL",
+                        "RH",
+                        "RM",
+                        "C (all)"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "LotFrontage",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LotFrontage"
+                },
+                "stats": {
+                    "min": 21.0,
+                    "max": 313.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "LotArea",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LotArea"
+                },
+                "stats": {
+                    "min": 1300.0,
+                    "max": 63887.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Street_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Street"
+                },
+                "stats": {
+                    "domain": [
+                        "Pave",
+                        "Grvl"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Alley_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Alley"
+                },
+                "stats": {
+                    "domain": [
+                        "Pave",
+                        "Grvl"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "LotShape_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LotShape"
+                },
+                "stats": {
+                    "domain": [
+                        "IR1",
+                        "IR2",
+                        "IR3",
+                        "Reg"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "LandContour_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LandContour"
+                },
+                "stats": {
+                    "domain": [
+                        "Lvl",
+                        "Bnk",
+                        "HLS",
+                        "Low"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Utilities_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Utilities"
+                },
+                "stats": {
+                    "domain": [
+                        "AllPub",
+                        "NoSeWa"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "LotConfig_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LotConfig"
+                },
+                "stats": {
+                    "domain": [
+                        "CulDSac",
+                        "FR3",
+                        "Corner",
+                        "FR2",
+                        "Inside"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "LandSlope_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LandSlope"
+                },
+                "stats": {
+                    "domain": [
+                        "Gtl",
+                        "Sev",
+                        "Mod"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Neighborhood_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Neighborhood"
+                },
+                "stats": {
+                    "domain": [
+                        "IDOTRR",
+                        "Crawfor",
+                        "Gilbert",
+                        "StoneBr",
+                        "NAmes",
+                        "Veenker",
+                        "CollgCr",
+                        "Timber",
+                        "Sawyer",
+                        "NPkVill",
+                        "Blmngtn",
+                        "BrDale",
+                        "BrkSide",
+                        "OldTown",
+                        "SWISU",
+                        "SawyerW",
+                        "NridgHt",
+                        "NWAmes",
+                        "NoRidge",
+                        "Mitchel",
+                        "MeadowV",
+                        "Somerst",
+                        "ClearCr",
+                        "Blueste",
+                        "Edwards"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Condition1_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Condition1"
+                },
+                "stats": {
+                    "domain": [
+                        "RRNn",
+                        "PosA",
+                        "Artery",
+                        "RRNe",
+                        "RRAe",
+                        "Feedr",
+                        "PosN",
+                        "Norm",
+                        "RRAn"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Condition2_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Condition2"
+                },
+                "stats": {
+                    "domain": [
+                        "RRNn",
+                        "Artery",
+                        "Feedr",
+                        "Norm",
+                        "RRAn"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "BldgType_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BldgType"
+                },
+                "stats": {
+                    "domain": [
+                        "Duplex",
+                        "Twnhs",
+                        "2fmCon",
+                        "TwnhsE",
+                        "1Fam"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "HouseStyle_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "HouseStyle"
+                },
+                "stats": {
+                    "domain": [
+                        "SFoyer",
+                        "2.5Fin",
+                        "1.5Fin",
+                        "2.5Unf",
+                        "SLvl",
+                        "2Story",
+                        "1.5Unf",
+                        "1Story"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "OverallQual",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "OverallQual"
+                },
+                "stats": {
+                    "min": 1.0,
+                    "max": 10.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "OverallCond",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "OverallCond"
+                },
+                "stats": {
+                    "min": 1.0,
+                    "max": 9.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "YearBuilt",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "YearBuilt"
+                },
+                "stats": {
+                    "min": 1872.0,
+                    "max": 2009.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "YearRemodAdd",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "YearRemodAdd"
+                },
+                "stats": {
+                    "min": 1950.0,
+                    "max": 2010.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "RoofStyle_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "RoofStyle"
+                },
+                "stats": {
+                    "domain": [
+                        "Hip",
+                        "Mansard",
+                        "Gambrel",
+                        "Gable",
+                        "Flat"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "RoofMatl_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "RoofMatl"
+                },
+                "stats": {
+                    "domain": [
+                        "ClyTile",
+                        "Tar&Grv",
+                        "WdShngl",
+                        "Roll",
+                        "WdShake",
+                        "Membran",
+                        "CompShg",
+                        "Metal"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Exterior1st_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Exterior1st"
+                },
+                "stats": {
+                    "domain": [
+                        "Wd Sdng",
+                        "VinylSd",
+                        "WdShing",
+                        "BrkFace",
+                        "MetalSd",
+                        "CemntBd",
+                        "AsphShn",
+                        "AsbShng",
+                        "Stucco",
+                        "HdBoard",
+                        "BrkComm",
+                        "Plywood",
+                        "CBlock"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Exterior2nd_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Exterior2nd"
+                },
+                "stats": {
+                    "domain": [
+                        "Wd Sdng",
+                        "VinylSd",
+                        "Stone",
+                        "CmentBd",
+                        "BrkFace",
+                        "ImStucc",
+                        "MetalSd",
+                        "Wd Shng",
+                        "Stucco",
+                        "AsbShng",
+                        "HdBoard",
+                        "Brk Cmn",
+                        "AsphShn",
+                        "Plywood",
+                        "CBlock"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "MasVnrType_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MasVnrType"
+                },
+                "stats": {
+                    "domain": [
+                        "None",
+                        "BrkCmn",
+                        "Stone",
+                        "BrkFace"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "MasVnrArea",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MasVnrArea"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 1600.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "ExterQual_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "ExterQual"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "TA",
+                        "Gd",
+                        "Fa"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "ExterCond_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "ExterCond"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "Po",
+                        "Fa",
+                        "TA",
+                        "Gd"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Foundation_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Foundation"
+                },
+                "stats": {
+                    "domain": [
+                        "Stone",
+                        "PConc",
+                        "Slab",
+                        "BrkTil",
+                        "Wood",
+                        "CBlock"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "BsmtQual_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtQual"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "TA",
+                        "Gd",
+                        "Fa"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "BsmtCond_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtCond"
+                },
+                "stats": {
+                    "domain": [
+                        "TA",
+                        "Po",
+                        "Gd",
+                        "Fa"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "BsmtExposure_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtExposure"
+                },
+                "stats": {
+                    "domain": [
+                        "Mn",
+                        "Av",
+                        "No",
+                        "Gd"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "BsmtFinType1_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtFinType1"
+                },
+                "stats": {
+                    "domain": [
+                        "LwQ",
+                        "Unf",
+                        "Rec",
+                        "GLQ",
+                        "ALQ",
+                        "BLQ"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "BsmtFinSF1",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtFinSF1"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 5644.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "BsmtFinType2_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtFinType2"
+                },
+                "stats": {
+                    "domain": [
+                        "LwQ",
+                        "Unf",
+                        "Rec",
+                        "ALQ",
+                        "GLQ",
+                        "BLQ"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "BsmtFinSF2",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtFinSF2"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 1063.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "BsmtUnfSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtUnfSF"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 1907.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "TotalBsmtSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "TotalBsmtSF"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 6110.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Heating_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Heating"
+                },
+                "stats": {
+                    "domain": [
+                        "Grav",
+                        "OthW",
+                        "GasW",
+                        "GasA",
+                        "Floor",
+                        "Wall"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "HeatingQC_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "HeatingQC"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "Po",
+                        "Fa",
+                        "TA",
+                        "Gd"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "CentralAir_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "CentralAir"
+                },
+                "stats": {
+                    "domain": [
+                        "N",
+                        "Y"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Electrical_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Electrical"
+                },
+                "stats": {
+                    "domain": [
+                        "FuseP",
+                        "FuseA",
+                        "Mix",
+                        "SBrkr",
+                        "FuseF"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "1stFlrSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "1stFlrSF"
+                },
+                "stats": {
+                    "min": 334.0,
+                    "max": 4692.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "2ndFlrSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "2ndFlrSF"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 1440.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "LowQualFinSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "LowQualFinSF"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 528.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "GrLivArea",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GrLivArea"
+                },
+                "stats": {
+                    "min": 334.0,
+                    "max": 5642.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "BsmtFullBath",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtFullBath"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 3.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "BsmtHalfBath",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BsmtHalfBath"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 2.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "FullBath",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "FullBath"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 3.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "HalfBath",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "HalfBath"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 2.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "BedroomAbvGr",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "BedroomAbvGr"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 8.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "KitchenAbvGr",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "KitchenAbvGr"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 3.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "KitchenQual_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "KitchenQual"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "TA",
+                        "Gd",
+                        "Fa"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "TotRmsAbvGrd",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "TotRmsAbvGrd"
+                },
+                "stats": {
+                    "min": 2.0,
+                    "max": 14.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Functional_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Functional"
+                },
+                "stats": {
+                    "domain": [
+                        "Min2",
+                        "Min1",
+                        "Maj2",
+                        "Mod",
+                        "Maj1",
+                        "Typ",
+                        "Sev"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "Fireplaces",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Fireplaces"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 3.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "FireplaceQu_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "FireplaceQu"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "Po",
+                        "Fa",
+                        "TA",
+                        "Gd"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "GarageType_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageType"
+                },
+                "stats": {
+                    "domain": [
+                        "BuiltIn",
+                        "Detchd",
+                        "2Types",
+                        "Attchd",
+                        "Basment",
+                        "CarPort"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "GarageYrBlt",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageYrBlt"
+                },
+                "stats": {
+                    "min": 1900.0,
+                    "max": 2010.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "GarageFinish_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageFinish"
+                },
+                "stats": {
+                    "domain": [
+                        "Unf",
+                        "Fin",
+                        "RFn"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "GarageCars",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageCars"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 4.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "GarageArea",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageArea"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 1418.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "GarageQual_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageQual"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "Po",
+                        "Fa",
+                        "TA",
+                        "Gd"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "GarageCond_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "GarageCond"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "Po",
+                        "Fa",
+                        "TA",
+                        "Gd"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "PavedDrive_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "PavedDrive"
+                },
+                "stats": {
+                    "domain": [
+                        "N",
+                        "Y",
+                        "P"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "WoodDeckSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "WoodDeckSF"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 736.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "OpenPorchSF",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "OpenPorchSF"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 523.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "EnclosedPorch",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "EnclosedPorch"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 552.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "3SsnPorch",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "3SsnPorch"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 407.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "ScreenPorch",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "ScreenPorch"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 385.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "PoolArea",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "PoolArea"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 648.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "PoolQC_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "PoolQC"
+                },
+                "stats": {
+                    "domain": [
+                        "Ex",
+                        "Gd",
+                        "Fa"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "Fence_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "Fence"
+                },
+                "stats": {
+                    "domain": [
+                        "MnPrv",
+                        "MnWw",
+                        "GdWo",
+                        "GdPrv"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "MiscFeature_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MiscFeature"
+                },
+                "stats": {
+                    "domain": [
+                        "Shed",
+                        "Gar2",
+                        "Othr"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "MiscVal",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MiscVal"
+                },
+                "stats": {
+                    "min": 0.0,
+                    "max": 15500.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "MoSold",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "MoSold"
+                },
+                "stats": {
+                    "min": 1.0,
+                    "max": 12.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "YrSold",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "YrSold"
+                },
+                "stats": {
+                    "min": 2006.0,
+                    "max": 2010.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "SaleType_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "SaleType"
+                },
+                "stats": {
+                    "domain": [
+                        "New",
+                        "ConLD",
+                        "WD",
+                        "COD",
+                        "ConLI",
+                        "Con",
+                        "CWD",
+                        "ConLw",
+                        "Oth"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.CategoricComponent",
+            "component": {
+                "name": "SaleCondition_check",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "SaleCondition"
+                },
+                "stats": {
+                    "domain": [
+                        "Alloca",
+                        "Family",
+                        "Normal",
+                        "Abnorml",
+                        "AdjLand",
+                        "Partial"
+                    ],
+                    "domain_counts": null,
+                    "pinv": null
+                }
+            }
+        },
+        {
+            "component_class": "rdv.component.NumericComponent",
+            "component": {
+                "name": "SalePrice",
+                "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
+                "extractor_state": {
+                    "element": "SalePrice"
+                },
+                "stats": {
+                    "min": 34900.0,
+                    "max": 248900.0,
+                    "mean": null,
+                    "std": null,
+                    "pinv": null,
+                    "hist": null
+                }
+            }
+        }
+    ]
+}

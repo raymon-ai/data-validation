@@ -103,7 +103,9 @@ class CCAble(ABC):
 
 
 class FeatureExtractor(Serializable, CCAble, ABC):
-
+    
+    
+    #TODO: Make all subclasses implement a from_jcr classmethod instead of Class().load_jcr()?
     @abstractmethod
     def extract_feature(self, data):
         """Extracts a feature from the data.

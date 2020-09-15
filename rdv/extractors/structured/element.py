@@ -14,7 +14,7 @@ class ElementExtractor(FeatureExtractor):
     _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
-    def __init__(self, element):
+    def __init__(self, element=None):
         self.element = element
 
     def to_jcr(self):
