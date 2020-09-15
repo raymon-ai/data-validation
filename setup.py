@@ -24,7 +24,8 @@ setuptools.setup(
         "selenium",
         "dash",
         "numpy",
-        "imagehash"
+        "imagehash",
+        "plotly"
     ],
     # entry_points='''
     #     [console_scripts]
