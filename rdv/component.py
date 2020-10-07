@@ -141,7 +141,7 @@ class NumericComponent(Component):
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
         # make deviation tag
-        dev_tag = self.feature2tag(feature)
+        dev_tag = self.feature2dev(feature)
         if return_features:
             tags = [feat_tag, dev_tag, err_tag]
         else:
@@ -157,7 +157,7 @@ class NumericComponent(Component):
         return dev_tag
     
     def feature2tag(self, feature):
-        return Tag(name=self.name, value=feature, type=IND)
+        return Tag(name=self.name, value=float(feature), type=IND)
         
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"
@@ -216,7 +216,7 @@ class CategoricComponent(Component):
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
         # make deviation tag
-        dev_tag = self.feature2tag(feature)
+        dev_tag = self.feature2dev(feature)
         if return_features:
             tags = [feat_tag, dev_tag, err_tag]
         else:
@@ -225,10 +225,14 @@ class CategoricComponent(Component):
         tags = [tag for tag in tags if tag is not None]
         return tags
     
-    def feature2dev(self, feature):  
-        p = self.stats.domain_counts[feature]
-        dev_tag = Tag(name=f"{self.name}-dev", value=p, type=IND)
-        return dev_tag
+    def feature2dev(self, feature): 
+        if feature in self.stats.domain: 
+            p = self.stats.domain_counts[feature]
+            dev_tag = Tag(name=f"{self.name}-dev", value=p, type=IND)
+            return dev_tag
+
+        else:
+            return None
 
     def feature2tag(self, feature):
         return Tag(name=self.name, value=feature, type=SEG)
@@ -264,7 +268,7 @@ def construct_components(dtypes):
         # Check type: Numeric or categoric
         extractor = ElementExtractor(element=key)
         if dtypes[key] == np.dtype('O'):
-            component = CategoricComponent(name=f"{key}_check", extractor=extractor)
+            component = CategoricComponent(name=key, extractor=extractor)
         else:
             component = NumericComponent(name=key, extractor=extractor)
         components.append(component)

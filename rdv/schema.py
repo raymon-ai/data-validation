@@ -78,15 +78,16 @@ class Schema(Serializable, CCAble):
             comp.compile(data)
     
     """Other Methods"""
-    def check(self, data):
+    def check(self, data, convert_json=True):
         tags = []
         if self.is_compiled():
             for component in self.components:
                 tag = component.check(data)
-                tags.append(tag)
+                tags.extend(tag)
         else: 
             raise SchemaCompilationException(f"Cannot check data on an uncompiled schema. Check whether all components are compiled.")
-            
+        if convert_json:
+            tags = [t.to_jcr() for t in tags]
         return tags
             
     def save(self, fpath):
