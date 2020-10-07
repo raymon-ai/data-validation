@@ -2,7 +2,7 @@ import json
 from pydoc import locate
 
 
-from rdv.globals import CCAble, ClassNotFoundError, Serializable
+from rdv.globals import CCAble, ClassNotFoundError, Serializable, DataException, SchemaCompilationException
 
 
 class Schema(Serializable, CCAble):
@@ -22,7 +22,7 @@ class Schema(Serializable, CCAble):
         jcr = {
             'name': self.name,
             'version': self.version,
-            'components': []
+            'components': [],
         }
         components = []
         for comp in self.components:
@@ -69,21 +69,29 @@ class Schema(Serializable, CCAble):
             # Configure component
             comp.configure(data)
 
+
+
     def compile(self, data):
         """Compile the schema.
         """
         for comp in self.components:
             # Compile stats
             comp.compile(data)
-            
     
     """Other Methods"""
     
     def check(self, data):
         tags = []
-        for component in self.components:
-            tag = component.check(data)
-            tags.append(tag)
+        if self.is_compiled():
+            for component in self.components:
+                if component.name not in self.ignore:
+                    tag = component.check(data)
+                    tags.append(tag)
+                else:
+                    print(f"Ignoring component {component}")
+        else: 
+            raise SchemaCompilationException(f"Cannot check data on an uncompiled schema. Check whether all components are compiled.")
+            
         return tags
             
     def save(self, fpath):
@@ -102,3 +110,6 @@ class Schema(Serializable, CCAble):
                 unconfigureds.append(component)
 
         return unconfigureds
+    
+    def drop_component(self, name):
+        self.components = [c for c in self.components if c.name != name]

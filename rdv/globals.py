@@ -11,6 +11,7 @@ class SchemaCompilationException(Exception):
     pass
 
 
+
 class DataException(Exception):
     pass
 
