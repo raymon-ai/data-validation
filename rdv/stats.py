@@ -132,10 +132,10 @@ class CategoricStats(Serializable, CCAble):
     def domain(self, value):
         if value is None:
             self._domain = value
-        elif isinstance(value, list):
+        elif isinstance(value, list) or isinstance(value, set):
             self._domain = list(set(value))
         else:
-            raise DataException("stats.domain should be a list")
+            raise DataException(f"stats.domain should be a list or set, not {type(value)}")
         
         
     """domain_counts"""
@@ -148,10 +148,10 @@ class CategoricStats(Serializable, CCAble):
         if value is None:
             self._domain_counts = value
         elif isinstance(value, dict):
-            for key, value in value.items():
+            for key, keyvalue in value.items():
                 if key not in self.domain:
                     raise DataException(f"{key} is not in domain but is in domain_counts")
-                if value < 0:
+                if keyvalue < 0:
                     raise DataException(f"Domain count for {key} is  < 0")
             self._domain_counts = value
         else:
@@ -183,7 +183,7 @@ class CategoricStats(Serializable, CCAble):
         for attr in self._config_attrs + self._compile_attrs:
             value = jcr[attr]
             if attr == 'domain' and value is not None:
-                setattr(self, attr, set(value))
+                setattr(self, attr, list(set(value)))
             else:
                 setattr(self, attr, value)
         return self

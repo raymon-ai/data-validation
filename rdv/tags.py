@@ -3,25 +3,22 @@ from enum import Enum
 from rdv.globals import Serializable
 
 
-class TagType(Enum):
-    SEGM = 0
-    IND = 1
-    ERROR = 2
+SEG = 'seg'
+IND = 'ind'
+ERR = 'err'
 
 
 class Tag(Serializable):
-    def __init__(self, name, value, tagtype, msg=None):
+    def __init__(self, name, value, type):
         self.name = name
         self.value = value
-        self.tagtype = tagtype
-        self.msg = msg
+        self.type = type
 
     def to_jcr(self):
         jcr = {
-            'tagtype': self.tagtype,
+            'type': self.type,
             'name': self.name,
             'value': self.value,
-            'msg': self.msg
         }
         return jcr
 
@@ -33,4 +30,4 @@ class Tag(Serializable):
         return f"'{self.name}:{self.value}"
 
     def __repr__(self):
-        return f"Tag(name='{self.name}, value={self.value}, tagtype={self.tagtype}, msg={self.msg}"
+        return f"Tag(name='{self.name}, value={self.value}, type={self.type}"

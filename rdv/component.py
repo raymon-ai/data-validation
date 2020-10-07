@@ -12,7 +12,7 @@ import pandas as pd
 from rdv.globals import (CCAble, ClassNotFoundError, NoneExtractor,
                          NotSupportedException, Serializable, SchemaCompilationException)
 from rdv.stats import CategoricStats, NumericStats
-from rdv.tags import Tag, TagType
+from rdv.tags import Tag, SEG, ERR, IND
 from rdv.extractors.structured import ElementExtractor
 
 
@@ -134,25 +134,41 @@ class NumericComponent(Component):
             raise NotSupportedException(
                 f"stats for a NumericComponant should be of type NumericStats, not {type(value)}")
 
-    def check(self, data):
+    def check(self, data, return_features=True):
         feature = self.extractor.extract_feature(data)
+        # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
         # Check min, max, nan or None and raise data error
-        tag = self.check_invalid(feature)
-        # If all pass, calc z score
-        if tag is None:
-            zscore = (feature - self.stats.mean) / self.stats.std
-            tag = Tag(name=self.name, value=zscore, tagtype=TagType.IND, msg="Valid Sample with given zscore")
-        return tag
-
+        err_tag = self.check_invalid(feature)
+        # make deviation tag
+        dev_tag = self.feature2tag(feature)
+        if return_features:
+            tags = [feat_tag, dev_tag, err_tag]
+        else:
+            tags = [dev_tag, err_tag]
+        # Filter Nones
+        tags = [tag for tag in tags if tag is not None]
+        return tags
+    
+    
+    def feature2dev(self, feature):
+        zscore = (feature - self.stats.mean) / self.stats.std
+        dev_tag = Tag(name=f"{self.name}-dev", value=zscore, type=IND)
+        return dev_tag
+    
+    def feature2tag(self, feature):
+        return Tag(name=self.name, value=feature, type=IND)
+        
     def check_invalid(self, feature):
+        tagname = f"{self.name}-err"
         if feature is None:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is None")
+            return Tag(name=tagname, value='Value None', type=ERR)
         elif np.isnan(feature):
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is NaN")
+            return Tag(name=tagname, value='Value NaN', type=ERR)
         elif feature > self.stats.max:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} above schema max")
+            return Tag(name=tagname, value='Value > max', type=ERR)
         elif feature < self.stats.min:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} below schema min")
+            return Tag(name=tagname, value='Value < min', type=ERR)
         else:
             return None
 
@@ -192,24 +208,41 @@ class CategoricComponent(Component):
         else:
             raise NotSupportedException(
                 f"stats for a NumericComponant should be of type CategoricStats, not {type(value)}")
-
-    def check(self, data):
+            
+    def check(self, data, return_features=True):
         feature = self.extractor.extract_feature(data)
+        # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
         # Check min, max, nan or None and raise data error
-        tag = self.check_invalid(feature)
-        # If all pass, return the probability the feature occurs according to the schema
-        if tag is None:
-            p = self.stats.domain_counts[feature]
-            tag = Tag(name=self.name, value=p, tagtype=TagType.IND, msg="Valid Sample with given probability")
-        return tag
+        err_tag = self.check_invalid(feature)
+        # make deviation tag
+        dev_tag = self.feature2tag(feature)
+        if return_features:
+            tags = [feat_tag, dev_tag, err_tag]
+        else:
+            tags = [dev_tag, err_tag]
+        # Filter Nones
+        tags = [tag for tag in tags if tag is not None]
+        return tags
+    
+    def feature2dev(self, feature):  
+        p = self.stats.domain_counts[feature]
+        dev_tag = Tag(name=f"{self.name}-dev", value=p, type=IND)
+        return dev_tag
+
+    def feature2tag(self, feature):
+        return Tag(name=self.name, value=feature, type=SEG)
+    
 
     def check_invalid(self, feature):
+        tagname = f"{self.name}-err"
+
         if feature is None:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is None")
+            return Tag(name=tagname, value='Value None', type=ERR)
         elif pd.isnull(feature):
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg="Value is NaN")
+            return Tag(name=tagname, value='Value NaN', type=ERR)
         elif feature not in self.stats.domain:
-            return Tag(name=self.name, value='invalid', tagtype=TagType.ERROR, msg=f"Value {feature} not in schema domain")
+            return Tag(name=tagname, value='Domain Error', type=ERR)
         else:
             return None
 

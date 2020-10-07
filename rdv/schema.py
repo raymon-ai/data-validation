@@ -23,7 +23,7 @@ class Schema(Serializable, CCAble):
             'name': self.name,
             'version': self.version,
             'components': [],
-        }
+        } 
         components = []
         for comp in self.components:
             components.append({'component_class': self.class2str(comp),
@@ -70,7 +70,6 @@ class Schema(Serializable, CCAble):
             comp.configure(data)
 
 
-
     def compile(self, data):
         """Compile the schema.
         """
@@ -79,16 +78,12 @@ class Schema(Serializable, CCAble):
             comp.compile(data)
     
     """Other Methods"""
-    
     def check(self, data):
         tags = []
         if self.is_compiled():
             for component in self.components:
-                if component.name not in self.ignore:
-                    tag = component.check(data)
-                    tags.append(tag)
-                else:
-                    print(f"Ignoring component {component}")
+                tag = component.check(data)
+                tags.append(tag)
         else: 
             raise SchemaCompilationException(f"Cannot check data on an uncompiled schema. Check whether all components are compiled.")
             
@@ -113,3 +108,9 @@ class Schema(Serializable, CCAble):
     
     def drop_component(self, name):
         self.components = [c for c in self.components if c.name != name]
+
+    @classmethod
+    def from_json(cls, json):
+        schema = cls()
+        schema.load_jcr(json)
+        return schema
