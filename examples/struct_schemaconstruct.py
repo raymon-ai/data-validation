@@ -47,3 +47,5 @@ tags = schema.check(row)
 tags
 # %%
 
+tags[0].to_jcr()
+# %%

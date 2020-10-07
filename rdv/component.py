@@ -10,7 +10,7 @@ import numpy as np
 import pandas as pd
 
 from rdv.globals import (CCAble, ClassNotFoundError, NoneExtractor,
-                         NotSupportedException, Serializable)
+                         NotSupportedException, Serializable, SchemaCompilationException)
 from rdv.stats import CategoricStats, NumericStats
 from rdv.tags import Tag, TagType
 from rdv.extractors.structured import ElementExtractor
@@ -103,7 +103,11 @@ class Component(Serializable, CCAble):
         return self.check_deps(func='is_configured') and self.extractor.is_compiled()
 
     def compile(self, data):
-        self.compile_stats(data)
+        if self.is_configured():
+            self.compile_stats(data)
+        else:
+            raise SchemaCompilationException(f"Component {self.name} not configured. Cannot compile.")
+        
 
 
 class NumericComponent(Component):

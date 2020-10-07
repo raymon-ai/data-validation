@@ -201,7 +201,7 @@ def compare_schema(schema_a, schema_b):
             get_stat_table(comp_b),
             row=1, col=3
     )
-        fig.update_layout(height=500, width=1400, title_text=f"Component {comp_a.name}")
+        fig.update_layout(height=500,v a width=1400, title_text=f"Component {comp_a.name}")
         figs.append(fig)
 
         # fhtml = fig.to_html(full_html=False, include_plotlyjs='cdn')
@@ -218,8 +218,8 @@ def create_schema(fpath, name):
     return schema
 
 
-schema_cheap = create_schema('/Users/kv/Raymon/Code/rdv/examples/subset-cheap.csv', name="cheap")
-schema_exp = create_schema('/Users/kv/Raymon/Code/rdv/examples/subset-exp.csv', name="exp")
+schema_cheap = create_schema('/Users/kv/Raymon/Code/rdv/examples/subset-cheap.csv', name="training")
+schema_exp = create_schema('/Users/kv/Raymon/Code/rdv/examples/subset-exp.csv', name="prod")
 
 vis = compare_schema(schema_a=schema_cheap, 
                schema_b=schema_exp)

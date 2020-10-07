@@ -4,10 +4,15 @@ from abc import ABC, abstractmethod
 class ClassNotFoundError(Exception):
     pass
 
-
 class NotSupportedException(Exception):
     pass
 
+class SchemaCompilationException(Exception):
+    pass
+
+
+class DataException(Exception):
+    pass
 
 class Serializable(ABC):
 

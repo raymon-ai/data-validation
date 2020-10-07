@@ -30,10 +30,10 @@
                 },
                 "stats": {
                     "domain": [
-                        "FV",
-                        "RL",
-                        "RH",
                         "RM",
+                        "RH",
+                        "RL",
+                        "FV",
                         "C (all)"
                     ],
                     "domain_counts": null,
@@ -124,9 +124,9 @@
                 "stats": {
                     "domain": [
                         "IR1",
-                        "IR2",
                         "IR3",
-                        "Reg"
+                        "Reg",
+                        "IR2"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -143,10 +143,10 @@
                 },
                 "stats": {
                     "domain": [
+                        "Low",
                         "Lvl",
                         "Bnk",
-                        "HLS",
-                        "Low"
+                        "HLS"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -163,8 +163,8 @@
                 },
                 "stats": {
                     "domain": [
-                        "AllPub",
-                        "NoSeWa"
+                        "NoSeWa",
+                        "AllPub"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -181,11 +181,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "CulDSac",
-                        "FR3",
                         "Corner",
+                        "Inside",
+                        "CulDSac",
                         "FR2",
-                        "Inside"
+                        "FR3"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -202,9 +202,9 @@
                 },
                 "stats": {
                     "domain": [
-                        "Gtl",
                         "Sev",
-                        "Mod"
+                        "Mod",
+                        "Gtl"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -221,31 +221,31 @@
                 },
                 "stats": {
                     "domain": [
-                        "IDOTRR",
-                        "Crawfor",
-                        "Gilbert",
-                        "StoneBr",
-                        "NAmes",
-                        "Veenker",
-                        "CollgCr",
                         "Timber",
-                        "Sawyer",
-                        "NPkVill",
-                        "Blmngtn",
+                        "NAmes",
                         "BrDale",
-                        "BrkSide",
-                        "OldTown",
-                        "SWISU",
-                        "SawyerW",
-                        "NridgHt",
-                        "NWAmes",
-                        "NoRidge",
-                        "Mitchel",
+                        "Edwards",
+                        "StoneBr",
                         "MeadowV",
+                        "CollgCr",
+                        "Gilbert",
                         "Somerst",
-                        "ClearCr",
+                        "Blmngtn",
                         "Blueste",
-                        "Edwards"
+                        "BrkSide",
+                        "SawyerW",
+                        "Crawfor",
+                        "NridgHt",
+                        "SWISU",
+                        "OldTown",
+                        "Sawyer",
+                        "Mitchel",
+                        "NPkVill",
+                        "Veenker",
+                        "IDOTRR",
+                        "ClearCr",
+                        "NWAmes",
+                        "NoRidge"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -262,15 +262,15 @@
                 },
                 "stats": {
                     "domain": [
-                        "RRNn",
-                        "PosA",
-                        "Artery",
-                        "RRNe",
                         "RRAe",
-                        "Feedr",
-                        "PosN",
+                        "RRNe",
+                        "RRNn",
                         "Norm",
-                        "RRAn"
+                        "PosN",
+                        "Artery",
+                        "RRAn",
+                        "Feedr",
+                        "PosA"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -288,10 +288,10 @@
                 "stats": {
                     "domain": [
                         "RRNn",
-                        "Artery",
-                        "Feedr",
                         "Norm",
-                        "RRAn"
+                        "Artery",
+                        "RRAn",
+                        "Feedr"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -308,8 +308,8 @@
                 },
                 "stats": {
                     "domain": [
-                        "Duplex",
                         "Twnhs",
+                        "Duplex",
                         "2fmCon",
                         "TwnhsE",
                         "1Fam"
@@ -329,14 +329,14 @@
                 },
                 "stats": {
                     "domain": [
+                        "1Story",
                         "SFoyer",
                         "2.5Fin",
                         "1.5Fin",
                         "2.5Unf",
                         "SLvl",
                         "2Story",
-                        "1.5Unf",
-                        "1Story"
+                        "1.5Unf"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -425,11 +425,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "Hip",
-                        "Mansard",
-                        "Gambrel",
                         "Gable",
-                        "Flat"
+                        "Hip",
+                        "Flat",
+                        "Mansard",
+                        "Gambrel"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -446,14 +446,14 @@
                 },
                 "stats": {
                     "domain": [
-                        "ClyTile",
-                        "Tar&Grv",
-                        "WdShngl",
-                        "Roll",
-                        "WdShake",
                         "Membran",
+                        "Roll",
+                        "WdShngl",
+                        "Metal",
+                        "Tar&Grv",
+                        "ClyTile",
                         "CompShg",
-                        "Metal"
+                        "WdShake"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -470,19 +470,19 @@
                 },
                 "stats": {
                     "domain": [
+                        "Plywood",
+                        "AsbShng",
                         "Wd Sdng",
+                        "CemntBd",
+                        "BrkFace",
+                        "BrkComm",
                         "VinylSd",
                         "WdShing",
-                        "BrkFace",
-                        "MetalSd",
-                        "CemntBd",
-                        "AsphShn",
-                        "AsbShng",
                         "Stucco",
-                        "HdBoard",
-                        "BrkComm",
-                        "Plywood",
-                        "CBlock"
+                        "CBlock",
+                        "MetalSd",
+                        "AsphShn",
+                        "HdBoard"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -499,21 +499,21 @@
                 },
                 "stats": {
                     "domain": [
-                        "Wd Sdng",
-                        "VinylSd",
-                        "Stone",
-                        "CmentBd",
-                        "BrkFace",
-                        "ImStucc",
-                        "MetalSd",
-                        "Wd Shng",
-                        "Stucco",
-                        "AsbShng",
-                        "HdBoard",
-                        "Brk Cmn",
-                        "AsphShn",
                         "Plywood",
-                        "CBlock"
+                        "Brk Cmn",
+                        "AsbShng",
+                        "Wd Sdng",
+                        "BrkFace",
+                        "Wd Shng",
+                        "Stone",
+                        "VinylSd",
+                        "Stucco",
+                        "CBlock",
+                        "AsphShn",
+                        "MetalSd",
+                        "CmentBd",
+                        "ImStucc",
+                        "HdBoard"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -530,10 +530,10 @@
                 },
                 "stats": {
                     "domain": [
-                        "None",
                         "BrkCmn",
-                        "Stone",
-                        "BrkFace"
+                        "BrkFace",
+                        "None",
+                        "Stone"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -568,10 +568,10 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Fa",
                         "TA",
-                        "Gd",
-                        "Fa"
+                        "Ex",
+                        "Gd"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -588,11 +588,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Gd",
                         "Po",
-                        "Fa",
                         "TA",
-                        "Gd"
+                        "Fa",
+                        "Ex"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -609,12 +609,12 @@
                 },
                 "stats": {
                     "domain": [
-                        "Stone",
-                        "PConc",
-                        "Slab",
                         "BrkTil",
                         "Wood",
-                        "CBlock"
+                        "Stone",
+                        "CBlock",
+                        "Slab",
+                        "PConc"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -631,10 +631,10 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Fa",
                         "TA",
-                        "Gd",
-                        "Fa"
+                        "Ex",
+                        "Gd"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -651,10 +651,10 @@
                 },
                 "stats": {
                     "domain": [
-                        "TA",
+                        "Fa",
                         "Po",
-                        "Gd",
-                        "Fa"
+                        "TA",
+                        "Gd"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -672,8 +672,8 @@
                 "stats": {
                     "domain": [
                         "Mn",
-                        "Av",
                         "No",
+                        "Av",
                         "Gd"
                     ],
                     "domain_counts": null,
@@ -691,12 +691,12 @@
                 },
                 "stats": {
                     "domain": [
-                        "LwQ",
                         "Unf",
-                        "Rec",
-                        "GLQ",
                         "ALQ",
-                        "BLQ"
+                        "GLQ",
+                        "BLQ",
+                        "LwQ",
+                        "Rec"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -731,12 +731,12 @@
                 },
                 "stats": {
                     "domain": [
-                        "LwQ",
                         "Unf",
-                        "Rec",
                         "ALQ",
                         "GLQ",
-                        "BLQ"
+                        "BLQ",
+                        "LwQ",
+                        "Rec"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -807,12 +807,12 @@
                 },
                 "stats": {
                     "domain": [
-                        "Grav",
-                        "OthW",
-                        "GasW",
+                        "Wall",
                         "GasA",
                         "Floor",
-                        "Wall"
+                        "GasW",
+                        "Grav",
+                        "OthW"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -829,11 +829,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Gd",
                         "Po",
-                        "Fa",
                         "TA",
-                        "Gd"
+                        "Fa",
+                        "Ex"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -868,11 +868,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "FuseP",
-                        "FuseA",
-                        "Mix",
                         "SBrkr",
-                        "FuseF"
+                        "FuseF",
+                        "Mix",
+                        "FuseP",
+                        "FuseA"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1069,10 +1069,10 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Fa",
                         "TA",
-                        "Gd",
-                        "Fa"
+                        "Ex",
+                        "Gd"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1107,13 +1107,13 @@
                 },
                 "stats": {
                     "domain": [
-                        "Min2",
+                        "Maj1",
                         "Min1",
                         "Maj2",
-                        "Mod",
-                        "Maj1",
+                        "Sev",
                         "Typ",
-                        "Sev"
+                        "Mod",
+                        "Min2"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1148,11 +1148,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Gd",
                         "Po",
-                        "Fa",
                         "TA",
-                        "Gd"
+                        "Fa",
+                        "Ex"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1169,12 +1169,12 @@
                 },
                 "stats": {
                     "domain": [
-                        "BuiltIn",
-                        "Detchd",
                         "2Types",
-                        "Attchd",
+                        "CarPort",
                         "Basment",
-                        "CarPort"
+                        "Attchd",
+                        "BuiltIn",
+                        "Detchd"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1210,8 +1210,8 @@
                 "stats": {
                     "domain": [
                         "Unf",
-                        "Fin",
-                        "RFn"
+                        "RFn",
+                        "Fin"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1264,11 +1264,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Gd",
                         "Po",
-                        "Fa",
                         "TA",
-                        "Gd"
+                        "Fa",
+                        "Ex"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1285,11 +1285,11 @@
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
+                        "Gd",
                         "Po",
-                        "Fa",
                         "TA",
-                        "Gd"
+                        "Fa",
+                        "Ex"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1433,9 +1433,9 @@
                 },
                 "stats": {
                     "domain": [
+                        "Fa",
                         "Ex",
-                        "Gd",
-                        "Fa"
+                        "Gd"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1452,10 +1452,10 @@
                 },
                 "stats": {
                     "domain": [
+                        "GdPrv",
                         "MnPrv",
                         "MnWw",
-                        "GdWo",
-                        "GdPrv"
+                        "GdWo"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1472,9 +1472,9 @@
                 },
                 "stats": {
                     "domain": [
-                        "Shed",
                         "Gar2",
-                        "Othr"
+                        "Othr",
+                        "Shed"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1545,15 +1545,15 @@
                 },
                 "stats": {
                     "domain": [
+                        "Con",
+                        "ConLw",
                         "New",
                         "ConLD",
-                        "WD",
                         "COD",
-                        "ConLI",
-                        "Con",
+                        "Oth",
                         "CWD",
-                        "ConLw",
-                        "Oth"
+                        "WD",
+                        "ConLI"
                     ],
                     "domain_counts": null,
                     "pinv": null
@@ -1570,12 +1570,12 @@
                 },
                 "stats": {
                     "domain": [
-                        "Alloca",
-                        "Family",
-                        "Normal",
                         "Abnorml",
+                        "Alloca",
+                        "Partial",
                         "AdjLand",
-                        "Partial"
+                        "Family",
+                        "Normal"
                     ],
                     "domain_counts": null,
                     "pinv": null
