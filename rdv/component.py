@@ -222,9 +222,7 @@ class CategoricComponent(Component):
             
     def check(self, data, return_features=True):
         feature = self.extractor.extract_feature(data)
-        print(f"Checking component {self.name}: {feature}")
-
-        
+       
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
         if err_tag:  # If feature invalid, return only error tag
