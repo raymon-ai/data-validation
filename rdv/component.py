@@ -135,29 +135,40 @@ class NumericComponent(Component):
                 f"stats for a NumericComponant should be of type NumericStats, not {type(value)}")
 
     def check(self, data, return_features=True):
-        feature = self.extractor.extract_feature(data)
-        # Make a tag from the feature
-        feat_tag = self.feature2tag(feature)
+        feature = self.extractor.extract_feature(data)        
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
+        if err_tag:  # If feature invalid, return only error tag
+            return [err_tag]
+         # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
         # make deviation tag
         dev_tag = self.feature2dev(feature)
         if return_features:
-            tags = [feat_tag, dev_tag, err_tag]
+            tags = [feat_tag, dev_tag]
         else:
-            tags = [dev_tag, err_tag]
+            tags = [dev_tag]
         # Filter Nones
         tags = [tag for tag in tags if tag is not None]
         return tags
     
     
     def feature2dev(self, feature):
-        zscore = (feature - self.stats.mean) / self.stats.std
-        dev_tag = Tag(name=f"{self.name}-dev", value=zscore, type=IND)
-        return dev_tag
+        if self.stats.std != 0:
+            zscore = (feature - self.stats.mean) / self.stats.std 
+            return Tag(name=f"{self.name}-dev", value=zscore, type=IND)
+        elif feature == self.stats.mean:
+            zscore = 0
+            return Tag(name=f"{self.name}-dev", value=zscore, type=IND)
+        else:
+            return Tag(name=f"{self.name}-dev", value=float("nan"), type=ERR)
+
     
     def feature2tag(self, feature):
-        return Tag(name=self.name, value=float(feature), type=IND)
+        if not np.isnan(feature):
+            return Tag(name=self.name, value=float(feature), type=IND)
+        else:
+            return None
         
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"
@@ -211,16 +222,21 @@ class CategoricComponent(Component):
             
     def check(self, data, return_features=True):
         feature = self.extractor.extract_feature(data)
-        # Make a tag from the feature
-        feat_tag = self.feature2tag(feature)
+        print(f"Checking component {self.name}: {feature}")
+
+        
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
+        if err_tag:  # If feature invalid, return only error tag
+            return [err_tag]
+        # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
         # make deviation tag
         dev_tag = self.feature2dev(feature)
         if return_features:
-            tags = [feat_tag, dev_tag, err_tag]
+            tags = [feat_tag, dev_tag]
         else:
-            tags = [dev_tag, err_tag]
+            tags = [dev_tag]
         # Filter Nones
         tags = [tag for tag in tags if tag is not None]
         return tags
@@ -230,17 +246,14 @@ class CategoricComponent(Component):
             p = self.stats.domain_counts[feature]
             dev_tag = Tag(name=f"{self.name}-dev", value=p, type=IND)
             return dev_tag
-
         else:
             return None
 
     def feature2tag(self, feature):
         return Tag(name=self.name, value=feature, type=SEG)
     
-
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"
-
         if feature is None:
             return Tag(name=tagname, value='Value None', type=ERR)
         elif pd.isnull(feature):
