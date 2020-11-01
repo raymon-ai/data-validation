@@ -5,13 +5,15 @@ from rdv.globals import FeatureExtractor
 
 
 class AvgIntensity(FeatureExtractor):
-    
+
     _config_attrs = []
     _compile_attrs = []
     _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
-    def __init__(self, ):
+    def __init__(
+        self,
+    ):
         pass
 
     def to_jcr(self):

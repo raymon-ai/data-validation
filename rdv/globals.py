@@ -4,19 +4,20 @@ from abc import ABC, abstractmethod
 class ClassNotFoundError(Exception):
     pass
 
+
 class NotSupportedException(Exception):
     pass
+
 
 class SchemaCompilationException(Exception):
     pass
 
 
-
 class DataException(Exception):
     pass
 
-class Serializable(ABC):
 
+class Serializable(ABC):
     def class2str(self, obj=None):
         if obj is None:
             return None
@@ -85,13 +86,15 @@ class CCAble(ABC):
         if not has_attrs:
             return False
         # Dependencies need to be configured and compiled
-        return self.check_deps(func='is_configured')
+        return self.check_deps(func="is_configured")
 
     def is_compiled(self):
         has_attrs = self.check_has_attrs(self._compile_attrs + self._ccable_deps)
         if not has_attrs:
             return False
-        return self.check_deps(func='is_configured') and self.check_deps(func='is_compiled')
+        return self.check_deps(func="is_configured") and self.check_deps(
+            func="is_compiled"
+        )
 
     def __eq__(self, other):
         for attr in self._attrs:
@@ -109,9 +112,8 @@ class CCAble(ABC):
 
 
 class FeatureExtractor(Serializable, CCAble, ABC):
-    
-    
-    #TODO: Make all subclasses implement a from_jcr classmethod instead of Class().load_jcr()?
+
+    # TODO: Make all subclasses implement a from_jcr classmethod instead of Class().load_jcr()?
     @abstractmethod
     def extract_feature(self, data):
         """Extracts a feature from the data.
@@ -123,10 +125,8 @@ class FeatureExtractor(Serializable, CCAble, ABC):
 
 
 class NoneExtractor(FeatureExtractor):
-
     def to_jcr(self):
-        data = {
-        }
+        data = {}
         return data
 
     def load_jcr(self, jcr):

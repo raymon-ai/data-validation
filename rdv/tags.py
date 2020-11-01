@@ -3,9 +3,9 @@ from enum import Enum
 from rdv.globals import Serializable
 
 
-SEG = 'seg'
-IND = 'ind'
-ERR = 'err'
+SEG = "seg"
+IND = "ind"
+ERR = "err"
 
 
 class Tag(Serializable):
@@ -16,9 +16,9 @@ class Tag(Serializable):
 
     def to_jcr(self):
         jcr = {
-            'type': self.type,
-            'name': self.name,
-            'value': self.value,
+            "type": self.type,
+            "name": self.name,
+            "value": self.value,
         }
         return jcr
 

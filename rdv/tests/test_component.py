@@ -1,7 +1,7 @@
 #%%
 import pytest
 
-import pandas as pd 
+import pandas as pd
 import numpy as np
 
 import rdv
@@ -10,12 +10,15 @@ from rdv.component import CategoricComponent, NumericComponent
 from rdv.schema import Schema
 from rdv.globals import SchemaCompilationException, DataException
 from rdv.stats import NumericStats, CategoricStats
+
 #%%
 def test_constuct_components():
-    cols = {'num1': list(range(10)),
-            'cat1': ['a']*5 + ['b']*5,
-            'cat2': ['c'] * 5 + ['d'] * 5, 
-            'num2': list(range(0, 20, 2))}
+    cols = {
+        "num1": list(range(10)),
+        "cat1": ["a"] * 5 + ["b"] * 5,
+        "cat2": ["c"] * 5 + ["d"] * 5,
+        "num2": list(range(0, 20, 2)),
+    }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
     assert len(components) == 4
@@ -26,24 +29,27 @@ def test_constuct_components():
 
 
 def test_compile_unconfigured_numeric():
-    cols = {'num1': list(range(10)),
-            'cat1': ['a'] * 5 + ['b'] * 5,
-            'cat2': ['c'] * 5 + ['d'] * 5,
-            'num2': list(range(0, 20, 2))}
+    cols = {
+        "num1": list(range(10)),
+        "cat1": ["a"] * 5 + ["b"] * 5,
+        "cat2": ["c"] * 5 + ["d"] * 5,
+        "num2": list(range(0, 20, 2)),
+    }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
     schema = Schema(components=components)
-    try:     
+    try:
         schema.compile(data=df)
     except SchemaCompilationException:
         pass
     else:
         pytest.fail("Compilation of unconfigured schema should fail")
-   
+
 
 def test_configure():
-    cols = {'num1': list(range(10)),
-            'cat1': ['a'] * 5 + ['b'] * 5,
+    cols = {
+        "num1": list(range(10)),
+        "cat1": ["a"] * 5 + ["b"] * 5,
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
@@ -56,18 +62,19 @@ def test_configure():
     assert components[0].stats.mean is None
     assert components[0].is_configured()
     assert not components[0].is_compiled()
-    
+
     assert isinstance(components[1].stats, CategoricStats)
-    assert sorted(components[1].stats.domain) == sorted(['a', 'b'])
+    assert sorted(components[1].stats.domain) == sorted(["a", "b"])
     assert components[1].stats.pinv is None
     assert components[1].is_configured()
     assert not components[1].is_compiled()
 
 
 def test_conmpile():
-    cols = {'num1': list(range(10)),
-            'cat1': ['a'] * 5 + ['b'] * 5,
-            }
+    cols = {
+        "num1": list(range(10)),
+        "cat1": ["a"] * 5 + ["b"] * 5,
+    }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
     schema = Schema(components=components)
@@ -82,16 +89,17 @@ def test_conmpile():
     assert components[0].is_compiled()
 
     assert isinstance(components[1].stats, CategoricStats)
-    assert sorted(components[1].stats.domain) == sorted(['a', 'b'])
+    assert sorted(components[1].stats.domain) == sorted(["a", "b"])
     assert components[1].stats.pinv == 0
     assert components[1].is_configured()
     assert components[1].is_compiled()
 
 
 def test_all_nan():
-    cols = {'num1': [np.nan] * 10,
-            'cat1': [np.nan] * 10,
-            }
+    cols = {
+        "num1": [np.nan] * 10,
+        "cat1": [np.nan] * 10,
+    }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
     schema = Schema(components=components)
@@ -101,6 +109,6 @@ def test_all_nan():
         pass
     else:
         pytest.fail("Component with all nans should throw a DataException")
-    
+
 
 # %%

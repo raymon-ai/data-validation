@@ -9,3 +9,4 @@ plotly
 twine
 coverage
 coverage-badge
+pylint

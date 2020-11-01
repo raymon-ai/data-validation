@@ -11,12 +11,12 @@ from rdv.globals import FeatureExtractor
 
 class FixedSubpatchSimilarity(FeatureExtractor):
 
-    _config_attrs = ['patch']
-    _compile_attrs = ['refs']
+    _config_attrs = ["patch"]
+    _compile_attrs = ["refs"]
     _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
-    patch_keys = ['x0', 'y0', 'x1', 'y1']
+    patch_keys = ["x0", "y0", "x1", "y1"]
 
     def __init__(self, patch=None, refs=None, nrefs=10):
         """[summary]
@@ -32,9 +32,11 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         self.patch = patch
         self.nrefs = nrefs
         self.refs = refs
+
     """
     PROPERTIES
     """
+
     @property
     def patch(self):
         return self._patch
@@ -70,7 +72,9 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             elif isinstance(ref, str):
                 parsed_refs.append(imagehash.hex_to_hash(ref))
             else:
-                raise ValueError(f"refs should either be str or ImageHash, not {type(ref)}")
+                raise ValueError(
+                    f"refs should either be str or ImageHash, not {type(ref)}"
+                )
 
         self._refs = parsed_refs
 
@@ -92,25 +96,25 @@ class FixedSubpatchSimilarity(FeatureExtractor):
 
     def to_jcr(self):
         data = {
-            'patch': self.patch,
-            'refs': [str(ref) for ref in self.refs] if self.refs is not None else None,
-            'nrefs': self.nrefs
+            "patch": self.patch,
+            "refs": [str(ref) for ref in self.refs] if self.refs is not None else None,
+            "nrefs": self.nrefs,
         }
         return data
 
     def load_jcr(self, jcr):
-        if 'patch' in jcr:
-            self.patch = jcr['patch']
-        if 'nrefs' in jcr:
-            self.nrefs = jcr['nrefs']
-        if 'refs' in jcr:
-            self.refs = jcr['refs']
+        if "patch" in jcr:
+            self.patch = jcr["patch"]
+        if "nrefs" in jcr:
+            self.nrefs = jcr["nrefs"]
+        if "refs" in jcr:
+            self.refs = jcr["refs"]
 
         return self
 
     def configure(self, data):
         jcr = {
-            'patch': data,
+            "patch": data,
         }
         self.load_jcr(jcr)
 
@@ -128,7 +132,7 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         return dist
 
     def _extract(self, data):
-        patch = [self.patch['x0'], self.patch['y0'], self.patch['x1'], self.patch['y1']]
+        patch = [self.patch["x0"], self.patch["y0"], self.patch["x1"], self.patch["y1"]]
         crop = data.crop(box=patch)
         phash = imagehash.phash(crop)
         return phash
@@ -136,8 +140,10 @@ class FixedSubpatchSimilarity(FeatureExtractor):
     def configure_interactive(self, loaded_data, raymon_output, null_stderr=True):
         print(f"null_strerr: {null_stderr}")
         if null_stderr:
-            f = open(os.devnull, 'w')
+            f = open(os.devnull, "w")
             sys.stderr = f
-        app = dash.Dash("Data Schema Config",
-                        external_stylesheets=['https://codepen.io/chriddyp/pen/bWLwgP.css'])
+        app = dash.Dash(
+            "Data Schema Config",
+            external_stylesheets=["https://codepen.io/chriddyp/pen/bWLwgP.css"],
+        )
         dash_fsps(app, loaded_images=loaded_data, output_path=raymon_output)

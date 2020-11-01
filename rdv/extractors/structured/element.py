@@ -8,6 +8,7 @@ class ElementExtractor(FeatureExtractor):
     """
     Extract one element from a vector
     """
+
     # Configure attributes that are required for configuratio and compilation
     _config_attrs = []
     _compile_attrs = []
@@ -19,14 +20,14 @@ class ElementExtractor(FeatureExtractor):
 
     def to_jcr(self):
         data = {
-            'element': self.element,
+            "element": self.element,
         }
         return data
 
     def load_jcr(self, jcr):
-        if 'element' in jcr:
-            self.element = jcr['element']
-        
+        if "element" in jcr:
+            self.element = jcr["element"]
+
         return self
 
     def configure(self, data):

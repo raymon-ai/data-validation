@@ -2,20 +2,25 @@ import numpy as np
 import pandas as pd
 from scipy.stats import wasserstein_distance
 
-from rdv.globals import (CCAble, NoneExtractor,
-                         NotSupportedException, Serializable, DataException)
-
-
+from rdv.globals import (
+    CCAble,
+    NoneExtractor,
+    NotSupportedException,
+    Serializable,
+    DataException,
+)
 
 
 class NumericStats(Serializable, CCAble):
-    _config_attrs = ['min', 'max']
-    _compile_attrs = ['mean', 'std', 'pinv', 'hist']
+    _config_attrs = ["min", "max"]
+    _compile_attrs = ["mean", "std", "pinv", "hist"]
     _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
-    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, nbins=10, hist=None):
-       
+    def __init__(
+        self, min=None, max=None, mean=None, std=None, pinv=None, nbins=10, hist=None
+    ):
+
         self.min = min
         self.max = max
         self.mean = mean
@@ -24,7 +29,8 @@ class NumericStats(Serializable, CCAble):
         self.nbins = nbins
         self.hist = hist
 
-    """MIN"""  
+    """MIN"""
+
     @property
     def min(self):
         return self._min
@@ -34,7 +40,9 @@ class NumericStats(Serializable, CCAble):
         if value is np.nan:
             raise DataException("stats.min cannot be NaN")
         self._min = value
-    """MAX"""  
+
+    """MAX"""
+
     @property
     def max(self):
         return self._max
@@ -44,8 +52,9 @@ class NumericStats(Serializable, CCAble):
         if value is np.nan:
             raise DataException("stats.max cannot be NaN")
         self._max = value
-    
+
     """MEAN"""
+
     @property
     def mean(self):
         return self._mean
@@ -55,8 +64,9 @@ class NumericStats(Serializable, CCAble):
         if value is np.nan:
             raise DataException("stats.mean cannot be NaN")
         self._mean = value
-        
+
     """STD"""
+
     @property
     def std(self):
         return self._std
@@ -66,8 +76,9 @@ class NumericStats(Serializable, CCAble):
         if value is np.nan:
             raise DataException("stats.std cannot be NaN")
         self._std = value
-    
+
     """PINV"""
+
     @property
     def pinv(self):
         return self._pinv
@@ -77,7 +88,6 @@ class NumericStats(Serializable, CCAble):
         if value is np.nan:
             raise DataException("stats.pinv cannot be NaN")
         self._pinv = value
-        
 
     def to_jcr(self):
         data = {}
@@ -101,9 +111,9 @@ class NumericStats(Serializable, CCAble):
         hist, edges = np.histogram(data, bins=self.nbins, range=(self.min, self.max))
         hist = hist / np.sum(hist)
         self.hist = hist.tolist()
-        invalids = np.logical_or(data > self.max,
-                                 data < self.min,
-                                 np.isnan(data.values))
+        invalids = np.logical_or(
+            data > self.max, data < self.min, np.isnan(data.values)
+        )
         self.pinv = int(np.sum(invalids)) / len(data)
 
     def distance(self, other):
@@ -113,8 +123,8 @@ class NumericStats(Serializable, CCAble):
 
 
 class CategoricStats(Serializable, CCAble):
-    _config_attrs = ['domain']
-    _compile_attrs = ['domain_counts', 'pinv']
+    _config_attrs = ["domain"]
+    _compile_attrs = ["domain_counts", "pinv"]
     _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
@@ -122,8 +132,9 @@ class CategoricStats(Serializable, CCAble):
         self.domain = domain
         self.domain_counts = domain_counts  # TODO move to property, check whether does not include keys not in domain
         self.pinv = pinv
-        
+
     """domain"""
+
     @property
     def domain(self):
         return self._domain
@@ -135,10 +146,12 @@ class CategoricStats(Serializable, CCAble):
         elif isinstance(value, list) or isinstance(value, set):
             self._domain = list(set(value))
         else:
-            raise DataException(f"stats.domain should be a list or set, not {type(value)}")
-        
-        
+            raise DataException(
+                f"stats.domain should be a list or set, not {type(value)}"
+            )
+
     """domain_counts"""
+
     @property
     def domain_counts(self):
         return self._domain_counts
@@ -150,15 +163,19 @@ class CategoricStats(Serializable, CCAble):
         elif isinstance(value, dict):
             for key, keyvalue in value.items():
                 if key not in self.domain:
-                    raise DataException(f"{key} is not in domain but is in domain_counts")
+                    raise DataException(
+                        f"{key} is not in domain but is in domain_counts"
+                    )
                 if keyvalue < 0:
                     raise DataException(f"Domain count for {key} is  < 0")
             self._domain_counts = value
         else:
-            raise DataException(f"stats.domain_counts should be a dict, not {type(value)}")
-        
+            raise DataException(
+                f"stats.domain_counts should be a dict, not {type(value)}"
+            )
 
     """PINV"""
+
     @property
     def pinv(self):
         return self._pinv
@@ -168,12 +185,12 @@ class CategoricStats(Serializable, CCAble):
         if value is np.nan:
             raise DataException("stats.pinv cannot be NaN")
         self._pinv = value
-        
+
     def to_jcr(self):
         data = {}
         for attr in self._config_attrs + self._compile_attrs:
             value = getattr(self, attr)
-            if attr == 'domain' and value is not None:
+            if attr == "domain" and value is not None:
                 data[attr] = list(value)
             else:
                 data[attr] = value
@@ -182,7 +199,7 @@ class CategoricStats(Serializable, CCAble):
     def load_jcr(self, jcr):
         for attr in self._config_attrs + self._compile_attrs:
             value = jcr[attr]
-            if attr == 'domain' and value is not None:
+            if attr == "domain" and value is not None:
                 setattr(self, attr, list(set(value)))
             else:
                 setattr(self, attr, value)
