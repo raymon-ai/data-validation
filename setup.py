@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="rdv", 
-    version="0.0.2-dev4",
+    version="0.0.2-dev5",
     author="Raymon.ai",
     author_email="dev@raymon.ai",
     description="Raymon Data Validation Package.",
