@@ -1,6 +1,6 @@
 
 # Raymon Data Validation Library
-![coverage-report](https://byob.yarr.is/raymon-ai/data-validation/covbadge)
+![Build](https://github.com/raymon-ai/data-validation/workflows/build/badge.svg)
 
 
 ## What?
