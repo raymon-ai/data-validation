@@ -1,11 +1,11 @@
 import setuptools
-
+import rdv
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
     name="rdv", 
-    version="0.0.2-dev5",
+    version=rdv.__version__,
     author="Raymon.ai",
     author_email="dev@raymon.ai",
     description="Raymon Data Validation Package.",
