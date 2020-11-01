@@ -6,8 +6,10 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8]
-
+        python-version: [3.7]
+    env:
+      TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+      TWINE_REPOSITORY_URL: ${{ secrets.TWINE_REPOSITORY_URL }}
     steps:
     - uses: actions/checkout@v2
     - name: Set up Python ${{ matrix.python-version }}
@@ -31,8 +33,6 @@ jobs:
         STATUS: ${{ steps.coverage-badge-generation.outputs.coverage }}
         COLOR: 00EEFF
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Install wheel
-      run: pip install wheel
     - name: build package
       run: |
         python setup.py bdist bdist_wheel
