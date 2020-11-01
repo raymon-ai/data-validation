@@ -1,6 +1,6 @@
 name: build
 on:
-  pull-request:
+  pull_request:
   push:
     tags:
     - 'v*'
