@@ -29,7 +29,7 @@ jobs:
     - name: coverage-badge-generation
       uses: RubbaBoy/BYOB@v1.1.0
       with:
-        NAME: cov-badge
+        NAME: covbadge
         LABEL: coverage
         STATUS: ${{ steps.coverage-badge-generation.outputs.coverage }}
         COLOR: 00EEFF
@@ -38,4 +38,4 @@ jobs:
       run: |
         python setup.py bdist bdist_wheel
     - name: Push to fury 
-      run: twine upload dist/*  # --skip-existing
+      run: twine upload dist/* --skip-existing

@@ -1,6 +1,6 @@
 
 # Raymon Data Validation Library
-![coverage-report](https://byob.yarr.is/raymon-ai/data-validation/cov-badge/master)
+![coverage-report](https://byob.yarr.is/raymon-ai/data-validation/covbadge)
 
 
 ## What?
