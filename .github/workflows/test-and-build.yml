@@ -25,7 +25,7 @@ jobs:
     - name: Test with pytest
       run: |
         coverage run -m pytest
-        COVERAGE_RESULT=coverage report | grep TOTAL | awk '{print $NF}' | sed 's/%//g'
+        COVERAGE_RESULT=`coverage report | grep TOTAL | awk '{print $NF}' | sed 's/%//g'`
         echo "Coverage: ${COVERAGE_RESULT}"
         if [[ $COVERAGE_RESULT -gt $MIN_COVERAGE ]]; then
             echo ::set-output name=coverage_result::$COVERAGE_RESULT
