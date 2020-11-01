@@ -1,2 +1,5 @@
 [run]
-omit = *test*
+omit = 
+    *test*
+    *dash*
+relative_files = True

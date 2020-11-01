@@ -1,5 +1,6 @@
+
 # Raymon Data Validation Library
-Raymon Data Validation Library
+[![GitHub Super-Linter](https://github.com/raymon-ai/data-validation/workflows/Linting/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 ## What?
 
