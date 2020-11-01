@@ -9,6 +9,7 @@ jobs:
         python-version: [3.7]
     env:
       TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+      TWINE_PASSWORD: ""
       TWINE_REPOSITORY_URL: ${{ secrets.TWINE_REPOSITORY_URL }}
     steps:
     - uses: actions/checkout@v2
