@@ -34,7 +34,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "MSZoning_check",
+                "name": "MSZoning",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "MSZoning"
@@ -42,10 +42,10 @@
                 "stats": {
                     "domain": [
                         "RL",
-                        "FV",
-                        "RH",
                         "C (all)",
-                        "RM"
+                        "FV",
+                        "RM",
+                        "RH"
                     ],
                     "domain_counts": {
                         "RL": 0.7389112903225806,
@@ -119,7 +119,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Street_check",
+                "name": "Street",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Street"
@@ -140,15 +140,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Alley_check",
+                "name": "Alley",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Alley"
                 },
                 "stats": {
                     "domain": [
-                        "Pave",
-                        "Grvl"
+                        "Grvl",
+                        "Pave"
                     ],
                     "domain_counts": {
                         "Grvl": 0.6052631578947368,
@@ -161,7 +161,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LotShape_check",
+                "name": "LotShape",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LotShape"
@@ -169,9 +169,9 @@
                 "stats": {
                     "domain": [
                         "IR3",
+                        "IR1",
                         "Reg",
-                        "IR2",
-                        "IR1"
+                        "IR2"
                     ],
                     "domain_counts": {
                         "Reg": 0.7046370967741935,
@@ -186,17 +186,17 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LandContour_check",
+                "name": "LandContour",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LandContour"
                 },
                 "stats": {
                     "domain": [
-                        "Low",
+                        "HLS",
                         "Bnk",
                         "Lvl",
-                        "HLS"
+                        "Low"
                     ],
                     "domain_counts": {
                         "Lvl": 0.9012096774193549,
@@ -211,15 +211,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Utilities_check",
+                "name": "Utilities",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Utilities"
                 },
                 "stats": {
                     "domain": [
-                        "NoSeWa",
-                        "AllPub"
+                        "AllPub",
+                        "NoSeWa"
                     ],
                     "domain_counts": {
                         "AllPub": 0.998991935483871,
@@ -232,18 +232,18 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LotConfig_check",
+                "name": "LotConfig",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LotConfig"
                 },
                 "stats": {
                     "domain": [
-                        "FR2",
-                        "FR3",
-                        "CulDSac",
                         "Inside",
-                        "Corner"
+                        "Corner",
+                        "FR3",
+                        "FR2",
+                        "CulDSac"
                     ],
                     "domain_counts": {
                         "Inside": 0.7237903225806451,
@@ -259,7 +259,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LandSlope_check",
+                "name": "LandSlope",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LandSlope"
@@ -282,38 +282,38 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Neighborhood_check",
+                "name": "Neighborhood",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Neighborhood"
                 },
                 "stats": {
                     "domain": [
-                        "NoRidge",
-                        "Mitchel",
-                        "Sawyer",
-                        "Timber",
-                        "SWISU",
-                        "NPkVill",
-                        "Crawfor",
-                        "MeadowV",
+                        "OldTown",
+                        "CollgCr",
                         "Blueste",
                         "Edwards",
-                        "NWAmes",
-                        "CollgCr",
-                        "SawyerW",
-                        "Gilbert",
+                        "IDOTRR",
+                        "ClearCr",
                         "Veenker",
+                        "Sawyer",
+                        "Blmngtn",
+                        "Somerst",
+                        "NAmes",
+                        "Crawfor",
+                        "MeadowV",
+                        "Gilbert",
+                        "Timber",
+                        "NPkVill",
+                        "BrkSide",
+                        "NWAmes",
+                        "SawyerW",
+                        "SWISU",
                         "BrDale",
                         "NridgHt",
-                        "ClearCr",
-                        "IDOTRR",
-                        "Somerst",
-                        "BrkSide",
-                        "Blmngtn",
-                        "OldTown",
+                        "Mitchel",
                         "StoneBr",
-                        "NAmes"
+                        "NoRidge"
                     ],
                     "domain_counts": {
                         "NAmes": 0.19959677419354838,
@@ -331,15 +331,15 @@
                         "Crawfor": 0.02721774193548387,
                         "SWISU": 0.02217741935483871,
                         "MeadowV": 0.017137096774193547,
-                        "BrDale": 0.016129032258064516,
                         "Timber": 0.016129032258064516,
+                        "BrDale": 0.016129032258064516,
                         "ClearCr": 0.014112903225806451,
                         "NridgHt": 0.012096774193548387,
                         "NPkVill": 0.009072580645161291,
                         "Blmngtn": 0.007056451612903226,
                         "Veenker": 0.005040322580645161,
-                        "Blueste": 0.0020161290322580645,
                         "StoneBr": 0.0020161290322580645,
+                        "Blueste": 0.0020161290322580645,
                         "NoRidge": 0.0020161290322580645
                     },
                     "pinv": 0.0
@@ -349,22 +349,22 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Condition1_check",
+                "name": "Condition1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Condition1"
                 },
                 "stats": {
                     "domain": [
-                        "Artery",
-                        "Norm",
-                        "PosN",
-                        "PosA",
-                        "RRAe",
-                        "Feedr",
                         "RRNe",
                         "RRAn",
-                        "RRNn"
+                        "RRAe",
+                        "PosN",
+                        "Feedr",
+                        "PosA",
+                        "RRNn",
+                        "Artery",
+                        "Norm"
                     ],
                     "domain_counts": {
                         "Norm": 0.8417338709677419,
@@ -384,18 +384,18 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Condition2_check",
+                "name": "Condition2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Condition2"
                 },
                 "stats": {
                     "domain": [
-                        "Artery",
-                        "Norm",
-                        "Feedr",
                         "RRAn",
-                        "RRNn"
+                        "Feedr",
+                        "RRNn",
+                        "Artery",
+                        "Norm"
                     ],
                     "domain_counts": {
                         "Norm": 0.9899193548387096,
@@ -411,18 +411,18 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BldgType_check",
+                "name": "BldgType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BldgType"
                 },
                 "stats": {
                     "domain": [
-                        "TwnhsE",
-                        "2fmCon",
-                        "Twnhs",
                         "1Fam",
-                        "Duplex"
+                        "2fmCon",
+                        "TwnhsE",
+                        "Duplex",
+                        "Twnhs"
                     ],
                     "domain_counts": {
                         "1Fam": 0.8104838709677419,
@@ -438,21 +438,21 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "HouseStyle_check",
+                "name": "HouseStyle",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "HouseStyle"
                 },
                 "stats": {
                     "domain": [
-                        "SFoyer",
-                        "1.5Unf",
-                        "1.5Fin",
-                        "2Story",
                         "SLvl",
-                        "2.5Unf",
                         "1Story",
-                        "2.5Fin"
+                        "2.5Unf",
+                        "2.5Fin",
+                        "1.5Unf",
+                        "SFoyer",
+                        "2Story",
+                        "1.5Fin"
                     ],
                     "domain_counts": {
                         "1Story": 0.5131048387096774,
@@ -587,18 +587,18 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "RoofStyle_check",
+                "name": "RoofStyle",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "RoofStyle"
                 },
                 "stats": {
                     "domain": [
+                        "Flat",
                         "Mansard",
-                        "Hip",
-                        "Gambrel",
                         "Gable",
-                        "Flat"
+                        "Hip",
+                        "Gambrel"
                     ],
                     "domain_counts": {
                         "Gable": 0.811491935483871,
@@ -614,31 +614,31 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "RoofMatl_check",
+                "name": "RoofMatl",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "RoofMatl"
                 },
                 "stats": {
                     "domain": [
+                        "WdShngl",
+                        "Membran",
                         "WdShake",
                         "Tar&Grv",
                         "CompShg",
-                        "Metal",
-                        "Roll",
                         "ClyTile",
-                        "Membran",
-                        "WdShngl"
+                        "Metal",
+                        "Roll"
                     ],
                     "domain_counts": {
                         "CompShg": 0.9868951612903226,
                         "Tar&Grv": 0.006048387096774193,
                         "WdShake": 0.0020161290322580645,
-                        "WdShngl": 0.0010080645161290322,
+                        "ClyTile": 0.0010080645161290322,
                         "Membran": 0.0010080645161290322,
                         "Roll": 0.0010080645161290322,
-                        "ClyTile": 0.0010080645161290322,
-                        "Metal": 0.0010080645161290322
+                        "Metal": 0.0010080645161290322,
+                        "WdShngl": 0.0010080645161290322
                     },
                     "pinv": 0.0
                 }
@@ -647,26 +647,26 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Exterior1st_check",
+                "name": "Exterior1st",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Exterior1st"
                 },
                 "stats": {
                     "domain": [
-                        "CBlock",
-                        "CemntBd",
-                        "Stucco",
-                        "AsbShng",
-                        "Plywood",
-                        "HdBoard",
-                        "AsphShn",
-                        "Wd Sdng",
-                        "BrkComm",
                         "BrkFace",
                         "VinylSd",
+                        "BrkComm",
+                        "HdBoard",
+                        "AsphShn",
+                        "Stucco",
+                        "WdShing",
+                        "CemntBd",
+                        "Plywood",
+                        "Wd Sdng",
+                        "CBlock",
                         "MetalSd",
-                        "WdShing"
+                        "AsbShng"
                     ],
                     "domain_counts": {
                         "VinylSd": 0.2661290322580645,
@@ -680,8 +680,8 @@
                         "Stucco": 0.021169354838709676,
                         "AsbShng": 0.020161290322580645,
                         "BrkComm": 0.0020161290322580645,
-                        "CBlock": 0.0010080645161290322,
-                        "AsphShn": 0.0010080645161290322
+                        "AsphShn": 0.0010080645161290322,
+                        "CBlock": 0.0010080645161290322
                     },
                     "pinv": 0.0
                 }
@@ -690,28 +690,28 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Exterior2nd_check",
+                "name": "Exterior2nd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Exterior2nd"
                 },
                 "stats": {
                     "domain": [
-                        "CBlock",
-                        "Stucco",
-                        "ImStucc",
-                        "CmentBd",
-                        "AsbShng",
-                        "Plywood",
-                        "Brk Cmn",
-                        "Stone",
                         "HdBoard",
+                        "VinylSd",
                         "AsphShn",
-                        "Wd Sdng",
                         "BrkFace",
                         "Wd Shng",
-                        "VinylSd",
-                        "MetalSd"
+                        "Stucco",
+                        "CmentBd",
+                        "Stone",
+                        "Brk Cmn",
+                        "Plywood",
+                        "Wd Sdng",
+                        "ImStucc",
+                        "CBlock",
+                        "MetalSd",
+                        "AsbShng"
                     ],
                     "domain_counts": {
                         "VinylSd": 0.25806451612903225,
@@ -726,8 +726,8 @@
                         "BrkFace": 0.015120967741935484,
                         "Brk Cmn": 0.007056451612903226,
                         "ImStucc": 0.005040322580645161,
-                        "Stone": 0.0030241935483870967,
                         "AsphShn": 0.0030241935483870967,
+                        "Stone": 0.0030241935483870967,
                         "CBlock": 0.0010080645161290322
                     },
                     "pinv": 0.0
@@ -737,7 +737,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "MasVnrType_check",
+                "name": "MasVnrType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "MasVnrType"
@@ -745,9 +745,9 @@
                 "stats": {
                     "domain": [
                         "BrkFace",
-                        "Stone",
+                        "None",
                         "BrkCmn",
-                        "None"
+                        "Stone"
                     ],
                     "domain_counts": {
                         "None": 0.6841574167507568,
@@ -791,15 +791,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "ExterQual_check",
+                "name": "ExterQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "ExterQual"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "TA",
                         "Fa"
                     ],
@@ -816,15 +816,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "ExterCond_check",
+                "name": "ExterCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "ExterCond"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "Po",
                         "TA",
                         "Fa"
@@ -843,19 +843,19 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Foundation_check",
+                "name": "Foundation",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Foundation"
                 },
                 "stats": {
                     "domain": [
-                        "CBlock",
-                        "Slab",
-                        "Wood",
+                        "Stone",
                         "BrkTil",
+                        "Slab",
                         "PConc",
-                        "Stone"
+                        "CBlock",
+                        "Wood"
                     ],
                     "domain_counts": {
                         "CBlock": 0.5413306451612904,
@@ -872,15 +872,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtQual_check",
+                "name": "BsmtQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtQual"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "TA",
                         "Fa"
                     ],
@@ -897,7 +897,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtCond_check",
+                "name": "BsmtCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtCond"
@@ -922,16 +922,16 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtExposure_check",
+                "name": "BsmtExposure",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtExposure"
                 },
                 "stats": {
                     "domain": [
-                        "Av",
                         "No",
                         "Mn",
+                        "Av",
                         "Gd"
                     ],
                     "domain_counts": {
@@ -947,7 +947,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtFinType1_check",
+                "name": "BsmtFinType1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtFinType1"
@@ -955,11 +955,11 @@
                 "stats": {
                     "domain": [
                         "BLQ",
+                        "ALQ",
                         "GLQ",
                         "LwQ",
-                        "Rec",
                         "Unf",
-                        "ALQ"
+                        "Rec"
                     ],
                     "domain_counts": {
                         "Unf": 0.3148535564853556,
@@ -1005,7 +1005,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtFinType2_check",
+                "name": "BsmtFinType2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtFinType2"
@@ -1013,11 +1013,11 @@
                 "stats": {
                     "domain": [
                         "BLQ",
-                        "LwQ",
                         "GLQ",
-                        "Rec",
+                        "ALQ",
+                        "LwQ",
                         "Unf",
-                        "ALQ"
+                        "Rec"
                     ],
                     "domain_counts": {
                         "Unf": 0.8692468619246861,
@@ -1121,18 +1121,18 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Heating_check",
+                "name": "Heating",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Heating"
                 },
                 "stats": {
                     "domain": [
-                        "Floor",
-                        "GasA",
-                        "Wall",
-                        "GasW",
                         "Grav",
+                        "GasA",
+                        "GasW",
+                        "Wall",
+                        "Floor",
                         "OthW"
                     ],
                     "domain_counts": {
@@ -1150,15 +1150,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "HeatingQC_check",
+                "name": "HeatingQC",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "HeatingQC"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "Po",
                         "TA",
                         "Fa"
@@ -1177,7 +1177,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "CentralAir_check",
+                "name": "CentralAir",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "CentralAir"
@@ -1198,18 +1198,18 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Electrical_check",
+                "name": "Electrical",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Electrical"
                 },
                 "stats": {
                     "domain": [
-                        "SBrkr",
+                        "FuseF",
                         "FuseA",
-                        "Mix",
                         "FuseP",
-                        "FuseF"
+                        "Mix",
+                        "SBrkr"
                     ],
                     "domain_counts": {
                         "SBrkr": 0.8768920282542886,
@@ -1515,15 +1515,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "KitchenQual_check",
+                "name": "KitchenQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "KitchenQual"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "TA",
                         "Fa"
                     ],
@@ -1569,27 +1569,27 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Functional_check",
+                "name": "Functional",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Functional"
                 },
                 "stats": {
                     "domain": [
-                        "Maj1",
-                        "Maj2",
                         "Mod",
                         "Min2",
-                        "Sev",
+                        "Maj1",
+                        "Typ",
                         "Min1",
-                        "Typ"
+                        "Maj2",
+                        "Sev"
                     ],
                     "domain_counts": {
                         "Typ": 0.9173387096774194,
                         "Min2": 0.029233870967741934,
                         "Min1": 0.023185483870967742,
-                        "Maj1": 0.012096774193548387,
                         "Mod": 0.012096774193548387,
+                        "Maj1": 0.012096774193548387,
                         "Maj2": 0.005040322580645161,
                         "Sev": 0.0010080645161290322
                     },
@@ -1629,15 +1629,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "FireplaceQu_check",
+                "name": "FireplaceQu",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "FireplaceQu"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "Po",
                         "TA",
                         "Fa"
@@ -1656,7 +1656,7 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageType_check",
+                "name": "GarageType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageType"
@@ -1667,8 +1667,8 @@
                         "2Types",
                         "BuiltIn",
                         "CarPort",
-                        "Attchd",
-                        "Basment"
+                        "Basment",
+                        "Attchd"
                     ],
                     "domain_counts": {
                         "Attchd": 0.5367727771679474,
@@ -1714,16 +1714,16 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageFinish_check",
+                "name": "GarageFinish",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageFinish"
                 },
                 "stats": {
                     "domain": [
+                        "Unf",
                         "Fin",
-                        "RFn",
-                        "Unf"
+                        "RFn"
                     ],
                     "domain_counts": {
                         "Unf": 0.5927552140504939,
@@ -1795,15 +1795,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageQual_check",
+                "name": "GarageQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageQual"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "Po",
                         "TA",
                         "Fa"
@@ -1822,15 +1822,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageCond_check",
+                "name": "GarageCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageCond"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "Po",
                         "TA",
                         "Fa"
@@ -1849,16 +1849,16 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "PavedDrive_check",
+                "name": "PavedDrive",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "PavedDrive"
                 },
                 "stats": {
                     "domain": [
+                        "P",
                         "Y",
-                        "N",
-                        "P"
+                        "N"
                     ],
                     "domain_counts": {
                         "Y": 0.8891129032258065,
@@ -2046,21 +2046,21 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "PoolQC_check",
+                "name": "PoolQC",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "PoolQC"
                 },
                 "stats": {
                     "domain": [
-                        "Ex",
                         "Gd",
+                        "Ex",
                         "Fa"
                     ],
                     "domain_counts": {
                         "Gd": 0.3333333333333333,
-                        "Ex": 0.3333333333333333,
-                        "Fa": 0.3333333333333333
+                        "Fa": 0.3333333333333333,
+                        "Ex": 0.3333333333333333
                     },
                     "pinv": 0.9969758064516129
                 }
@@ -2069,17 +2069,17 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Fence_check",
+                "name": "Fence",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Fence"
                 },
                 "stats": {
                     "domain": [
+                        "GdWo",
                         "MnWw",
-                        "GdPrv",
                         "MnPrv",
-                        "GdWo"
+                        "GdPrv"
                     ],
                     "domain_counts": {
                         "MnPrv": 0.5767634854771784,
@@ -2094,15 +2094,15 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "MiscFeature_check",
+                "name": "MiscFeature",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "MiscFeature"
                 },
                 "stats": {
                     "domain": [
-                        "Shed",
                         "Gar2",
+                        "Shed",
                         "Othr"
                     ],
                     "domain_counts": {
@@ -2204,30 +2204,30 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "SaleType_check",
+                "name": "SaleType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "SaleType"
                 },
                 "stats": {
                     "domain": [
-                        "ConLD",
                         "WD",
-                        "COD",
-                        "Oth",
-                        "CWD",
-                        "Con",
                         "ConLI",
                         "ConLw",
-                        "New"
+                        "New",
+                        "Con",
+                        "Oth",
+                        "CWD",
+                        "ConLD",
+                        "COD"
                     ],
                     "domain_counts": {
                         "WD": 0.905241935483871,
                         "COD": 0.036290322580645164,
                         "New": 0.034274193548387094,
                         "ConLD": 0.009072580645161291,
-                        "ConLI": 0.004032258064516129,
                         "ConLw": 0.004032258064516129,
+                        "ConLI": 0.004032258064516129,
                         "CWD": 0.0030241935483870967,
                         "Oth": 0.0030241935483870967,
                         "Con": 0.0010080645161290322
@@ -2239,19 +2239,19 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "SaleCondition_check",
+                "name": "SaleCondition",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "SaleCondition"
                 },
                 "stats": {
                     "domain": [
-                        "Normal",
-                        "AdjLand",
                         "Alloca",
+                        "AdjLand",
+                        "Normal",
                         "Partial",
-                        "Abnorml",
-                        "Family"
+                        "Family",
+                        "Abnorml"
                     ],
                     "domain_counts": {
                         "Normal": 0.8457661290322581,

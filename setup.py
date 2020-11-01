@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-    name="rdv",  # Replace with your own username
+    name="rdv", 
     version="0.0.2-dev4",
     author="Raymon.ai",
     author_email="dev@raymon.ai",
