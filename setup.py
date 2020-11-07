@@ -19,6 +19,7 @@ setuptools.setup(
     long_description_content_type="text/markdown",
     url="https://raymon.ai",
     packages=setuptools.find_packages(),
+    license="MIT",
     classifiers=[
         "Programming Language :: Python :: 3",
     ],
