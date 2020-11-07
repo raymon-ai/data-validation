@@ -70,9 +70,7 @@ def dash_fsps(app, loaded_images, output_path):
                         html.H5("Example"),
                         dcc.Graph(
                             id="graph-image",
-                            figure=create_image_fig(
-                                active_img_idx=active_img_idx, patch=state
-                            ),
+                            figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
                         ),
                         html.Div(id="hidden-dummy"),
                     ],

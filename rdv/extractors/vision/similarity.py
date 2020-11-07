@@ -72,9 +72,7 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             elif isinstance(ref, str):
                 parsed_refs.append(imagehash.hex_to_hash(ref))
             else:
-                raise ValueError(
-                    f"refs should either be str or ImageHash, not {type(ref)}"
-                )
+                raise ValueError(f"refs should either be str or ImageHash, not {type(ref)}")
 
         self._refs = parsed_refs
 

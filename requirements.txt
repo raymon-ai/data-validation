@@ -1,12 +1,6 @@
-pytest
-wheel
 pandas
 selenium
 dash
 numpy
 imagehash
 plotly
-twine
-coverage
-coverage-badge
-pylint

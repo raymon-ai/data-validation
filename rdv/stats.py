@@ -17,9 +17,7 @@ class NumericStats(Serializable, CCAble):
     _ccable_deps = []
     _attrs = _config_attrs + _compile_attrs + _ccable_deps
 
-    def __init__(
-        self, min=None, max=None, mean=None, std=None, pinv=None, nbins=10, hist=None
-    ):
+    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, nbins=10, hist=None):
 
         self.min = min
         self.max = max
@@ -111,9 +109,7 @@ class NumericStats(Serializable, CCAble):
         hist, edges = np.histogram(data, bins=self.nbins, range=(self.min, self.max))
         hist = hist / np.sum(hist)
         self.hist = hist.tolist()
-        invalids = np.logical_or(
-            data > self.max, data < self.min, np.isnan(data.values)
-        )
+        invalids = np.logical_or(data > self.max, data < self.min, np.isnan(data.values))
         self.pinv = int(np.sum(invalids)) / len(data)
 
     def distance(self, other):
@@ -146,9 +142,7 @@ class CategoricStats(Serializable, CCAble):
         elif isinstance(value, list) or isinstance(value, set):
             self._domain = list(set(value))
         else:
-            raise DataException(
-                f"stats.domain should be a list or set, not {type(value)}"
-            )
+            raise DataException(f"stats.domain should be a list or set, not {type(value)}")
 
     """domain_counts"""
 
@@ -163,16 +157,12 @@ class CategoricStats(Serializable, CCAble):
         elif isinstance(value, dict):
             for key, keyvalue in value.items():
                 if key not in self.domain:
-                    raise DataException(
-                        f"{key} is not in domain but is in domain_counts"
-                    )
+                    raise DataException(f"{key} is not in domain but is in domain_counts")
                 if keyvalue < 0:
                     raise DataException(f"Domain count for {key} is  < 0")
             self._domain_counts = value
         else:
-            raise DataException(
-                f"stats.domain_counts should be a dict, not {type(value)}"
-            )
+            raise DataException(f"stats.domain_counts should be a dict, not {type(value)}")
 
     """PINV"""
 

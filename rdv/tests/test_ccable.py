@@ -36,9 +36,7 @@ def test_schema_jcr():
     extractor = FixedSubpatchSimilarity(
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
-    stats = NumericStats(
-        min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10]
-    )
+    stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version="1.0.0", components=[component, component])
     schema_jcr = schema.to_jcr()
@@ -59,9 +57,7 @@ def test_stats_ccable():
     assert stats.is_configured()
     assert not stats.is_compiled()
 
-    stats = NumericStats(
-        min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10]
-    )
+    stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     assert stats.is_configured()
     assert stats.is_compiled()
 
@@ -99,9 +95,7 @@ def test_component_ccable():
     extractor = FixedSubpatchSimilarity(
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
-    stats = NumericStats(
-        min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10]
-    )
+    stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
     assert component.is_compiled()
@@ -126,9 +120,7 @@ def test_schema_ccable():
     extractor = FixedSubpatchSimilarity(
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
-    stats = NumericStats(
-        min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10]
-    )
+    stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version="1.0.0", components=[component, component])
 

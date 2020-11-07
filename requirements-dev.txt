@@ -1,0 +1,7 @@
+twine
+coverage
+coverage-badge
+pre-commit
+pytest
+wheel
+black

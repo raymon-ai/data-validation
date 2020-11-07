@@ -115,9 +115,7 @@ class Component(Serializable, CCAble):
         if self.is_configured():
             self.compile_stats(data)
         else:
-            raise SchemaCompilationException(
-                f"Component {self.name} not configured. Cannot compile."
-            )
+            raise SchemaCompilationException(f"Component {self.name} not configured. Cannot compile.")
 
 
 class NumericComponent(Component):

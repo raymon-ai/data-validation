@@ -92,9 +92,7 @@ class CCAble(ABC):
         has_attrs = self.check_has_attrs(self._compile_attrs + self._ccable_deps)
         if not has_attrs:
             return False
-        return self.check_deps(func="is_configured") and self.check_deps(
-            func="is_compiled"
-        )
+        return self.check_deps(func="is_configured") and self.check_deps(func="is_compiled")
 
     def __eq__(self, other):
         for attr in self._attrs:

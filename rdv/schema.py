@@ -32,9 +32,7 @@ class Schema(Serializable, CCAble):
         }
         components = []
         for comp in self.components:
-            components.append(
-                {"component_class": self.class2str(comp), "component": comp.to_jcr()}
-            )
+            components.append({"component_class": self.class2str(comp), "component": comp.to_jcr()})
         jcr["components"] = components
         return jcr
 
