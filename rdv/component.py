@@ -145,12 +145,13 @@ class NumericComponent(Component):
 
     def check(self, data, return_features=True):
         feature = self.extractor.extract_feature(data)
+        # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
         if err_tag:  # If feature invalid, return only error tag
-            return [err_tag]
-        # Make a tag from the feature
-        feat_tag = self.feature2tag(feature)
+            return [feat_tag, err_tag]
+
         # make deviation tag
         dev_tag = self.feature2dev(feature)
         if return_features:
@@ -231,13 +232,12 @@ class CategoricComponent(Component):
 
     def check(self, data, return_features=True):
         feature = self.extractor.extract_feature(data)
-
+        # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
         # Check min, max, nan or None and raise data error
         err_tag = self.check_invalid(feature)
         if err_tag:  # If feature invalid, return only error tag
-            return [err_tag]
-        # Make a tag from the feature
-        feat_tag = self.feature2tag(feature)
+            return [feat_tag, err_tag]
         # make deviation tag
         dev_tag = self.feature2dev(feature)
         if return_features:
