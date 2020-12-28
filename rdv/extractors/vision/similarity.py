@@ -146,10 +146,10 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         return phash
 
     def configure_interactive(self, loaded_data, raymon_output, null_stderr=True):
-        run_interactive_config(loaded_data, raymon_output, null_stderr=null_stderr)
+        run_interactive_config(loaded_data, raymon_output, ref=self.__class__.__name__, null_stderr=null_stderr)
 
 
-def run_interactive_config(loaded_images, output_path, null_stderr=True):
+def run_interactive_config(loaded_images, output_path, ref, null_stderr=True):
     def create_image_fig(active_img_idx, patch, editable=True):
         active_img = loaded_images[active_img_idx].copy()
         img_width, img_height = active_img.size
@@ -177,7 +177,7 @@ def run_interactive_config(loaded_images, output_path, null_stderr=True):
             [
                 html.Div(
                     [
-                        html.H5("Global controls"),
+                        html.H2("Global controls", className="h2"),
                         html.Label("Select the image to view:"),
                         dcc.Input(
                             id="img-selector",
@@ -199,14 +199,16 @@ def run_interactive_config(loaded_images, output_path, null_stderr=True):
                             id="patch-shape",
                             style=styles["pre"],
                         ),
-                        html.Button("Continue", id="patch-setup-complete", n_clicks=0),
+                        html.Button(
+                            "Continue", id="patch-setup-complete", n_clicks=0, className="btn btn-primary mr-2"
+                        ),
                     ],
                     className="three columns",
                     id="left-column-div",
                 ),
                 html.Div(
                     [
-                        html.H5("Example"),
+                        html.H2("Example", className="h2"),
                         dcc.Graph(
                             id="graph-image",
                             figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
@@ -286,7 +288,7 @@ def run_interactive_config(loaded_images, output_path, null_stderr=True):
     register_callbacks(app)
     app.layout = html.Div(
         [
-            html.H2("Configuring Extractor"),
+            html.H1(f"Configuring Extractor {ref}", className="h1"),
             html.Div(
                 render_patch_page(
                     loaded_images=loaded_images,
