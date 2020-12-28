@@ -55,7 +55,7 @@ class Schema(Serializable, CCAble):
     """CCAble Interface"""
 
     def configure(self, data):
-        """This will configure the components extractors and stats, and will compile the extracotrs using the loaded data.
+        """This will configure the components extractors and stats, and will compile the extractors using the loaded data.
         Steps:
         1. Find components with unconfigured extractors
         2. Select component to configure

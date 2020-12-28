@@ -93,7 +93,7 @@ class Component(Serializable, CCAble):
             for data in loaded_data:
                 features.append(self.extractor.extract_feature(data))
         else:
-            raise NotSupportedException("loaded_data should be a DataFrame of Iterable")
+            raise NotSupportedException("loaded_data should be a DataFrame or Iterable")
         return features
 
     def configure(self, data):

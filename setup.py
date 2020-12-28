@@ -1,8 +1,7 @@
 import setuptools
 import os
-from rdv.version import __version__
 
-
+exec(open("rdv/version.py").read())  # Loads __version__
 ROOT_DIR = os.path.dirname(__file__)
 REQUIREMENTS = [line.strip() for line in open(os.path.join(ROOT_DIR, "requirements.txt")).readlines()]
 with open("README.md", "r") as fh:
