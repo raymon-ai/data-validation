@@ -145,11 +145,11 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         phash = imagehash.phash(crop)
         return phash
 
-    def configure_interactive(self, loaded_data, raymon_output, null_stderr=True):
-        run_interactive_config(loaded_data, raymon_output, ref=self.__class__.__name__, null_stderr=null_stderr)
+    def configure_interactive(self, loaded_data, raymon_output, cref, null_stderr=True):
+        run_interactive_config(loaded_data, raymon_output, cref=cref, null_stderr=null_stderr)
 
 
-def run_interactive_config(loaded_images, output_path, ref, null_stderr=True):
+def run_interactive_config(loaded_images, output_path, cref, null_stderr=True):
     def create_image_fig(active_img_idx, patch, editable=True):
         active_img = loaded_images[active_img_idx].copy()
         img_width, img_height = active_img.size
@@ -177,8 +177,8 @@ def run_interactive_config(loaded_images, output_path, ref, null_stderr=True):
             [
                 html.Div(
                     [
-                        html.H2("Global controls", className="h2"),
-                        html.Label("Select the image to view:"),
+                        html.H2("Global controls", className="Subhead Subhead--spacious"),
+                        html.Label("Select the image to view:", className="m-2"),
                         dcc.Input(
                             id="img-selector",
                             type="number",
@@ -186,29 +186,20 @@ def run_interactive_config(loaded_images, output_path, ref, null_stderr=True):
                             min=0,
                             max=len(loaded_images) - 1,
                             step=1,
+                            className="m-2",
                         ),
-                        html.Label("Patch Location:"),
-                        html.Pre(
-                            json.dumps(state, indent=4),
-                            id="raymon-state",
-                            style=styles["pre"],
-                        ),
-                        html.Label("Patch Shape:"),
-                        html.Pre(
-                            str(state2shape(state)),
-                            id="patch-shape",
-                            style=styles["pre"],
-                        ),
-                        html.Button(
-                            "Continue", id="patch-setup-complete", n_clicks=0, className="btn btn-primary mr-2"
-                        ),
+                        html.Label("Patch Location:", className="m-2"),
+                        html.Pre(json.dumps(state, indent=4), id="raymon-state", style=styles["pre"], className="m-2"),
+                        html.Label("Patch Shape:", className="m-2"),
+                        html.Pre(str(state2shape(state)), id="patch-shape", style=styles["pre"], className="m-2"),
+                        html.Button("Continue", id="patch-setup-complete", n_clicks=0, className="btn btn-primary m-2"),
                     ],
                     className="three columns",
                     id="left-column-div",
                 ),
                 html.Div(
                     [
-                        html.H2("Example", className="h2"),
+                        html.H2("Example", className="Subhead Subhead--spacious"),
                         dcc.Graph(
                             id="graph-image",
                             figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
@@ -288,7 +279,7 @@ def run_interactive_config(loaded_images, output_path, ref, null_stderr=True):
     register_callbacks(app)
     app.layout = html.Div(
         [
-            html.H1(f"Configuring Extractor {ref}", className="h1"),
+            html.H1(f"Configuring Component {cref}", className="pagehead"),
             html.Div(
                 render_patch_page(
                     loaded_images=loaded_images,
@@ -298,6 +289,7 @@ def run_interactive_config(loaded_images, output_path, ref, null_stderr=True):
             ),
         ],
         id="page-body",
+        className="p-5",
     )
-
+    app.title = f"Configuring component {cref}"
     app.run_server(debug=False)

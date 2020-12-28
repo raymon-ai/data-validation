@@ -48,11 +48,12 @@ class Component(Serializable, CCAble):
 
     def interact_config(self, loaded_data):
         _, output_fpath = tempfile.mkstemp()
+        cref = self.name
         print(f"Saving to: {output_fpath}")
         # Crease new process
         p = Process(
             target=self.extractor.configure_interactive,
-            args=(loaded_data, output_fpath),
+            args=(loaded_data, output_fpath, cref),
         )
         p.start()
         time.sleep(0.5)
