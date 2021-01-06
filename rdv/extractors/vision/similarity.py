@@ -13,22 +13,17 @@ import plotly.graph_objects as go
 import rdv.dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-
-
 from rdv.dash.helpers import register_close, register_shutdown, styles
-from rdv.globals import FeatureExtractor
+from rdv.extractors import FeatureExtractor
+from rdv.globals import Configurable
 
 
-class FixedSubpatchSimilarity(FeatureExtractor):
+class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
 
-    _config_attrs = ["patch"]
-    _compile_attrs = ["refs"]
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
+    _attrs = ["patch", "refs"]
+    _patch_keys = ["x0", "y0", "x1", "y1"]
 
-    patch_keys = ["x0", "y0", "x1", "y1"]
-
-    def __init__(self, patch=None, refs=None, nrefs=10):
+    def __init__(self, patch=None, refs=None, nrefs=10, idfr=None):
         """[summary]
 
         Args:
@@ -38,10 +33,12 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         self._nrefs = None
         self._patch = None
         self._refs = None
+        self._idfr = None
 
         self.patch = patch
         self.nrefs = nrefs
         self.refs = refs
+        self.idfr = idfr
 
     """
     PROPERTIES
@@ -60,7 +57,7 @@ class FixedSubpatchSimilarity(FeatureExtractor):
         if not isinstance(value, dict):
             raise ValueError(f"patch must be a dict, not {type(value)}")
         # make sure the correct keys are there
-        self._patch = {key: value[key] for key in self.patch_keys}
+        self._patch = {key: value[key] for key in self._patch_keys}
 
     @property
     def refs(self):
@@ -98,9 +95,28 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             raise ValueError(f"nrefs should be a an int > 0")
         self._nrefs = value
 
-    """
-    SERIALISATION
-    """
+    @property
+    def idfr(self):
+        return self._idfr
+
+    @idfr.setter
+    def idfr(self, value):
+        self._idfr = str(value)
+
+    """Feature extractor"""
+
+    def extract_feature(self, data):
+        phash = self._extract(data)
+        dist = min(abs(ref - phash) for ref in self.refs)
+        return dist
+
+    def _extract(self, data):
+        patch = [self.patch["x0"], self.patch["y0"], self.patch["x1"], self.patch["y1"]]
+        crop = data.crop(box=patch)
+        phash = imagehash.phash(crop)
+        return phash
+
+    """Serializable interface """
 
     def to_jcr(self):
         data = {
@@ -120,13 +136,9 @@ class FixedSubpatchSimilarity(FeatureExtractor):
 
         return self
 
-    def configure(self, data):
-        jcr = {
-            "patch": data,
-        }
-        self.load_jcr(jcr)
+    """Buildable interface"""
 
-    def compile(self, data):
+    def build(self, data):
         refs = []
         chosen_samples = random.choices(data, k=self.nrefs)
         for sample in chosen_samples:
@@ -134,162 +146,165 @@ class FixedSubpatchSimilarity(FeatureExtractor):
             refs.append(ref)
         self.refs = refs
 
-    def extract_feature(self, data):
-        phash = self._extract(data)
-        dist = min(abs(ref - phash) for ref in self.refs)
-        return dist
+    def is_built(self):
+        return True
 
-    def _extract(self, data):
-        patch = [self.patch["x0"], self.patch["y0"], self.patch["x1"], self.patch["y1"]]
-        crop = data.crop(box=patch)
-        phash = imagehash.phash(crop)
-        return phash
+    def __str__(self):
+        return f"{self.class2str()} ({self.idfr})"
 
-    def configure_interactive(self, loaded_data, raymon_output, cref, null_stderr=True):
-        run_interactive_config(loaded_data, raymon_output, cref=cref, null_stderr=null_stderr)
+    """Configurable interface"""
 
+    def set_config(self, data):
+        self.patch = data
 
-def run_interactive_config(loaded_images, output_path, cref, null_stderr=True):
-    def create_image_fig(active_img_idx, patch, editable=True):
-        active_img = loaded_images[active_img_idx].copy()
-        img_width, img_height = active_img.size
+    def is_configured(self):
+        return isinstance(self.patch, dict) and all(key in self.patch for key in self._patch_keys)
 
-        fig = go.Figure(go.Image(z=np.array(active_img)))
-        fig.add_shape(
-            editable=editable,
-            xref="x",
-            yref="y",
-            layer="above",
-            line={"color": "cyan"},
-            opacity=0.7,
-            fillcolor="cyan",
-            type="rect",
-            **patch,
-        )
-        fig.update_xaxes(showgrid=False, range=(0, img_width))
-        fig.update_yaxes(showgrid=False, scaleanchor="x", range=(img_height, 0))
+    def configure_interactive(self, loaded_data, output_path, null_stderr=True):
+        def create_image_fig(active_img_idx, patch, editable=True):
+            active_img = loaded_data[active_img_idx].copy()
+            img_width, img_height = active_img.size
 
-        fig.update_layout(autosize=False, width=800, height=800)
-        return fig
+            fig = go.Figure(go.Image(z=np.array(active_img)))
+            fig.add_shape(
+                editable=editable,
+                xref="x",
+                yref="y",
+                layer="above",
+                line={"color": "cyan"},
+                opacity=0.7,
+                fillcolor="cyan",
+                type="rect",
+                **patch,
+            )
+            fig.update_xaxes(showgrid=False, range=(0, img_width))
+            fig.update_yaxes(showgrid=False, scaleanchor="x", range=(img_height, 0))
 
-    def render_patch_page(loaded_images, active_img_idx, state):
-        return html.Div(
-            [
-                html.Div(
-                    [
-                        html.H2("Global controls", className="Subhead Subhead--spacious"),
-                        html.Label("Select the image to view:", className="m-2"),
-                        dcc.Input(
-                            id="img-selector",
-                            type="number",
-                            value=0,
-                            min=0,
-                            max=len(loaded_images) - 1,
-                            step=1,
-                            className="m-2",
-                        ),
-                        html.Label("Patch Location:", className="m-2"),
-                        html.Pre(json.dumps(state, indent=4), id="raymon-state", style=styles["pre"], className="m-2"),
-                        html.Label("Patch Shape:", className="m-2"),
-                        html.Pre(str(state2shape(state)), id="patch-shape", style=styles["pre"], className="m-2"),
-                        html.Button("Continue", id="patch-setup-complete", n_clicks=0, className="btn btn-primary m-2"),
-                    ],
-                    className="three columns",
-                    id="left-column-div",
-                ),
-                html.Div(
-                    [
-                        html.H2("Example", className="Subhead Subhead--spacious"),
-                        dcc.Graph(
-                            id="graph-image",
-                            figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
-                        ),
-                        html.Div(id="hidden-dummy"),
-                    ],
-                    className="nine columns",
-                ),
-            ],
-            className="row",
-        )
+            fig.update_layout(autosize=False, width=800, height=800)
+            return fig
 
-    def state2shape(state):
-        if state is None:
-            raise PreventUpdate()
-        x0, y0 = state["x0"], state["y0"]
-        x1, y1 = state["x1"], state["y1"]
-        return x1 - x0, y1 - y0
+        def render_patch_page(loaded_data, active_img_idx, state):
+            return html.Div(
+                [
+                    html.Div(
+                        [
+                            html.H2("Global controls", className="Subhead Subhead--spacious"),
+                            html.Label("Select the image to view:", className="m-2"),
+                            dcc.Input(
+                                id="img-selector",
+                                type="number",
+                                value=0,
+                                min=0,
+                                max=len(loaded_data) - 1,
+                                step=1,
+                                className="m-2",
+                            ),
+                            html.Label("Patch Location:", className="m-2"),
+                            html.Pre(
+                                json.dumps(state, indent=4), id="raymon-state", style=styles["pre"], className="m-2"
+                            ),
+                            html.Label("Patch Shape:", className="m-2"),
+                            html.Pre(str(state2shape(state)), id="patch-shape", style=styles["pre"], className="m-2"),
+                            html.Button(
+                                "Continue", id="patch-setup-complete", n_clicks=0, className="btn btn-primary m-2"
+                            ),
+                        ],
+                        className="three columns",
+                        id="left-column-div",
+                    ),
+                    html.Div(
+                        [
+                            html.H2("Example", className="Subhead Subhead--spacious"),
+                            dcc.Graph(
+                                id="graph-image",
+                                figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
+                            ),
+                            html.Div(id="hidden-dummy"),
+                        ],
+                        className="nine columns",
+                    ),
+                ],
+                className="row",
+            )
 
-    def register_callbacks(app):
-        register_close(
-            app,
-            dash_input=[Input("patch-setup-complete", "n_clicks")],
-            dash_output=Output("hidden-dummy", "value"),
-        )
-
-        register_shutdown(
-            app,
-            fpath=output_path,
-            dash_input=[Input("patch-setup-complete", "n_clicks")],
-            dash_output=Output("page-body", "children"),
-            dash_state=[State("raymon-state", "children")],
-        )
-
-        @app.callback(
-            [
-                Output(component_id="raymon-state", component_property="children"),
-                Output(component_id="patch-shape", component_property="children"),
-            ],
-            [Input(component_id="graph-image", component_property="relayoutData")],
-        )
-        def update_patch_data(shape_data):
-            if shape_data is None or not "shapes[0].x0" in shape_data:
-                raise PreventUpdate()
-
-            keys = ["x0", "y0", "x1", "y1"]
-            data = {key: int(shape_data[f"shapes[0].{key}"]) for key in keys}
-            patch_width = int(data["x1"] - data["x0"])
-            patch_height = int(data["y1"] - data["y0"])
-
-            return f"{json.dumps(data, indent=4)}", str((patch_width, patch_height))
-
-        @app.callback(
-            Output(component_id="graph-image", component_property="figure"),
-            [Input(component_id="img-selector", component_property="value")],
-            [State("raymon-state", "children")],
-        )
-        def swap_img(active_image_idx, state):
+        def state2shape(state):
             if state is None:
                 raise PreventUpdate()
-            if isinstance(state, str):
-                state = json.loads(state)
-            active_image_idx = int(active_image_idx)
+            x0, y0 = state["x0"], state["y0"]
+            x1, y1 = state["x1"], state["y1"]
+            return x1 - x0, y1 - y0
 
-            return create_image_fig(active_img_idx=active_image_idx, patch=state)
+        def register_callbacks(app):
+            register_close(
+                app,
+                dash_input=[Input("patch-setup-complete", "n_clicks")],
+                dash_output=Output("hidden-dummy", "value"),
+            )
 
-    print(f"null_strerr: {null_stderr}")
-    if null_stderr:
-        f = open(os.devnull, "w")
-        sys.stderr = f
+            register_shutdown(
+                app,
+                fpath=output_path,
+                dash_input=[Input("patch-setup-complete", "n_clicks")],
+                dash_output=Output("page-body", "children"),
+                dash_state=[State("raymon-state", "children")],
+            )
 
-    app = dash.Dash(
-        "Data Schema Config",
-        external_stylesheets=["https://codepen.io/chriddyp/pen/bWLwgP.css"],
-        assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
-    )
-    register_callbacks(app)
-    app.layout = html.Div(
-        [
-            html.H1(f"Configuring Component {cref}", className="pagehead"),
-            html.Div(
-                render_patch_page(
-                    loaded_images=loaded_images,
-                    active_img_idx=0,
-                    state={"x0": 0, "y0": 0, "x1": 64, "y1": 64},
-                )
-            ),
-        ],
-        id="page-body",
-        className="p-5",
-    )
-    app.title = f"Configuring component {cref}"
-    app.run_server(debug=False)
+            @app.callback(
+                [
+                    Output(component_id="raymon-state", component_property="children"),
+                    Output(component_id="patch-shape", component_property="children"),
+                ],
+                [Input(component_id="graph-image", component_property="relayoutData")],
+            )
+            def update_patch_data(shape_data):
+                if shape_data is None or not "shapes[0].x0" in shape_data:
+                    raise PreventUpdate()
+
+                keys = ["x0", "y0", "x1", "y1"]
+                data = {key: int(shape_data[f"shapes[0].{key}"]) for key in keys}
+                patch_width = int(data["x1"] - data["x0"])
+                patch_height = int(data["y1"] - data["y0"])
+
+                return f"{json.dumps(data, indent=4)}", str((patch_width, patch_height))
+
+            @app.callback(
+                Output(component_id="graph-image", component_property="figure"),
+                [Input(component_id="img-selector", component_property="value")],
+                [State("raymon-state", "children")],
+            )
+            def swap_img(active_image_idx, state):
+                if state is None:
+                    raise PreventUpdate()
+                if isinstance(state, str):
+                    state = json.loads(state)
+                active_image_idx = int(active_image_idx)
+
+                return create_image_fig(active_img_idx=active_image_idx, patch=state)
+
+        print(f"null_strerr: {null_stderr}")
+        if null_stderr:
+            f = open(os.devnull, "w")
+            sys.stderr = f
+
+        app = dash.Dash(
+            "Data Schema Config",
+            external_stylesheets=["https://codepen.io/chriddyp/pen/bWLwgP.css"],
+            assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
+        )
+        register_callbacks(app)
+        app.layout = html.Div(
+            [
+                html.H1(f"Configuring extractor {str(self)}", className="pagehead"),
+                html.Div(
+                    render_patch_page(
+                        loaded_data=loaded_data,
+                        active_img_idx=0,
+                        state={"x0": 0, "y0": 0, "x1": 64, "y1": 64},
+                    )
+                ),
+            ],
+            id="page-body",
+            className="p-5",
+        )
+        app.title = f"Configuring component {str(self)}"
+        app.run_server(debug=False)

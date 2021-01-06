@@ -16,20 +16,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "MSZoning_check",
+                "name": "MSZoning",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "MSZoning"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -49,7 +48,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -67,20 +66,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Street_check",
+                "name": "Street",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Street"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -89,13 +87,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Alley_check",
+                "name": "Alley",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Alley"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -104,13 +101,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LotShape_check",
+                "name": "LotShape",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LotShape"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -119,13 +115,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LandContour_check",
+                "name": "LandContour",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LandContour"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -134,13 +129,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Utilities_check",
+                "name": "Utilities",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Utilities"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -149,13 +143,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LotConfig_check",
+                "name": "LotConfig",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LotConfig"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -164,13 +157,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "LandSlope_check",
+                "name": "LandSlope",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "LandSlope"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -179,13 +171,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Neighborhood_check",
+                "name": "Neighborhood",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Neighborhood"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -194,13 +185,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Condition1_check",
+                "name": "Condition1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Condition1"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -209,13 +199,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Condition2_check",
+                "name": "Condition2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Condition2"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -224,13 +213,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BldgType_check",
+                "name": "BldgType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BldgType"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -239,13 +227,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "HouseStyle_check",
+                "name": "HouseStyle",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "HouseStyle"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -265,7 +252,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -283,7 +270,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -301,7 +288,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -319,20 +306,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "RoofStyle_check",
+                "name": "RoofStyle",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "RoofStyle"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -341,13 +327,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "RoofMatl_check",
+                "name": "RoofMatl",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "RoofMatl"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -356,13 +341,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Exterior1st_check",
+                "name": "Exterior1st",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Exterior1st"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -371,13 +355,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Exterior2nd_check",
+                "name": "Exterior2nd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Exterior2nd"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -386,13 +369,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "MasVnrType_check",
+                "name": "MasVnrType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "MasVnrType"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -412,20 +394,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "ExterQual_check",
+                "name": "ExterQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "ExterQual"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -434,13 +415,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "ExterCond_check",
+                "name": "ExterCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "ExterCond"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -449,13 +429,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Foundation_check",
+                "name": "Foundation",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Foundation"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -464,13 +443,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtQual_check",
+                "name": "BsmtQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtQual"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -479,13 +457,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtCond_check",
+                "name": "BsmtCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtCond"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -494,13 +471,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtExposure_check",
+                "name": "BsmtExposure",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtExposure"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -509,13 +485,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtFinType1_check",
+                "name": "BsmtFinType1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtFinType1"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -535,20 +510,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "BsmtFinType2_check",
+                "name": "BsmtFinType2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "BsmtFinType2"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -568,7 +542,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -586,7 +560,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -604,20 +578,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Heating_check",
+                "name": "Heating",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Heating"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -626,13 +599,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "HeatingQC_check",
+                "name": "HeatingQC",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "HeatingQC"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -641,13 +613,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "CentralAir_check",
+                "name": "CentralAir",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "CentralAir"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -656,13 +627,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Electrical_check",
+                "name": "Electrical",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Electrical"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -682,7 +652,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -700,7 +670,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -718,7 +688,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -736,7 +706,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -754,7 +724,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -772,7 +742,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -790,7 +760,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -808,7 +778,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -826,7 +796,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -844,20 +814,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "KitchenQual_check",
+                "name": "KitchenQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "KitchenQual"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -877,20 +846,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Functional_check",
+                "name": "Functional",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Functional"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -910,20 +878,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "FireplaceQu_check",
+                "name": "FireplaceQu",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "FireplaceQu"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -932,13 +899,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageType_check",
+                "name": "GarageType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageType"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -958,20 +924,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageFinish_check",
+                "name": "GarageFinish",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageFinish"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -991,7 +956,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1009,20 +974,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageQual_check",
+                "name": "GarageQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageQual"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1031,13 +995,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "GarageCond_check",
+                "name": "GarageCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "GarageCond"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1046,13 +1009,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "PavedDrive_check",
+                "name": "PavedDrive",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "PavedDrive"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1072,7 +1034,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1090,7 +1052,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1108,7 +1070,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1126,7 +1088,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1144,7 +1106,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1162,20 +1124,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "PoolQC_check",
+                "name": "PoolQC",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "PoolQC"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1184,13 +1145,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "Fence_check",
+                "name": "Fence",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "Fence"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1199,13 +1159,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "MiscFeature_check",
+                "name": "MiscFeature",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "MiscFeature"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1225,7 +1184,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1243,7 +1202,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
@@ -1261,20 +1220,19 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         },
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "SaleType_check",
+                "name": "SaleType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "SaleType"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1283,13 +1241,12 @@
         {
             "component_class": "rdv.component.CategoricComponent",
             "component": {
-                "name": "SaleCondition_check",
+                "name": "SaleCondition",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
                 "extractor_state": {
                     "element": "SaleCondition"
                 },
                 "stats": {
-                    "domain": null,
                     "domain_counts": null,
                     "pinv": null
                 }
@@ -1309,7 +1266,7 @@
                     "mean": null,
                     "std": null,
                     "pinv": null,
-                    "hist": null
+                    "percentiles": null
                 }
             }
         }

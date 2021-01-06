@@ -3,29 +3,24 @@ import pandas as pd
 from scipy.stats import wasserstein_distance
 
 from rdv.globals import (
-    CCAble,
-    NoneExtractor,
-    NotSupportedException,
+    Buildable,
     Serializable,
     DataException,
 )
 
 
-class NumericStats(Serializable, CCAble):
-    _config_attrs = ["min", "max"]
-    _compile_attrs = ["mean", "std", "pinv", "hist"]
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
+class NumericStats(Serializable, Buildable):
 
-    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, nbins=10, hist=None):
+    _attrs = ["min", "max", "mean", "std", "pinv", "percentiles"]
+
+    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, percentiles=None):
 
         self.min = min
         self.max = max
         self.mean = mean
         self.std = std
         self.pinv = pinv
-        self.nbins = nbins
-        self.hist = hist
+        self.percentiles = percentiles
 
     """MIN"""
 
@@ -87,62 +82,64 @@ class NumericStats(Serializable, CCAble):
             raise DataException("stats.pinv cannot be NaN")
         self._pinv = value
 
+    """Percentiles"""
+
+    @property
+    def percentiles(self):
+        return self._percentiles
+
+    @percentiles.setter
+    def percentiles(self, value):
+        if value is None:
+            self._percentiles = None
+        elif len(value) == 101:
+            self._percentiles = list(value)
+        else:
+            raise DataException("stats.percentiles must be None or a list of length 101.")
+
+    """Serializable Interface"""
+
     def to_jcr(self):
         data = {}
-        for attr in self._config_attrs + self._compile_attrs:
+        for attr in self._attrs:
             data[attr] = getattr(self, attr)
         return data
 
     def load_jcr(self, jcr):
-        for attr in self._config_attrs + self._compile_attrs:
+        for attr in self._attrs:
             setattr(self, attr, jcr[attr])
         return self
 
-    def configure(self, data):
+    """Buildable Interface"""
+
+    def build(self, data):
+        data = np.array(data)
+        invalids = data[np.isnan(data)]
+        data = data[~np.isnan(data)]
+
         self.min = float(np.min(data))
         self.max = float(np.max(data))
-
-    def compile(self, data):
-        data = pd.Series(data)
         self.mean = float(data.mean())
         self.std = float(data.std())
-        hist, edges = np.histogram(data, bins=self.nbins, range=(self.min, self.max))
-        hist = hist / np.sum(hist)
-        self.hist = hist.tolist()
-        invalids = np.logical_or(data > self.max, data < self.min, np.isnan(data.values))
-        self.pinv = int(np.sum(invalids)) / len(data)
 
-    def distance(self, other):
-        if self.min != other.min or self.max != other.max:
-            raise ValueError("Cannot compare Stats that have unequal min and/or max.")
-        return wasserstein_distance(self.hist, other.hist)
+        # Build cdf estimate based on percentiles
+        q = np.arange(start=0, stop=101, step=1)
+        self.percentiles = np.percentile(a=data, q=q)
+
+        # Check the invalid
+        self.pinv = len(invalids) / len(data)
+
+    def is_built(self):
+        return all(getattr(self, attr) is not None for attr in self._attrs)
 
 
-class CategoricStats(Serializable, CCAble):
-    _config_attrs = ["domain"]
-    _compile_attrs = ["domain_counts", "pinv"]
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
+class CategoricStats(Serializable, Buildable):
+
+    _attrs = ["domain_counts", "pinv"]
 
     def __init__(self, domain=None, domain_counts=None, pinv=None):
-        self.domain = domain
-        self.domain_counts = domain_counts  # TODO move to property, check whether does not include keys not in domain
+        self.domain_counts = domain_counts
         self.pinv = pinv
-
-    """domain"""
-
-    @property
-    def domain(self):
-        return self._domain
-
-    @domain.setter
-    def domain(self, value):
-        if value is None:
-            self._domain = value
-        elif isinstance(value, list) or isinstance(value, set):
-            self._domain = list(set(value))
-        else:
-            raise DataException(f"stats.domain should be a list or set, not {type(value)}")
 
     """domain_counts"""
 
@@ -156,8 +153,6 @@ class CategoricStats(Serializable, CCAble):
             self._domain_counts = value
         elif isinstance(value, dict):
             for key, keyvalue in value.items():
-                if key not in self.domain:
-                    raise DataException(f"{key} is not in domain but is in domain_counts")
                 if keyvalue < 0:
                     raise DataException(f"Domain count for {key} is  < 0")
             self._domain_counts = value
@@ -178,7 +173,7 @@ class CategoricStats(Serializable, CCAble):
 
     def to_jcr(self):
         data = {}
-        for attr in self._config_attrs + self._compile_attrs:
+        for attr in self._attrs:
             value = getattr(self, attr)
             if attr == "domain" and value is not None:
                 data[attr] = list(value)
@@ -187,7 +182,7 @@ class CategoricStats(Serializable, CCAble):
         return data
 
     def load_jcr(self, jcr):
-        for attr in self._config_attrs + self._compile_attrs:
+        for attr in self._attrs:
             value = jcr[attr]
             if attr == "domain" and value is not None:
                 setattr(self, attr, list(set(value)))
@@ -195,19 +190,11 @@ class CategoricStats(Serializable, CCAble):
                 setattr(self, attr, value)
         return self
 
-    def configure(self, data):
-        unique = data.unique()
-        unique = unique[~pd.isnull(unique)]
-        self.domain = list(set(unique))
-
-    def compile(self, data):
+    def build(self, data):
         data = pd.Series(data)
-        # Only use values in configured domain
-        data_filt = data[data.isin(self.domain)]
-        self.domain_counts = data_filt.value_counts(normalize=True).to_dict()
-        # Invalids are data outside domain
-        invalids = data[~data.isin(self.domain) | pd.isna(data)]
+        self.domain_counts = data[~pd.isna(data)].value_counts(normalize=True).to_dict()
+        invalids = data[pd.isna(data)]
         self.pinv = len(invalids) / len(data)
 
-    def distance(self, other):
-        raise NotImplementedError
+    def is_built(self):
+        return all(getattr(self, attr) is not None for attr in self._attrs)

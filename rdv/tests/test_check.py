@@ -7,7 +7,7 @@ import rdv
 from rdv.component import construct_components
 from rdv.component import CategoricComponent, NumericComponent
 from rdv.schema import Schema
-from rdv.globals import SchemaCompilationException, DataException
+from rdv.globals import SchemaBuildingException, DataException
 from rdv.stats import NumericStats, CategoricStats
 
 

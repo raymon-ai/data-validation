@@ -1,7 +1,4 @@
 #%%
-%load_ext autoreload
-%autoreload 2
-
 from PIL import Image
 from PIL import ImageFile
 
@@ -20,21 +17,12 @@ ImageFile.LOAD_TRUNCATED_IMAGES = True
 DATA_PATH = Path("/Users/kv/Raymon/Data/casting_data/train/ok_front/")
 LIM = 150
 
-def dataloader(dpath, lim):
-    files = dpath.glob('*.jpeg')
-    for n, fpath in enumerate(files):
-        if n == lim:
-            raise StopIteration
-        img = Image.open(fpath)
-        yield img
-    
 
-dl = dataloader(dpath=DATA_PATH, lim=LIM)
-next(dl)
 #%%
 
+
 def load_data(dpath, lim):
-    files = dpath.glob('*.jpeg')
+    files = dpath.glob("*.jpeg")
     images = []
     for n, fpath in enumerate(files):
         if n == lim:
@@ -43,31 +31,35 @@ def load_data(dpath, lim):
         images.append(img)
     return images
 
+
 # %%
 def load_full_schema():
     extractor = FixedSubpatchSimilarity(patch=[0, 0, 64, 64], refs=["ae81b596d698da31"])
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
     component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
-    schema = Schema(name="Testing", version='1.0.0', components=[component, component])
+    schema = Schema(name="Testing", version="1.0.0", components=[component, component])
     return schema
+
 
 def load_empty_schema():
-    schema=Schema(name="Testing", version='1.0.0', components=[
-        NumericComponent(name="patch_similarity", 
-                         extractor=FixedSubpatchSimilarity()
-                         ),
-        NumericComponent(name="sharpness", extractor=Sharpness()),
-        NumericComponent(name='intensity', extractor=AvgIntensity())
-
-    ])
+    schema = Schema(
+        name="Testing",
+        version="1.0.0",
+        components=[
+            NumericComponent(name="patch_similarity", extractor=FixedSubpatchSimilarity()),
+            NumericComponent(name="sharpness", extractor=Sharpness()),
+            NumericComponent(name="intensity", extractor=AvgIntensity()),
+        ],
+    )
     return schema
 
-#%% 
+
+#%%
 schema = load_empty_schema()
 loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
 schema.configure(data=loaded_data)
 # %%
-schema.compile(data=load_data(dpath=DATA_PATH, lim=1000))
+schema.build(data=load_data(dpath=DATA_PATH, lim=1000))
 # %%
 fullschema_path = "schema-compiled.json"
 schema.save(fullschema_path)
@@ -86,12 +78,17 @@ tags = schema.check(img_blur)
 tags
 # %%
 import numpy as np
+
 img_dark = loaded_data[-20].copy()
-img_dark = Image.fromarray((np.array(img_dark) - np.array(img_dark)*0.3).astype(np.uint8))
+img_dark = Image.fromarray((np.array(img_dark) - np.array(img_dark) * 0.3).astype(np.uint8))
 img_dark
 
 tags = schema.check(img_dark)
 tags
 
 
-
+#%%
+nc = NumericComponent(name="patch_similarity", extractor=FixedSubpatchSimilarity())
+# %%
+nc.extractor.configure(data=loaded_data)
+# %%

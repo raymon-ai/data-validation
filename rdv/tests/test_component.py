@@ -8,7 +8,7 @@ import rdv
 from rdv.component import construct_components
 from rdv.component import CategoricComponent, NumericComponent
 from rdv.schema import Schema
-from rdv.globals import SchemaCompilationException, DataException
+from rdv.globals import SchemaBuildingException, DataException
 from rdv.stats import NumericStats, CategoricStats
 
 #%%
@@ -40,7 +40,7 @@ def test_compile_unconfigured_numeric():
     schema = Schema(components=components)
     try:
         schema.compile(data=df)
-    except SchemaCompilationException:
+    except SchemaBuildingException:
         pass
     else:
         pytest.fail("Compilation of unconfigured schema should fail")

@@ -1,7 +1,7 @@
 from PIL import Image
 import numpy as np
 
-from rdv.globals import FeatureExtractor
+from rdv.extractors import FeatureExtractor
 
 
 class ElementExtractor(FeatureExtractor):
@@ -9,14 +9,25 @@ class ElementExtractor(FeatureExtractor):
     Extract one element from a vector
     """
 
-    # Configure attributes that are required for configuratio and compilation
-    _config_attrs = []
-    _compile_attrs = []
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
-
-    def __init__(self, element=None):
+    def __init__(self, element):
         self.element = element
+
+    """ELEMENT"""
+
+    @property
+    def element(self):
+        return self._element
+
+    @element.setter
+    def element(self, value):
+        if not (isinstance(value, str) or isinstance(value, int)):
+            raise DataException("element ot extract must be int or str")
+        self._element = value
+
+    def extract_feature(self, data):
+        return data[self.element]
+
+    """Serializable interface """
 
     def to_jcr(self):
         data = {
@@ -30,11 +41,10 @@ class ElementExtractor(FeatureExtractor):
 
         return self
 
-    def configure(self, data):
+    """Buildable interface"""
+
+    def build(self, data):
         pass
 
-    def compile(self, data):
-        pass
-
-    def extract_feature(self, data):
-        return data[self.element]
+    def is_built(self):
+        return True

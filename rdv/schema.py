@@ -1,21 +1,11 @@
 import json
 from pydoc import locate
 
-
-from rdv.globals import (
-    CCAble,
-    ClassNotFoundError,
-    Serializable,
-    DataException,
-    SchemaCompilationException,
-)
+from rdv.globals import Buildable, ClassNotFoundError, NotSupportedException, SchemaBuildingException, Serializable
 
 
-class Schema(Serializable, CCAble):
-    _config_attrs = ["name", "version"]
-    _compile_attrs = []
-    _ccable_deps = ["components"]
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
+class Schema(Serializable, Buildable):
+    _attrs = ["name", "version", "components"]
 
     def __init__(self, name="default", version="0.0.0", components=[]):
         self.name = str(name)
@@ -32,7 +22,7 @@ class Schema(Serializable, CCAble):
         }
         components = []
         for comp in self.components:
-            components.append({"component_class": self.class2str(comp), "component": comp.to_jcr()})
+            components.append({"component_class": comp.class2str(), "component": comp.to_jcr()})
         jcr["components"] = components
         return jcr
 
@@ -52,50 +42,6 @@ class Schema(Serializable, CCAble):
         self.components = components
         return self
 
-    """CCAble Interface"""
-
-    def configure(self, data):
-        """This will configure the components extractors and stats, and will compile the extractors using the loaded data.
-        Steps:
-        1. Find components with unconfigured extractors
-        2. Select component to configure
-            1. Config extractor
-            2. Compile extractor & propose stats config
-            3. Inspect stat config
-
-        Args:
-            loaded_data ([type]): [description]
-        """
-        # Find unconfigured components
-
-        # Configure extractor, process loaded data (compile extractor), configure stats
-        unconfigs = self.get_unconfigured()
-        for comp in unconfigs:
-            # Configure component
-            comp.configure(data)
-
-    def compile(self, data):
-        """Compile the schema."""
-        for comp in self.components:
-            # Compile stats
-            comp.compile(data)
-
-    """Other Methods"""
-
-    def check(self, data, convert_json=True):
-        tags = []
-        if self.is_compiled():
-            for component in self.components:
-                tag = component.check(data)
-                tags.extend(tag)
-        else:
-            raise SchemaCompilationException(
-                f"Cannot check data on an uncompiled schema. Check whether all components are compiled."
-            )
-        if convert_json:
-            tags = [t.to_jcr() for t in tags]
-        return tags
-
     def save(self, fpath):
         with open(fpath, "w") as f:
             json.dump(self.to_jcr(), f, indent=4)
@@ -105,13 +51,53 @@ class Schema(Serializable, CCAble):
             jcr = json.load(f)
         return self.load_jcr(jcr)
 
+    """Buildable Interface"""
+
+    def build(self, data):
+        # check wheter there are no extractors that require config
+        require_config = self.get_unconfigured()
+        if len(require_config) > 0:
+            raise SchemaBuildingException(f"Some schema component extractors require configuration.")
+        # Build the schema
+        for comp in self.components:
+            # Compile stats
+            comp.build(data)
+
+    def is_built(self):
+        return all(comp.is_built() for comp in self.components)
+
+    """Configurable extractors support"""
+
     def get_unconfigured(self):
         unconfigureds = []
         for component in self.components:
-            if not component.is_configured():
+            if component.requires_config():
                 unconfigureds.append(component)
-
         return unconfigureds
+
+    def configure(self, data):
+        require_config = self.get_unconfigured()
+        for comp in require_config:
+            print(f"Starting configuration wizard for {comp.name} extractor...")
+            comp.extractor.configure(data)
+            print(f"Done.")
+        print(f"Configuration complete.")
+
+    """Other Methods"""
+
+    def check(self, data, convert_json=True):
+        tags = []
+        if self.is_built():
+            for component in self.components:
+                tag = component.check(data)
+                tags.extend(tag)
+        else:
+            raise NotSupportedException(
+                f"Cannot check data on an unbuilt schema. Check whether all components are built."
+            )
+        if convert_json:
+            tags = [t.to_jcr() for t in tags]
+        return tags
 
     def drop_component(self, name):
         self.components = [c for c in self.components if c.name != name]

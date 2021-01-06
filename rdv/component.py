@@ -1,90 +1,53 @@
-import json
-import tempfile
-import time
-import webbrowser
 from collections.abc import Iterable
-from multiprocessing import Process
 from pydoc import locate
+from abc import ABC, abstractmethod
 
 import numpy as np
 import pandas as pd
 
 from rdv.globals import (
-    CCAble,
+    Buildable,
     ClassNotFoundError,
-    NoneExtractor,
+    Configurable,
     NotSupportedException,
     Serializable,
-    SchemaCompilationException,
 )
 from rdv.stats import CategoricStats, NumericStats
 from rdv.tags import Tag, SEG, ERR, IND
 from rdv.extractors.structured import ElementExtractor
+from rdv.extractors import NoneExtractor
 
 
-class Component(Serializable, CCAble):
-
-    _config_attrs = []
-    _compile_attrs = []
-    _ccable_deps = ["extractor", "stats"]
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
-
+class Component(Serializable, Buildable, ABC):
     def __init__(self, name="default_name", extractor=None):
         self.name = str(name)
         if extractor is None:
             self.extractor = NoneExtractor()
         else:
             self.extractor = extractor
+        if isinstance(self.extractor, Configurable):
+            self.extractor.idfr = self.name
+
         self.stats = None
+
+    """Serializable interface """
 
     def to_jcr(self):
         data = {
             "name": self.name,
-            "extractor_class": self.class2str(self.extractor),
+            "extractor_class": self.extractor.class2str(),
             "extractor_state": self.extractor.to_jcr(),
             "stats": self.stats.to_jcr(),
         }
         return data
 
-    def interact_config(self, loaded_data):
-        _, output_fpath = tempfile.mkstemp()
-        cref = self.name
-        print(f"Saving to: {output_fpath}")
-        # Crease new process
-        p = Process(
-            target=self.extractor.configure_interactive,
-            args=(loaded_data, output_fpath, cref),
-        )
-        p.start()
-        time.sleep(0.5)
-        webbrowser.open_new("http://127.0.0.1:8050/")
-        p.join()
-        # Load saved config and save to extractor
-        with open(output_fpath, "r") as f:
-            loaded = json.load(f)
-        return loaded
+    def build_extractor(self, loaded_data):
+        self.extractor.build(loaded_data)
 
-    def configure_extractor(self, loaded_data):
-        if hasattr(self.extractor, "configure_interactive"):
-            print(f"Configure extractor for {self.name}")
-            loaded = self.interact_config(loaded_data)
-            self.extractor.configure(loaded)
-        else:
-            print(f"No configuration interaction available for {self.name}")
-            self.extractor.configure(loaded_data)
-
-    def compile_extractor(self, loaded_data):
-        self.extractor.compile(loaded_data)
-
-    def configure_stats(self, loaded_data):
-        print(f"Configuring stats for {self.name}")
-        features = self.extract_features(loaded_data)
-        self.stats.configure(features)
-
-    def compile_stats(self, loaded_data):
+    def build_stats(self, loaded_data):
         print(f"Compiling stats for {self.name}")
         features = self.extract_features(loaded_data)
-        self.stats.compile(features)
+        self.stats.build(features)
 
     def extract_features(self, loaded_data):
         features = []
@@ -97,26 +60,37 @@ class Component(Serializable, CCAble):
             raise NotSupportedException("loaded_data should be a DataFrame or Iterable")
         return features
 
-    def configure(self, data):
-        # Configure extractor
-        self.configure_extractor(data)
+    def build(self, data):
         # Compile extractor
-        self.compile_extractor(data)
+        self.build_extractor(data)
         # Configure stats
-        self.configure_stats(data)
+        self.build_stats(data)
 
-    def is_configured(self):
-        has_attrs = self.check_has_attrs(self._config_attrs + self._ccable_deps)
-        if not has_attrs:
-            return False
-        # Dependencies need to be configured and compiled
-        return self.check_deps(func="is_configured") and self.extractor.is_compiled()
+    def is_built(self):
+        return self.extractor.is_built() and self.stats.is_built()
 
-    def compile(self, data):
-        if self.is_configured():
-            self.compile_stats(data)
-        else:
-            raise SchemaCompilationException(f"Component {self.name} not configured. Cannot compile.")
+    def requires_config(self):
+        return isinstance(self.extractor, Configurable) and not self.extractor.is_configured()
+
+    def check(self, data):
+
+        feature = self.extractor.extract_feature(data)
+        # Make a tag from the feature
+        feat_tag = self.feature2tag(feature)
+        # Check min, max, nan or None and raise data error
+        err_tag = self.check_invalid(feature)
+        tags = [feat_tag, err_tag]
+        # Filter Nones
+        tags = [tag for tag in tags if tag is not None]
+        return tags
+
+    @abstractmethod
+    def feature2tag(self, feature):
+        pass
+
+    @abstractmethod
+    def check_invalid(self, feature):
+        pass
 
 
 class NumericComponent(Component):
@@ -143,35 +117,6 @@ class NumericComponent(Component):
             raise NotSupportedException(
                 f"stats for a NumericComponant should be of type NumericStats, not {type(value)}"
             )
-
-    def check(self, data, return_features=True):
-        feature = self.extractor.extract_feature(data)
-        # Make a tag from the feature
-        feat_tag = self.feature2tag(feature)
-        # Check min, max, nan or None and raise data error
-        err_tag = self.check_invalid(feature)
-        if err_tag:  # If feature invalid, return only error tag
-            return [feat_tag, err_tag]
-
-        # make deviation tag
-        dev_tag = self.feature2dev(feature)
-        if return_features:
-            tags = [feat_tag, dev_tag]
-        else:
-            tags = [dev_tag]
-        # Filter Nones
-        tags = [tag for tag in tags if tag is not None]
-        return tags
-
-    def feature2dev(self, feature):
-        if self.stats.std != 0:
-            zscore = (feature - self.stats.mean) / self.stats.std
-            return Tag(name=f"{self.name}-dev", value=zscore, type=IND)
-        elif feature == self.stats.mean:
-            zscore = 0
-            return Tag(name=f"{self.name}-dev", value=zscore, type=IND)
-        else:
-            return Tag(name=f"{self.name}-dev", value=float("nan"), type=ERR)
 
     def feature2tag(self, feature):
         if not np.isnan(feature):
@@ -231,32 +176,6 @@ class CategoricComponent(Component):
                 f"stats for a NumericComponant should be of type CategoricStats, not {type(value)}"
             )
 
-    def check(self, data, return_features=True):
-        feature = self.extractor.extract_feature(data)
-        # Make a tag from the feature
-        feat_tag = self.feature2tag(feature)
-        # Check min, max, nan or None and raise data error
-        err_tag = self.check_invalid(feature)
-        if err_tag:  # If feature invalid, return only error tag
-            return [feat_tag, err_tag]
-        # make deviation tag
-        dev_tag = self.feature2dev(feature)
-        if return_features:
-            tags = [feat_tag, dev_tag]
-        else:
-            tags = [dev_tag]
-        # Filter Nones
-        tags = [tag for tag in tags if tag is not None]
-        return tags
-
-    def feature2dev(self, feature):
-        if feature in self.stats.domain:
-            p = self.stats.domain_counts[feature]
-            dev_tag = Tag(name=f"{self.name}-dev", value=p, type=IND)
-            return dev_tag
-        else:
-            return None
-
     def feature2tag(self, feature):
         return Tag(name=self.name, value=feature, type=SEG)
 
@@ -266,7 +185,7 @@ class CategoricComponent(Component):
             return Tag(name=tagname, value="Value None", type=ERR)
         elif pd.isnull(feature):
             return Tag(name=tagname, value="Value NaN", type=ERR)
-        elif feature not in self.stats.domain:
+        elif feature not in self.stats.domain_counts:
             return Tag(name=tagname, value="Domain Error", type=ERR)
         else:
             return None

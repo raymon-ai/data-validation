@@ -1,7 +1,7 @@
 from PIL import ImageFilter
 import numpy as np
 
-from rdv.globals import FeatureExtractor
+from rdv.extractors import FeatureExtractor
 
 
 class Sharpness(FeatureExtractor):
@@ -9,26 +9,7 @@ class Sharpness(FeatureExtractor):
     https://www.pyimagesearch.com/2015/09/07/blur-detection-with-opencv/
     """
 
-    _config_attrs = []
-    _compile_attrs = []
-    _ccable_deps = []
-    _attrs = _config_attrs + _compile_attrs + _ccable_deps
-
-    def __init__(
-        self,
-    ):
-        pass
-
-    def to_jcr(self):
-        return {}
-
-    def load_jcr(self, jcr):
-        return self
-
-    def configure(self, data):
-        pass
-
-    def compile(self, data):
+    def __init__(self):
         pass
 
     def extract_feature(self, data):
@@ -36,3 +17,19 @@ class Sharpness(FeatureExtractor):
         img = img.convert("L")
         filtered = img.filter(ImageFilter.Kernel((3, 3), (0, 1, 0, 1, -4, 1, 0, 1, 0), scale=1, offset=0))
         return float(np.array(filtered).var())
+
+    """Serializable inteface """
+
+    def to_jcr(self):
+        return {}
+
+    def load_jcr(self, jcr):
+        return self
+
+    """Buildable interface"""
+
+    def build(self, data):
+        pass
+
+    def is_built(self):
+        return True
