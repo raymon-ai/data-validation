@@ -23,8 +23,9 @@ class Sharpness(FeatureExtractor):
     def to_jcr(self):
         return {}
 
-    def load_jcr(self, jcr):
-        return self
+    @classmethod
+    def from_jcr(cls, jcr):
+        return cls()
 
     """Buildable interface"""
 

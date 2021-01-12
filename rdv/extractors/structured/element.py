@@ -2,6 +2,7 @@ from PIL import Image
 import numpy as np
 
 from rdv.extractors import FeatureExtractor
+from rdv.globals import DataException
 
 
 class ElementExtractor(FeatureExtractor):
@@ -35,11 +36,9 @@ class ElementExtractor(FeatureExtractor):
         }
         return data
 
-    def load_jcr(self, jcr):
-        if "element" in jcr:
-            self.element = jcr["element"]
-
-        return self
+    @classmethod
+    def from_jcr(cls, jcr):
+        return cls(**jcr)
 
     """Buildable interface"""
 
@@ -48,3 +47,6 @@ class ElementExtractor(FeatureExtractor):
 
     def is_built(self):
         return True
+
+    def __str__(self):
+        return f"{self.__class__.__name__}(element={self.element})"

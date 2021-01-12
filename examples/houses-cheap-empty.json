@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "components": [
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "MSSubClass",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -30,12 +30,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.FloatComponent",
             "component": {
                 "name": "LotFrontage",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -53,7 +54,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "LotArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -80,7 +81,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -94,7 +96,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -108,7 +111,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -122,7 +126,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -136,7 +141,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -150,7 +156,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -164,7 +171,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -178,7 +186,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -192,7 +201,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -206,7 +216,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -220,7 +231,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -234,12 +246,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "OverallQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -257,7 +270,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "OverallCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -275,7 +288,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "YearBuilt",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -293,7 +306,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "YearRemodAdd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -320,7 +333,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -334,7 +348,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -348,7 +363,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -362,7 +378,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -376,12 +393,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.FloatComponent",
             "component": {
                 "name": "MasVnrArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -408,7 +426,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -422,7 +441,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -436,7 +456,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -450,7 +471,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -464,7 +486,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -478,7 +501,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -492,12 +516,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "BsmtFinSF1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -524,12 +549,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "BsmtFinSF2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -547,7 +573,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "BsmtUnfSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -565,7 +591,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "TotalBsmtSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -592,7 +618,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -606,7 +633,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -620,7 +648,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -634,12 +663,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "1stFlrSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -657,7 +687,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "2ndFlrSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -675,7 +705,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "LowQualFinSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -693,7 +723,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "GrLivArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -711,7 +741,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "BsmtFullBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -729,7 +759,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "BsmtHalfBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -747,7 +777,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "FullBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -765,7 +795,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "HalfBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -783,7 +813,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "BedroomAbvGr",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -801,7 +831,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "KitchenAbvGr",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -828,12 +858,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "TotRmsAbvGrd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -860,12 +891,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "Fireplaces",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -892,7 +924,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -906,12 +939,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.FloatComponent",
             "component": {
                 "name": "GarageYrBlt",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -938,12 +972,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "GarageCars",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -961,7 +996,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "GarageArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -988,7 +1023,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -1002,7 +1038,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -1016,12 +1053,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "WoodDeckSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1039,7 +1077,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "OpenPorchSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1057,7 +1095,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "EnclosedPorch",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1075,7 +1113,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "3SsnPorch",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1093,7 +1131,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "ScreenPorch",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1111,7 +1149,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "PoolArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1138,7 +1176,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -1152,7 +1191,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -1166,12 +1206,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "MiscVal",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1189,7 +1230,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "MoSold",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1207,7 +1248,7 @@
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "YrSold",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1234,7 +1275,8 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
@@ -1248,12 +1290,13 @@
                 },
                 "stats": {
                     "domain_counts": null,
-                    "pinv": null
+                    "pinv": null,
+                    "samplesize": null
                 }
             }
         },
         {
-            "component_class": "rdv.component.NumericComponent",
+            "component_class": "rdv.component.IntComponent",
             "component": {
                 "name": "SalePrice",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",

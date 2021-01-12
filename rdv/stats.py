@@ -97,6 +97,18 @@ class NumericStats(Serializable, Buildable):
         else:
             raise DataException("stats.percentiles must be None or a list of length 101.")
 
+    """Size of the sample that was analyzed"""
+
+    @property
+    def samplesize(self):
+        return self._samplesize
+
+    @samplesize.setter
+    def samplesize(self, value):
+        if value is np.nan:
+            raise DataException("stats.pinv cannot be NaN")
+        self._samplesize = value
+
     """Serializable Interface"""
 
     def to_jcr(self):
@@ -105,10 +117,12 @@ class NumericStats(Serializable, Buildable):
             data[attr] = getattr(self, attr)
         return data
 
-    def load_jcr(self, jcr):
-        for attr in self._attrs:
-            setattr(self, attr, jcr[attr])
-        return self
+    @classmethod
+    def from_jcr(cls, jcr):
+        d = {}
+        for attr in cls._attrs:
+            d[attr] = jcr[attr]
+        return cls(**d)
 
     """Buildable Interface"""
 
@@ -128,6 +142,7 @@ class NumericStats(Serializable, Buildable):
 
         # Check the invalid
         self.pinv = len(invalids) / len(data)
+        self.samplesize = len(data)
 
     def is_built(self):
         return all(getattr(self, attr) is not None for attr in self._attrs)
@@ -135,11 +150,13 @@ class NumericStats(Serializable, Buildable):
 
 class CategoricStats(Serializable, Buildable):
 
-    _attrs = ["domain_counts", "pinv"]
+    _attrs = ["domain_counts", "pinv", "samplesize"]
 
-    def __init__(self, domain=None, domain_counts=None, pinv=None):
+    def __init__(self, domain_counts=None, pinv=None, samplesize=None):
+
         self.domain_counts = domain_counts
         self.pinv = pinv
+        self.samplesize = samplesize
 
     """domain_counts"""
 
@@ -171,30 +188,36 @@ class CategoricStats(Serializable, Buildable):
             raise DataException("stats.pinv cannot be NaN")
         self._pinv = value
 
+    @property
+    def samplesize(self):
+        return self._samplesize
+
+    @samplesize.setter
+    def samplesize(self, value):
+        if value is np.nan:
+            raise DataException("stats.pinv cannot be NaN")
+        self._samplesize = value
+
     def to_jcr(self):
         data = {}
         for attr in self._attrs:
             value = getattr(self, attr)
-            if attr == "domain" and value is not None:
-                data[attr] = list(value)
-            else:
-                data[attr] = value
+            data[attr] = value
         return data
 
-    def load_jcr(self, jcr):
-        for attr in self._attrs:
-            value = jcr[attr]
-            if attr == "domain" and value is not None:
-                setattr(self, attr, list(set(value)))
-            else:
-                setattr(self, attr, value)
-        return self
+    @classmethod
+    def from_jcr(cls, jcr):
+        d = {}
+        for attr in cls._attrs:
+            d[attr] = jcr[attr]
+        return cls(**d)
 
     def build(self, data):
         data = pd.Series(data)
         self.domain_counts = data[~pd.isna(data)].value_counts(normalize=True).to_dict()
         invalids = data[pd.isna(data)]
         self.pinv = len(invalids) / len(data)
+        self.samplesize = len(data)
 
     def is_built(self):
         return all(getattr(self, attr) is not None for attr in self._attrs)

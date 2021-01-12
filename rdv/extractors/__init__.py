@@ -16,14 +16,21 @@ class FeatureExtractor(Serializable, Buildable, ABC):
         """
         raise NotImplementedError
 
+    def __str__(self):
+        return self.__class__.__name__
+
+    def __repr__(self):
+        return str(self)
+
 
 class NoneExtractor(FeatureExtractor):
     def to_jcr(self):
         data = {}
         return data
 
-    def load_jcr(self, jcr):
-        return self
+    @classmethod
+    def from_jcr(cls, jcr):
+        return cls()
 
     def extract(self, data):
         """Extracts a feature from the data.

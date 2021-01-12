@@ -1,7 +1,7 @@
 import pytest
 import json
 from rdv.schema import Schema
-from rdv.component import NumericComponent, NumericStats
+from rdv.component import FloatComponent, NumericStats
 from rdv.extractors.vision.similarity import FixedSubpatchSimilarity
 
 
@@ -23,12 +23,12 @@ def test_stats_partial_none():
 
 
 def test_component_jcr():
-    comp = NumericComponent()
+    comp = FloatComponent()
     comp_jcr = comp.to_jcr()
     jsonstr = json.dumps(comp_jcr)
-    comp_restored = NumericComponent()
+    comp_restored = FloatComponent()
     comp_restored.load_jcr(comp_jcr)
-    for attr in NumericComponent._attrs:
+    for attr in FloatComponent._attrs:
         assert getattr(comp, attr) == getattr(comp_restored, attr)
 
 
@@ -37,7 +37,7 @@ def test_schema_jcr():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version="1.0.0", components=[component, component])
     schema_jcr = schema.to_jcr()
     assert len(schema_jcr["components"]) == 2
@@ -79,7 +79,7 @@ def test_fsps_extractor_ccable():
 
 
 def test_component_ccable():
-    component = NumericComponent(name="testcomponent")
+    component = FloatComponent(name="testcomponent")
 
     assert not component.is_configured()
     assert not component.is_compiled()
@@ -88,7 +88,7 @@ def test_component_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=10)
-    component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
     assert not component.is_compiled()
 
@@ -96,13 +96,13 @@ def test_component_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
     assert component.is_compiled()
 
 
 def test_schema_ccable():
-    component = NumericComponent(name="testcomponent")
+    component = FloatComponent(name="testcomponent")
     schema = Schema(name="Testing", version="1.0.0", components=[component])
     assert not schema.is_configured()
     assert not schema.is_compiled()
@@ -111,7 +111,7 @@ def test_schema_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=10)
-    component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version="1.0.0", components=[component])
 
     assert schema.is_configured()
@@ -121,7 +121,7 @@ def test_schema_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = NumericComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
     schema = Schema(name="Testing", version="1.0.0", components=[component, component])
 
     assert schema.is_configured()

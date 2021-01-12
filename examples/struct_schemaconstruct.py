@@ -5,7 +5,14 @@ import numpy as np
 from pathlib import Path
 from pydoc import locate
 from rdv.schema import Schema
-from rdv.component import NumericComponent, CategoricComponent, NumericStats, CategoricStats, construct_components
+from rdv.component import (
+    FloatComponent,
+    IntComponent,
+    CategoricComponent,
+    NumericStats,
+    CategoricStats,
+    construct_components,
+)
 from rdv.extractors.structured import ElementExtractor
 
 pd.set_option("display.max_rows", 500)
@@ -30,7 +37,7 @@ print_status(schema)
 
 # %%
 schema.build(data=all_data)
-schema.save("houses-cheap-build.json")
+schema.save("houses-cheap-built.json")
 print_status(schema)
 
 #%%
@@ -47,5 +54,5 @@ data = all_data["MasVnrType"]
 data
 
 # %%
-schema.configure(loaded_data=all_data)
+schema.configure(data=all_data)
 # %%

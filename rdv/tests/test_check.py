@@ -5,9 +5,9 @@ import numpy as np
 
 import rdv
 from rdv.component import construct_components
-from rdv.component import CategoricComponent, NumericComponent
+from rdv.component import CategoricComponent, FloatComponent
 from rdv.schema import Schema
-from rdv.globals import SchemaBuildingException, DataException
+from rdv.globals import SchemaStateException, DataException
 from rdv.stats import NumericStats, CategoricStats
 
 

@@ -6,9 +6,9 @@ import numpy as np
 
 import rdv
 from rdv.component import construct_components
-from rdv.component import CategoricComponent, NumericComponent
+from rdv.component import CategoricComponent, FloatComponent
 from rdv.schema import Schema
-from rdv.globals import SchemaBuildingException, DataException
+from rdv.globals import SchemaStateException, DataException
 from rdv.stats import NumericStats, CategoricStats
 
 #%%
@@ -22,10 +22,10 @@ def test_constuct_components():
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
     assert len(components) == 4
-    assert isinstance(components[0], NumericComponent)
+    assert isinstance(components[0], FloatComponent)
     assert isinstance(components[1], CategoricComponent)
     assert isinstance(components[2], CategoricComponent)
-    assert isinstance(components[3], NumericComponent)
+    assert isinstance(components[3], FloatComponent)
 
 
 def test_compile_unconfigured_numeric():
@@ -39,8 +39,8 @@ def test_compile_unconfigured_numeric():
     components = construct_components(dtypes=df.dtypes)
     schema = Schema(components=components)
     try:
-        schema.compile(data=df)
-    except SchemaBuildingException:
+        schema.build(data=df)
+    except SchemaStateException:
         pass
     else:
         pytest.fail("Compilation of unconfigured schema should fail")

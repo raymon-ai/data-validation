@@ -15,7 +15,7 @@ class NotSupportedException(Exception):
     pass
 
 
-class SchemaBuildingException(Exception):
+class SchemaStateException(Exception):
     pass
 
 
@@ -34,9 +34,9 @@ class Serializable(ABC):
         # Return a json-compatible representation
         raise NotImplementedError()
 
-    # TODO: Make all subclasses implement a from_jcr classmethod instead of Class().load_jcr()?
+    @classmethod
     @abstractmethod
-    def load_jcr(self, jcr):
+    def from_jcr(cls, jcr):
         # Load a json-compatible representation
         raise NotImplementedError()
 

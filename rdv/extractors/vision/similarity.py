@@ -126,15 +126,19 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
         }
         return data
 
-    def load_jcr(self, jcr):
+    @classmethod
+    def from_jcr(cls, jcr):
+        patch, refs, nfres, idfr = None, None, None, None
         if "patch" in jcr:
-            self.patch = jcr["patch"]
+            patch = jcr["patch"]
         if "nrefs" in jcr:
-            self.nrefs = jcr["nrefs"]
+            nrefs = jcr["nrefs"]
         if "refs" in jcr:
-            self.refs = jcr["refs"]
+            refs = jcr["refs"]
+        if "idfr" in jcr:
+            refs = jcr["idfr"]
 
-        return self
+        return cls(patch=patch, refs=refs, nrefs=nrefs, idfr=idfr)
 
     """Buildable interface"""
 

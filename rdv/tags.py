@@ -22,9 +22,9 @@ class Tag(Serializable):
         }
         return jcr
 
-    def load_jcr(self, jcr):
-        self.__init__(**jcr)
-        return self
+    @classmethod
+    def from_jcr(cls, jcr):
+        return cls(**jcr)
 
     def __str__(self):
         return f"'{self.name}:{self.value}"

@@ -1,18 +1,59 @@
 import json
 from pydoc import locate
 
-from rdv.globals import Buildable, ClassNotFoundError, NotSupportedException, SchemaBuildingException, Serializable
+from rdv.globals import Buildable, ClassNotFoundError, NotSupportedException, SchemaStateException, Serializable
+from rdv.component import Component
 
 
 class Schema(Serializable, Buildable):
     _attrs = ["name", "version", "components"]
 
     def __init__(self, name="default", version="0.0.0", components=[]):
+
+        self._name = None
+        self._version = None
+        self._components = {}
+
         self.name = str(name)
         self.version = str(version)
         self.components = components
 
     """Serializable interface"""
+
+    @property
+    def name(self):
+        return self._name
+
+    @name.setter
+    def name(self, value):
+        if not isinstance(value, str):
+            raise ValueError(f"Schema name should be a string")
+        self._name = value
+
+    @property
+    def version(self):
+        return self._version
+
+    @version.setter
+    def version(self, value):
+        if not isinstance(value, str):
+            raise ValueError(f"Schema version should be a string")
+        self._version = value
+
+    @property
+    def components(self):
+        return self._components
+
+    @components.setter
+    def components(self, value):
+        if isinstance(value, list) and all(isinstance(comp, Component) for comp in value):
+            # Convert to dict
+            self._components = {c.name: c for c in value}
+
+        elif isinstance(value, dict) and all(isinstance(comp, Component) for comp in value.values()):
+            self._components = value
+        else:
+            raise ValueError(f"components must be a list[Component] or dict[str, Component]")
 
     def to_jcr(self):
         jcr = {
@@ -21,14 +62,15 @@ class Schema(Serializable, Buildable):
             "components": [],
         }
         components = []
-        for comp in self.components:
+        for comp in self.components.values():
             components.append({"component_class": comp.class2str(), "component": comp.to_jcr()})
         jcr["components"] = components
         return jcr
 
-    def load_jcr(self, jcr):
-        self.name = jcr["name"]
-        self.version = jcr["version"]
+    @classmethod
+    def from_jcr(cls, jcr):
+        name = jcr["name"]
+        version = jcr["version"]
         components = []
         for comp_dict in jcr["components"]:
             classpath = comp_dict["component_class"]
@@ -36,20 +78,20 @@ class Schema(Serializable, Buildable):
             compclass = locate(classpath)
             if compclass is None:
                 raise ClassNotFoundError("Could not locate classpath")
-            component = compclass().load_jcr(comp_jcr)
+            component = compclass.from_jcr(comp_jcr)
             components.append(component)
 
-        self.components = components
-        return self
+        return cls(name=name, version=version, components=components)
 
     def save(self, fpath):
         with open(fpath, "w") as f:
             json.dump(self.to_jcr(), f, indent=4)
 
-    def load(self, fpath):
+    @classmethod
+    def load(cls, fpath):
         with open(fpath, "r") as f:
             jcr = json.load(f)
-        return self.load_jcr(jcr)
+        return cls.from_jcr(jcr)
 
     """Buildable Interface"""
 
@@ -57,20 +99,20 @@ class Schema(Serializable, Buildable):
         # check wheter there are no extractors that require config
         require_config = self.get_unconfigured()
         if len(require_config) > 0:
-            raise SchemaBuildingException(f"Some schema component extractors require configuration.")
+            raise SchemaStateException(f"Some schema component extractors require configuration.")
         # Build the schema
-        for comp in self.components:
+        for comp in self.components.values():
             # Compile stats
             comp.build(data)
 
     def is_built(self):
-        return all(comp.is_built() for comp in self.components)
+        return all(comp.is_built() for comp in self.components.values())
 
     """Configurable extractors support"""
 
     def get_unconfigured(self):
         unconfigureds = []
-        for component in self.components:
+        for component in self.components.values():
             if component.requires_config():
                 unconfigureds.append(component)
         return unconfigureds
@@ -88,7 +130,7 @@ class Schema(Serializable, Buildable):
     def check(self, data, convert_json=True):
         tags = []
         if self.is_built():
-            for component in self.components:
+            for component in self.components.values():
                 tag = component.check(data)
                 tags.extend(tag)
         else:
@@ -100,10 +142,4 @@ class Schema(Serializable, Buildable):
         return tags
 
     def drop_component(self, name):
-        self.components = [c for c in self.components if c.name != name]
-
-    @classmethod
-    def from_json(cls, json):
-        schema = cls()
-        schema.load_jcr(json)
-        return schema
+        self.components = [c for c in self.components.values() if c.name != name]
