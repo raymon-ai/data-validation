@@ -1,7 +1,7 @@
 import json
 from pydoc import locate
 
-from rdv.globals import Buildable, ClassNotFoundError, NotSupportedException, SchemaStateException, Serializable
+from rdv.globals import Buildable, ClassNotFoundError, SchemaStateException, Serializable
 from rdv.component import Component
 
 
@@ -77,7 +77,7 @@ class Schema(Serializable, Buildable):
             comp_jcr = comp_dict["component"]
             compclass = locate(classpath)
             if compclass is None:
-                raise ClassNotFoundError("Could not locate classpath")
+                NameError("Could not locate classpath")
             component = compclass.from_jcr(comp_jcr)
             components.append(component)
 
@@ -134,7 +134,7 @@ class Schema(Serializable, Buildable):
                 tag = component.check(data)
                 tags.extend(tag)
         else:
-            raise NotSupportedException(
+            raise SchemaStateException(
                 f"Cannot check data on an unbuilt schema. Check whether all components are built."
             )
         if convert_json:

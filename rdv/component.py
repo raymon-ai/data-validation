@@ -16,7 +16,6 @@ from rdv.globals import (
     Buildable,
     ClassNotFoundError,
     Configurable,
-    NotSupportedException,
     Serializable,
     SchemaStateException,
 )
@@ -65,7 +64,7 @@ class Component(Serializable, Buildable, ABC):
             for data in loaded_data:
                 features.append(self.extractor.extract_feature(data))
         else:
-            raise NotSupportedException("loaded_data should be a DataFrame or Iterable")
+            raise DataException("loaded_data should be a DataFrame or Iterable")
         return features
 
     def build(self, data):
@@ -104,7 +103,7 @@ class Component(Serializable, Buildable, ABC):
         return str(self)
 
     @abstractmethod
-    def plot(self, poi):
+    def plot(self, poi, size, hist):
         pass
 
 
@@ -129,9 +128,7 @@ class FloatComponent(Component):
         elif isinstance(value, NumericStats):
             self._stats = value
         else:
-            raise NotSupportedException(
-                f"stats for a NumericComponant should be of type NumericStats, not {type(value)}"
-            )
+            raise DataException(f"stats for a NumericComponant should be of type NumericStats, not {type(value)}")
 
     def feature2tag(self, feature):
         if not np.isnan(feature):
@@ -157,7 +154,7 @@ class FloatComponent(Component):
         classpath = jcr["extractor_class"]
         extr_class = locate(classpath)
         if extr_class is None:
-            raise ClassNotFoundError(f"Could not locate {classpath}")
+            NameError(f"Could not locate {classpath}")
 
         extractor = extr_class.from_jcr(jcr["extractor_state"])
         stats = NumericStats.from_jcr(jcr["stats"])
@@ -167,23 +164,25 @@ class FloatComponent(Component):
     def __str__(self):
         return f"FloatComponent(name={self.name}, extractor={self.extractor})"
 
-    def plot(self, poi=None):
+    def plot(self, poi=None, size=(800, 500), hist=True):
         if not self.is_built():
             raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
-        fig = make_subplots(rows=2, cols=1, start_cell="top-left")
+        fig = go.Figure()
 
         # fig = go.Figure()
-        fig.add_trace(get_cdf(self.stats.percentiles), row=1, col=1)
-        fig.add_trace(get_histogram(self.stats.percentiles), row=2, col=1)
+        fig.add_trace(get_cdf(self.stats.percentiles))
+        if hist:
+            fig.add_trace(get_histogram(self.stats.percentiles))
 
         fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
-
         fig.update_layout(
-            # height=500,
-            # width=800,
-            title_text=f"cdf for {self.name}",
+            margin=dict(l=0, r=0, t=50, b=0),
+            height=size[1],
+            width=size[0],
+            template="plotly_white",
+            # title_text=f"cdf for {self.name}",
             xaxis_title=self.name,
-            yaxis_title="cdf",
+            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
         )
 
         if poi and (isinstance(poi, float) or isinstance(poi, int)):
@@ -195,8 +194,6 @@ class FloatComponent(Component):
                 y1=100,
                 line=dict(color=PLOTLY_COLORS[-1], width=1),
                 name="poi",
-                col=1,
-                row=1,
             )
         return fig
 
@@ -222,9 +219,7 @@ class IntComponent(Component):
         elif isinstance(value, NumericStats):
             self._stats = value
         else:
-            raise NotSupportedException(
-                f"stats for a NumericComponant should be of type NumericStats, not {type(value)}"
-            )
+            raise DataException(f"stats for a NumericComponant should be of type NumericStats, not {type(value)}")
 
     def feature2tag(self, feature):
         if not np.isnan(feature):
@@ -250,7 +245,7 @@ class IntComponent(Component):
         classpath = jcr["extractor_class"]
         extr_class = locate(classpath)
         if extr_class is None:
-            raise ClassNotFoundError(f"Could not locate {classpath}")
+            NameError(f"Could not locate {classpath}")
 
         extractor = extr_class.from_jcr(jcr["extractor_state"])
         stats = NumericStats.from_jcr(jcr["stats"])
@@ -260,23 +255,25 @@ class IntComponent(Component):
     def __str__(self):
         return f"IntComponent(name={self.name}, extractor={self.extractor})"
 
-    def plot(self, poi=None):
+    def plot(self, poi=None, size=(800, 500), hist=True):
         if not self.is_built():
             raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
-        fig = make_subplots(rows=2, cols=1, start_cell="top-left")
+        fig = go.Figure()
 
         # fig = go.Figure()
-        fig.add_trace(get_cdf(self.stats.percentiles), row=1, col=1)
-        fig.add_trace(get_histogram(self.stats.percentiles, dtype="int"), row=2, col=1)
+        fig.add_trace(get_cdf(self.stats.percentiles))
+        if hist:
+            fig.add_trace(get_histogram(self.stats.percentiles))
 
         fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
-
         fig.update_layout(
-            # height=500,
-            # width=800,
-            title_text=f"cdf for {self.name}",
+            margin=dict(l=0, r=0, t=50, b=0),
+            height=size[1],
+            width=size[0],
+            template="plotly_white",
+            # title_text=f"cdf for {self.name}",
             xaxis_title=self.name,
-            yaxis_title="cdf",
+            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
         )
 
         if poi and (isinstance(poi, float) or isinstance(poi, int)):
@@ -288,8 +285,6 @@ class IntComponent(Component):
                 y1=100,
                 line=dict(color=PLOTLY_COLORS[-1], width=1),
                 name="poi",
-                col=1,
-                row=1,
             )
         return fig
 
@@ -317,9 +312,7 @@ class CategoricComponent(Component):
         elif isinstance(value, CategoricStats):
             self._stats = value
         else:
-            raise NotSupportedException(
-                f"stats for a NumericComponant should be of type CategoricStats, not {type(value)}"
-            )
+            raise DataException(f"stats for a NumericComponant should be of type CategoricStats, not {type(value)}")
 
     def feature2tag(self, feature):
         return Tag(name=self.name, value=feature, type=SEG)
@@ -340,7 +333,7 @@ class CategoricComponent(Component):
         classpath = jcr["extractor_class"]
         extr_class = locate(classpath)
         if extr_class is None:
-            raise ClassNotFoundError(f"Could not locate {classpath}")
+            NameError(f"Could not locate {classpath}")
 
         extractor = extr_class.from_jcr(jcr["extractor_state"])
         stats = CategoricStats.from_jcr(jcr["stats"])
@@ -351,25 +344,64 @@ class CategoricComponent(Component):
     def __str__(self):
         return f"CategoricComponent(name={self.name}, extractor={self.extractor})"
 
-    def plot(self, poi=None):
+    def plot(self, poi=None, size=(800, 500), hist=True):
         if not self.is_built():
             raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
 
         domain = sorted(list(self.stats.domain_counts.keys()))
-        colors = [PLOTLY_COLORS[0] if e != poi else PLOTLY_COLORS[-1] for e in domain]
         # Let's be absolutely sure the domain is always in the same order
-        p = [self.stats.domain_counts[k] for k in domain]
+        p = [self.stats.domain_counts[k] * 100 for k in domain]
+        cdf = np.cumsum(p).astype("int")
         fig = go.Figure()
-        fig.add_trace(go.Bar(x=domain, y=p, marker_color=colors))
+        fig.add_trace(go.Scatter(x=domain, y=cdf, name="cdf"))
+        if hist:
+            fig.add_trace(go.Bar(x=domain, y=p, name="value freq"))
+
+        # fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
         fig.update_layout(
-            # height=500,
-            # width=800,
-            title_text=f"Value frequencies for {self.name}",
-            xaxis_title="Category",
-            yaxis_title="pdf",
+            margin=dict(l=0, r=0, t=50, b=0),
+            height=size[1],
+            width=size[0],
+            template="plotly_white",
+            # title_text=f"cdf for {self.name}",
+            xaxis_title=self.name,
+            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
         )
 
+        if poi and isinstance(poi, str):
+            fig.add_shape(
+                type="line",
+                x0=poi,
+                y0=0,
+                x1=poi,
+                y1=100,
+                line=dict(color=PLOTLY_COLORS[-1], width=1),
+                name="poi",
+            )
         return fig
+
+    # def plot(self, poi=None):
+    #     if not self.is_built():
+    #         raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
+
+    #     domain = sorted(list(self.stats.domain_counts.keys()))
+    #     colors = [PLOTLY_COLORS[0] if e != poi else PLOTLY_COLORS[-1] for e in domain]
+    #     # Let's be absolutely sure the domain is always in the same order
+    #     p = [self.stats.domain_counts[k] for k in domain]
+    #     cdf = np.cumsum(p).astype("int")
+    #     fig = go.Figure()
+    #     fig.add_trace(go.Bar(x=domain, y=p, marker_color=colors, name="value freq"))
+    #     fig.add_trace(go.Scatter(x=domain, y=cdf, name="cdf"))
+
+    #     fig.update_layout(
+    #         # height=500,
+    #         # width=800,
+    #         title_text=f"Value frequencies for {self.name}",
+    #         xaxis_title="Category",
+    #         yaxis_title="pdf",
+    #     )
+
+    #     return fig
 
     def plot_compare(self, other):
         def get_bartrace(domain_counts, name):
@@ -472,6 +504,7 @@ def sample_cdf(percentiles, n_samples, dtype="float"):
 def get_histogram(percentiles, dtype="float"):
     px = sample_cdf(percentiles=percentiles, n_samples=1000, dtype=dtype)
     hist, edges = np.histogram(px, bins=100, range=(percentiles[0], percentiles[-1]))
+    hist = hist / hist.sum() * 100
     widths = np.diff(edges)
     bin_centers = (edges[:-1] + edges[1:]) / 2
 

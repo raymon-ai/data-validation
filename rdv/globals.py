@@ -7,14 +7,6 @@ from abc import ABC, abstractmethod
 from multiprocessing import Process
 
 
-class ClassNotFoundError(Exception):
-    pass
-
-
-class NotSupportedException(Exception):
-    pass
-
-
 class SchemaStateException(Exception):
     pass
 
