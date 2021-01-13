@@ -3,8 +3,9 @@ import json
 import tempfile
 import time
 import webbrowser
-from abc import ABC, abstractmethod
 from multiprocessing import Process
+
+from abc import ABC, abstractmethod
 
 
 class SchemaStateException(Exception):

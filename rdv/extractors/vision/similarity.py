@@ -164,7 +164,7 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
     def is_configured(self):
         return isinstance(self.patch, dict) and all(key in self.patch for key in self._patch_keys)
 
-    def configure_interactive(self, loaded_data, output_path, null_stderr=True):
+    def configure_interactive(self, loaded_data, output_path):
         def create_image_fig(active_img_idx, patch, editable=True):
             active_img = loaded_data[active_img_idx].copy()
             img_width, img_height = active_img.size
@@ -284,11 +284,6 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
                 active_image_idx = int(active_image_idx)
 
                 return create_image_fig(active_img_idx=active_image_idx, patch=state)
-
-        print(f"null_strerr: {null_stderr}")
-        if null_stderr:
-            f = open(os.devnull, "w")
-            sys.stderr = f
 
         app = dash.Dash(
             "Data Schema Config",

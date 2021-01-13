@@ -14,9 +14,9 @@ PLOTLY_COLORS = px.colors.qualitative.Plotly
 
 from rdv.globals import (
     Buildable,
-    ClassNotFoundError,
     Configurable,
     Serializable,
+    DataException,
     SchemaStateException,
 )
 from rdv.stats import CategoricStats, NumericStats

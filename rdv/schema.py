@@ -1,8 +1,18 @@
 import json
 from pydoc import locate
+from pathlib import Path
+import time
+import webbrowser
+from multiprocessing import Process
+import dash
+import dash_core_components as dcc
+import dash_html_components as html
+from dash.dependencies import Input, Output
 
-from rdv.globals import Buildable, ClassNotFoundError, SchemaStateException, Serializable
+import rdv
+from rdv.globals import Buildable, SchemaStateException, Serializable
 from rdv.component import Component
+from rdv.dash.helpers import windowcloselistener, dash_app
 
 
 class Schema(Serializable, Buildable):
@@ -143,3 +153,87 @@ class Schema(Serializable, Buildable):
 
     def drop_component(self, name):
         self.components = [c for c in self.components.values() if c.name != name]
+
+    @dash_app
+    def view(self, poi=None):
+        def get_component_page(component_name):
+            return html.Div(
+                id="component-page-div",
+                children=[
+                    dcc.Graph(id="component-graph", figure=self.components[component_name].plot()),
+                    dcc.Link("Back", href=f"/"),
+                ],
+                className="my-3",
+            )
+
+        def component2row(comp):
+            return html.Tr(
+                [
+                    html.Td(dcc.Link(comp.name, href=f"/{comp.name}")),
+                    html.Td(comp.__class__.__name__, className="codelike-content"),
+                    html.Td(
+                        dcc.Graph(
+                            id=f"{comp.name}-prev",
+                            figure=comp.plot(size=(400, 150), hist=False),
+                            config={"displayModeBar": False},
+                        )
+                    ),
+                ]
+            )
+
+        def get_component_table():
+            return html.Table(
+                children=[
+                    html.Thead(
+                        className="schema-tablehead",
+                        children=[
+                            html.Tr(
+                                [
+                                    html.Td("Component", className="schema-name-column"),
+                                    html.Td("Type", className="schema-type-column"),
+                                    html.Td("Indicator", className="schema-preview-column"),
+                                ]
+                            )
+                        ],
+                    ),
+                    html.Tbody(children=[component2row(comp) for comp in self.components.values()]),
+                ]
+            )
+
+        app = dash.Dash(
+            __name__,
+            assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
+        )
+        app.title = f"Schema viewer"
+        app.layout = html.Div(
+            className="schema-container",
+            children=[
+                dcc.Location(id="url", refresh=False),
+                windowcloselistener(app),
+                html.Div(
+                    className="my-5",
+                    children=[
+                        html.H1(app.title, className="my-3"),
+                        html.H3(
+                            [
+                                "Schema:",
+                                html.Span(self.name, className="codelike-flex"),
+                                ", Version:",
+                                html.Span(self.version, className="codelike-flex"),
+                            ],
+                            className="my-3",
+                        ),
+                        html.Div(id="page-content"),
+                    ],
+                ),
+            ],
+        )
+
+        @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+        def display_page(pathname):
+            if pathname == "/":
+                return get_component_table()
+            else:
+                return get_component_page(pathname.split("/")[1])
+
+        app.run_server()
