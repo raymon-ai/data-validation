@@ -65,6 +65,10 @@ class Schema(Serializable, Buildable):
         else:
             raise ValueError(f"features must be a list[Feature] or dict[str, Feature]")
 
+    @property
+    def group_idfr(self):
+        return f"{self.name}@{self.version}"
+
     def to_jcr(self):
         jcr = {
             "name": self.name,
@@ -73,7 +77,7 @@ class Schema(Serializable, Buildable):
         }
         features = []
         for feat in self.features.values():
-            features.append({"feature_class": comp.class2str(), "feature": comp.to_jcr()})
+            features.append({"feature_class": feat.class2str(), "feature": feat.to_jcr()})
         jcr["features"] = features
         return jcr
 
@@ -113,10 +117,10 @@ class Schema(Serializable, Buildable):
         # Build the schema
         for feat in self.features.values():
             # Compile stats
-            comp.build(data)
+            feat.build(data)
 
     def is_built(self):
-        return all(comp.is_built() for feat in self.features.values())
+        return all(feat.is_built() for feat in self.features.values())
 
     """Configurable extractors support"""
 
@@ -130,8 +134,8 @@ class Schema(Serializable, Buildable):
     def configure(self, data):
         require_config = self.get_unconfigured()
         for feat in require_config:
-            print(f"Starting configuration wizard for {comp.name} extractor...")
-            comp.extractor.configure(data)
+            print(f"Starting configuration wizard for {feat.name} extractor...")
+            feat.extractor.configure(data)
             print(f"Done.")
         print(f"Configuration complete.")
 
@@ -142,6 +146,7 @@ class Schema(Serializable, Buildable):
         if self.is_built():
             for feature in self.features.values():
                 tag = feature.check(data)
+                tag.group = self.group_idfr
                 tags.extend(tag)
         else:
             raise SchemaStateException(f"Cannot check data on an unbuilt schema. Check whether all features are built.")
@@ -164,15 +169,15 @@ class Schema(Serializable, Buildable):
                 className="my-3",
             )
 
-        def feature2row(comp):
+        def feature2row(feat):
             return html.Tr(
                 [
-                    html.Td(dcc.Link(comp.name, href=f"/{comp.name}")),
-                    html.Td(comp.__class__.__name__, className="codelike-content"),
+                    html.Td(dcc.Link(feat.name, href=f"/{feat.name}")),
+                    html.Td(feat.__class__.__name__, className="codelike-content"),
                     html.Td(
                         dcc.Graph(
-                            id=f"{comp.name}-prev",
-                            figure=comp.plot(size=(400, 150), hist=False),
+                            id=f"{feat.name}-prev",
+                            figure=feat.plot(size=(400, 150), hist=False),
                             config={"displayModeBar": False},
                         )
                     ),
@@ -194,7 +199,7 @@ class Schema(Serializable, Buildable):
                             )
                         ],
                     ),
-                    html.Tbody(children=[feature2row(comp) for feat in self.features.values()]),
+                    html.Tbody(children=[feature2row(feat) for feat in self.features.values()]),
                 ]
             )
 

@@ -14,16 +14,18 @@ ERROR = "error"
 
 
 class Tag(Serializable):
-    def __init__(self, name, value, type):
+    def __init__(self, name, value, type, group=None):
         self.name = name
         self.value = value
         self.type = type
+        self.group = group
 
     def to_jcr(self):
         jcr = {
             "type": self.type,
             "name": self.name,
             "value": self.value,
+            "group": self.group,
         }
         return jcr
 
@@ -35,4 +37,4 @@ class Tag(Serializable):
         return f"'{self.name}:{self.value}"
 
     def __repr__(self):
-        return f"Tag(name='{self.name}, value={self.value}, type={self.type}"
+        return f"Tag(name='{self.name}, value={self.value}, type={self.type}, group={self.group}"
