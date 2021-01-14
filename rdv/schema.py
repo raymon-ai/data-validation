@@ -56,11 +56,11 @@ class Schema(Serializable, Buildable):
 
     @features.setter
     def features(self, value):
-        if isinstance(value, list) and all(isinstance(comp, Feature) for comp in value):
+        if isinstance(value, list) and all(isinstance(comp, Feature) for feat in value):
             # Convert to dict
             self._features = {c.name: c for c in value}
 
-        elif isinstance(value, dict) and all(isinstance(comp, Feature) for comp in value.values()):
+        elif isinstance(value, dict) and all(isinstance(comp, Feature) for feat in value.values()):
             self._features = value
         else:
             raise ValueError(f"features must be a list[Feature] or dict[str, Feature]")
@@ -72,7 +72,7 @@ class Schema(Serializable, Buildable):
             "features": [],
         }
         features = []
-        for comp in self.features.values():
+        for feat in self.features.values():
             features.append({"feature_class": comp.class2str(), "feature": comp.to_jcr()})
         jcr["features"] = features
         return jcr
@@ -111,12 +111,12 @@ class Schema(Serializable, Buildable):
         if len(require_config) > 0:
             raise SchemaStateException(f"Some schema feature extractors require configuration.")
         # Build the schema
-        for comp in self.features.values():
+        for feat in self.features.values():
             # Compile stats
             comp.build(data)
 
     def is_built(self):
-        return all(comp.is_built() for comp in self.features.values())
+        return all(comp.is_built() for feat in self.features.values())
 
     """Configurable extractors support"""
 
@@ -129,7 +129,7 @@ class Schema(Serializable, Buildable):
 
     def configure(self, data):
         require_config = self.get_unconfigured()
-        for comp in require_config:
+        for feat in require_config:
             print(f"Starting configuration wizard for {comp.name} extractor...")
             comp.extractor.configure(data)
             print(f"Done.")
@@ -194,7 +194,7 @@ class Schema(Serializable, Buildable):
                             )
                         ],
                     ),
-                    html.Tbody(children=[feature2row(comp) for comp in self.features.values()]),
+                    html.Tbody(children=[feature2row(comp) for feat in self.features.values()]),
                 ]
             )
 

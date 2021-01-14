@@ -23,7 +23,7 @@ def test_stats_partial_none():
 
 
 def test_component_jcr():
-    comp = FloatFeature()
+    feat = FloatFeature()
     comp_jcr = comp.to_jcr()
     jsonstr = json.dumps(comp_jcr)
     comp_restored = FloatFeature()
