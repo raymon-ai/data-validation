@@ -6,6 +6,7 @@ import webbrowser
 from multiprocessing import Process
 
 from abc import ABC, abstractmethod
+from rdv.dash.helpers import dash_app
 
 
 class SchemaStateException(Exception):
@@ -46,7 +47,7 @@ class Buildable(ABC):
 
 class Configurable(ABC):
     @abstractmethod
-    def configure_interactive(self, loaded_data, output_path, null_stderr=True):
+    def configure_interactive(self, loaded_data):
         raise NotImplementedError
 
     @abstractmethod
@@ -57,19 +58,30 @@ class Configurable(ABC):
     def is_configured(self):
         raise NotImplementedError
 
+    @dash_app
+    def _configure(self, loaded_data):
+        config = self.configure_interactive(loaded_data=loaded_data)
+        return config
+
     def configure(self, data):
-        _, output_fpath = tempfile.mkstemp()
-        print(f"Saving to: {output_fpath}")
-        # Crease new process
-        p = Process(
-            target=self.configure_interactive,
-            args=(data, output_fpath),
-        )
-        p.start()
-        time.sleep(0.5)
-        webbrowser.open_new("http://127.0.0.1:8050/")
-        p.join()
-        # Load saved config and save to extractor
-        with open(output_fpath, "r") as f:
-            loaded = json.load(f)
-        self.set_config(loaded)
+        config = self._configure(data)
+        print(f"Config received: {config}")
+        if len(config) > 0:
+            self.set_config(config)
+        return config
+
+        # _, output_fpath = tempfile.mkstemp()
+        # print(f"Saving to: {output_fpath}")
+        # # Crease new process
+        # p = Process(
+        #     target=self.configure_interactive,
+        #     args=(data, output_fpath),
+        # )
+        # p.start()
+        # time.sleep(0.5)
+        # webbrowser.open_new("http://127.0.0.1:8050/")
+        # p.join()
+        # # Load saved config and save to extractor
+        # with open(output_fpath, "r") as f:
+        #     loaded = json.load(f)
+        #

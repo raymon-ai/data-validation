@@ -13,9 +13,9 @@ import plotly.graph_objects as go
 import rdv.dash
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
-from rdv.dash.helpers import register_close, register_shutdown, styles
 from rdv.extractors import FeatureExtractor
 from rdv.globals import Configurable
+from rdv.dash.helpers import windowcloselistener, register_close
 
 
 class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
@@ -58,6 +58,7 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
             raise ValueError(f"patch must be a dict, not {type(value)}")
         # make sure the correct keys are there
         self._patch = {key: value[key] for key in self._patch_keys}
+        print(f"Patch set to: {self._patch} for {self}")
 
     @property
     def refs(self):
@@ -164,7 +165,9 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
     def is_configured(self):
         return isinstance(self.patch, dict) and all(key in self.patch for key in self._patch_keys)
 
-    def configure_interactive(self, loaded_data, output_path):
+    def configure_interactive(self, loaded_data):
+        config_state = {}
+
         def create_image_fig(active_img_idx, patch, editable=True):
             active_img = loaded_data[active_img_idx].copy()
             img_width, img_height = active_img.size
@@ -192,43 +195,77 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
                 [
                     html.Div(
                         [
-                            html.H2("Global controls", className="Subhead Subhead--spacious"),
-                            html.Label("Select the image to view:", className="m-2"),
-                            dcc.Input(
-                                id="img-selector",
-                                type="number",
-                                value=0,
-                                min=0,
-                                max=len(loaded_data) - 1,
-                                step=1,
-                                className="m-2",
-                            ),
-                            html.Label("Patch Location:", className="m-2"),
-                            html.Pre(
-                                json.dumps(state, indent=4), id="raymon-state", style=styles["pre"], className="m-2"
-                            ),
-                            html.Label("Patch Shape:", className="m-2"),
-                            html.Pre(str(state2shape(state)), id="patch-shape", style=styles["pre"], className="m-2"),
-                            html.Button(
-                                "Continue", id="patch-setup-complete", n_clicks=0, className="btn btn-primary m-2"
+                            html.H2("Controls", className="Subhead Subhead--spacious"),
+                            html.Form(
+                                html.Div(
+                                    className="form",
+                                    children=[
+                                        html.Div(
+                                            className="form-group-header",
+                                            children=html.Label("Select the image to view:"),
+                                        ),
+                                        html.Div(
+                                            className="form-group-body",
+                                            children=dcc.Input(
+                                                id="img-selector",
+                                                type="number",
+                                                value=0,
+                                                min=0,
+                                                max=len(loaded_data) - 1,
+                                                step=1,
+                                                className="m-2",
+                                            ),
+                                        ),
+                                        html.Div(
+                                            className="form-group-header",
+                                            children=html.Label("Patch Location:", className="m-2"),
+                                        ),
+                                        html.Div(
+                                            className="form-group-body",
+                                            children=html.Pre(
+                                                json.dumps(state, indent=4),
+                                                id="raymon-state",
+                                                className="m-2 similarity-code-view",
+                                            ),
+                                        ),
+                                        html.Div(
+                                            className="form-group-header",
+                                            children=html.Label("Patch Shape:", className="m-2"),
+                                        ),
+                                        html.Div(
+                                            className="form-group-body",
+                                            children=html.Pre(
+                                                str(state2shape(state)),
+                                                id="patch-shape",
+                                                className="m-2 similarity-code-view",
+                                            ),
+                                        ),
+                                        html.Button(
+                                            "Save",
+                                            id="patch-setup-complete",
+                                            n_clicks=0,
+                                            className="btn btn-primary m-2",
+                                        ),
+                                    ],
+                                ),
                             ),
                         ],
-                        className="three columns",
+                        className="col-4 float-left",
                         id="left-column-div",
                     ),
                     html.Div(
                         [
-                            html.H2("Example", className="Subhead Subhead--spacious"),
+                            html.H2("View", className="Subhead Subhead--spacious"),
                             dcc.Graph(
                                 id="graph-image",
                                 figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
                             ),
                             html.Div(id="hidden-dummy"),
                         ],
-                        className="nine columns",
+                        className="col-8 float-left",
                     ),
                 ],
-                className="row",
+                className="clearfix",
             )
 
         def state2shape(state):
@@ -245,13 +282,16 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
                 dash_output=Output("hidden-dummy", "value"),
             )
 
-            register_shutdown(
-                app,
-                fpath=output_path,
-                dash_input=[Input("patch-setup-complete", "n_clicks")],
-                dash_output=Output("page-body", "children"),
-                dash_state=[State("raymon-state", "children")],
+            @app.callback(
+                Output("dummy-save-output", "children"),
+                [Input("patch-setup-complete", "n_clicks")],
+                [State("raymon-state", "children")],
             )
+            def save_state(n_clicks, state):
+                nonlocal config_state
+                # if n_clicks == 0:
+                #     raise PreventUpdate()
+                config_state = json.loads(state)
 
             @app.callback(
                 [
@@ -287,23 +327,28 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
 
         app = dash.Dash(
             "Data Schema Config",
-            external_stylesheets=["https://codepen.io/chriddyp/pen/bWLwgP.css"],
+            # external_stylesheets=["https://codepen.io/chriddyp/pen/bWLwgP.css"],
             assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
         )
         register_callbacks(app)
         app.layout = html.Div(
             [
-                html.H1(f"Configuring extractor {str(self)}", className="pagehead"),
+                dcc.Location(id="url", refresh=False),
+                windowcloselistener(app),
+                html.H1(f"Configuring extractor {self.idfr}", className="pagehead"),
                 html.Div(
                     render_patch_page(
                         loaded_data=loaded_data,
                         active_img_idx=0,
                         state={"x0": 0, "y0": 0, "x1": 64, "y1": 64},
-                    )
+                    ),
+                    className="clearfix gutter-md-spacious",
                 ),
+                html.Div(id="dummy-save-output"),
             ],
             id="page-body",
-            className="p-5",
+            className="p-5 schema-container ",
         )
-        app.title = f"Configuring component {str(self)}"
+        app.title = f"Configuring component {self.idfr}"
         app.run_server(debug=False)
+        return config_state

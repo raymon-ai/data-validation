@@ -20,7 +20,7 @@ from rdv.globals import (
     SchemaStateException,
 )
 from rdv.stats import CategoricStats, NumericStats
-from rdv.tags import Tag, SEG, ERR, IND
+from rdv.tags import Tag, SCHEMA_ERROR, SCHEMA_FEATURE
 from rdv.extractors.structured import ElementExtractor
 from rdv.extractors import NoneExtractor
 
@@ -132,20 +132,20 @@ class FloatComponent(Component):
 
     def feature2tag(self, feature):
         if not np.isnan(feature):
-            return Tag(name=self.name, value=float(feature), type=IND)
+            return Tag(name=self.name, value=float(feature), type=SCHEMA_FEATURE)
         else:
             return None
 
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"
         if feature is None:
-            return Tag(name=tagname, value="Value None", type=ERR)
+            return Tag(name=tagname, value="Value None", type=SCHEMA_ERROR)
         elif np.isnan(feature):
-            return Tag(name=tagname, value="Value NaN", type=ERR)
+            return Tag(name=tagname, value="Value NaN", type=SCHEMA_ERROR)
         elif feature > self.stats.max:
-            return Tag(name=tagname, value="Value > max", type=ERR)
+            return Tag(name=tagname, value="Value > max", type=SCHEMA_ERROR)
         elif feature < self.stats.min:
-            return Tag(name=tagname, value="Value < min", type=ERR)
+            return Tag(name=tagname, value="Value < min", type=SCHEMA_ERROR)
         else:
             return None
 
@@ -223,20 +223,20 @@ class IntComponent(Component):
 
     def feature2tag(self, feature):
         if not np.isnan(feature):
-            return Tag(name=self.name, value=float(feature), type=IND)
+            return Tag(name=self.name, value=float(feature), type=SCHEMA_FEATURE)
         else:
             return None
 
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"
         if feature is None:
-            return Tag(name=tagname, value="Value None", type=ERR)
+            return Tag(name=tagname, value="Value None", type=SCHEMA_ERROR)
         elif np.isnan(feature):
-            return Tag(name=tagname, value="Value NaN", type=ERR)
+            return Tag(name=tagname, value="Value NaN", type=SCHEMA_ERROR)
         elif feature > self.stats.max:
-            return Tag(name=tagname, value="Value > max", type=ERR)
+            return Tag(name=tagname, value="Value > max", type=SCHEMA_ERROR)
         elif feature < self.stats.min:
-            return Tag(name=tagname, value="Value < min", type=ERR)
+            return Tag(name=tagname, value="Value < min", type=SCHEMA_ERROR)
         else:
             return None
 
@@ -320,11 +320,11 @@ class CategoricComponent(Component):
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"
         if feature is None:
-            return Tag(name=tagname, value="Value None", type=ERR)
+            return Tag(name=tagname, value="Value None", type=SCHEMA_ERROR)
         elif pd.isnull(feature):
-            return Tag(name=tagname, value="Value NaN", type=ERR)
+            return Tag(name=tagname, value="Value NaN", type=SCHEMA_ERROR)
         elif feature not in self.stats.domain_counts:
-            return Tag(name=tagname, value="Domain Error", type=ERR)
+            return Tag(name=tagname, value="Domain Error", type=SCHEMA_ERROR)
         else:
             return None
 

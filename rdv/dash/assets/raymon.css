@@ -50,3 +50,9 @@
     /* padding-right: 5px; */
 
 }
+
+pre.similarity-code-view {
+    border: thin lightgrey solid;
+    /* overflowX: scroll */
+}
+.hidden {display: none}

@@ -3,9 +3,14 @@ from enum import Enum
 from rdv.globals import Serializable
 
 
-SEG = "seg"
-IND = "ind"
-ERR = "err"
+SCHEMA_ERROR = "schema-error"
+SCHEMA_FEATURE = "schema-feature"
+SCHEMA_FEATURE_LH = "schema-feature-lh"
+SCHEMA_GLOBAL_LH = "schema-global-lh"
+LABEL = "label"
+METRIC = "metric"
+VECTOR = "vector"
+ERROR = "error"
 
 
 class Tag(Serializable):

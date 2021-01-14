@@ -32,8 +32,6 @@ def register_close(app, dash_input, dash_output):
         dash_output,
         dash_input,
     )
-    # Output('hidden-dummy', 'value'),
-    # [Input('patch-setup-complete', 'n_clicks')],
 
 
 def windowcloselistener(app, func=None):
@@ -59,22 +57,6 @@ def windowcloselistener(app, func=None):
     )
 
 
-def register_shutdown(app, fpath, dash_input, dash_output, dash_state):
-    @app.callback(dash_output, dash_input, dash_state)
-    def shutdown(n_clicks, state):
-        if n_clicks == 0:
-            raise PreventUpdate()
-        func = request.environ.get("werkzeug.server.shutdown")
-        if func is None:
-            raise RuntimeError("Not running with the Werkzeug Server")
-        with open(fpath, "w") as f:
-            json.dump(json.loads(state), f)
-        print(f"State: \n{state}", flush=True)
-        func()
-
-        return "Setup complete."
-
-
 def dash_app(func):
     def output_wrapped(*args, queue, **kwargs):
         returned = func(*args, **kwargs)
@@ -88,7 +70,6 @@ def dash_app(func):
         else:
             queue = Queue()
             kwargs["queue"] = queue
-        print(f"args: {args}, kwargs: {kwargs}")
         # Crease new process
         p = Process(target=output_wrapped, args=args, kwargs=kwargs)
         p.start()
