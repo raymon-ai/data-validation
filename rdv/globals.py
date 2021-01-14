@@ -6,7 +6,7 @@ import webbrowser
 from multiprocessing import Process
 
 from abc import ABC, abstractmethod
-from rdv.dash.helpers import dash_app
+from rdv.dash.helpers import dash_input
 
 
 class SchemaStateException(Exception):
@@ -58,7 +58,7 @@ class Configurable(ABC):
     def is_configured(self):
         raise NotImplementedError
 
-    @dash_app
+    @dash_input
     def _configure(self, loaded_data):
         config = self.configure_interactive(loaded_data=loaded_data)
         return config

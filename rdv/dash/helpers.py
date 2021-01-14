@@ -1,6 +1,7 @@
 import os
 import sys
-
+from jupyter_dash import JupyterDash
+import dash
 import json
 import time
 import webbrowser
@@ -13,25 +14,28 @@ from flask import request
 from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 
-styles = {
-    "pre": {"border": "thin lightgrey solid", "overflowX": "scroll"},
-    "hidden": {"display": "none"},
-}
+
+def isnotebook():
+    try:
+        shell = get_ipython().__class__.__name__
+        if shell == "ZMQInteractiveShell":
+            return True  # Jupyter notebook or qtconsole
+        elif shell == "TerminalInteractiveShell":
+            return False  # Terminal running IPython
+        else:
+            return False  # Other type (?)
+    except NameError:
+        return False  # Probably standard Python interpreter
 
 
-def register_close(app, dash_input, dash_output):
-    app.clientside_callback(
-        """
-        function(n_clicks) {
-            if(n_clicks==1){
-                window.close();
-            }
-            return 0;
-        }
-        """,
-        dash_output,
-        dash_input,
-    )
+def get_dash(mode="inline"):
+    isnb = isnotebook()
+    if isnb:
+        print("Using JupyterDash")
+        return JupyterDash, {"mode": mode}
+    else:
+        print("Using standard Dash")
+        return dash.Dash, {}
 
 
 def windowcloselistener(app, func=None):
@@ -57,7 +61,7 @@ def windowcloselistener(app, func=None):
     )
 
 
-def dash_app(func):
+def dash_input(func):
     def output_wrapped(*args, queue, **kwargs):
         returned = func(*args, **kwargs)
         queue.put(returned)
@@ -65,7 +69,7 @@ def dash_app(func):
     def server_wrapped(*args, **kwargs):
         if "queue" in kwargs:
             raise ValueError(
-                "The 'queue' kwarg is not allowed for functions wrapped with the 'dash_app' decorator as it is used internally. Please change the name of the parameter in the function."
+                "The 'queue' kwarg is not allowed for functions wrapped with the 'dash_input' decorator as it is used internally. Please change the name of the parameter in the function."
             )
         else:
             queue = Queue()

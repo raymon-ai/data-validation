@@ -15,7 +15,7 @@ from dash.dependencies import Input, Output, State
 from dash.exceptions import PreventUpdate
 from rdv.extractors import FeatureExtractor
 from rdv.globals import Configurable
-from rdv.dash.helpers import windowcloselistener, register_close
+from rdv.dash.helpers import windowcloselistener
 
 
 class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
@@ -246,6 +246,7 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
                                             n_clicks=0,
                                             className="btn btn-primary m-2",
                                         ),
+                                        html.Div(id="save-output"),
                                     ],
                                 ),
                             ),
@@ -276,14 +277,8 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
             return x1 - x0, y1 - y0
 
         def register_callbacks(app):
-            register_close(
-                app,
-                dash_input=[Input("patch-setup-complete", "n_clicks")],
-                dash_output=Output("hidden-dummy", "value"),
-            )
-
             @app.callback(
-                Output("dummy-save-output", "children"),
+                Output("save-output", "children"),
                 [Input("patch-setup-complete", "n_clicks")],
                 [State("raymon-state", "children")],
             )
@@ -292,6 +287,10 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
                 # if n_clicks == 0:
                 #     raise PreventUpdate()
                 config_state = json.loads(state)
+                if n_clicks == 0:
+                    return "Press the save button to save config."
+                else:
+                    return "State saved. Resave to overwite, close window to continue."
 
             @app.callback(
                 [
@@ -344,7 +343,6 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
                     ),
                     className="clearfix gutter-md-spacious",
                 ),
-                html.Div(id="dummy-save-output"),
             ],
             id="page-body",
             className="p-5 schema-container ",

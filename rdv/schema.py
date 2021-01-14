@@ -12,7 +12,7 @@ from dash.dependencies import Input, Output
 import rdv
 from rdv.globals import Buildable, SchemaStateException, Serializable
 from rdv.feature import Feature
-from rdv.dash.helpers import windowcloselistener, dash_app
+from rdv.dash.helpers import windowcloselistener, dash_input, get_dash
 from rdv.tags import SCHEMA_FEATURE
 
 
@@ -169,8 +169,7 @@ class Schema(Serializable, Buildable):
                 tags_dict[tag["name"]] = tag["value"]
         return tags_dict
 
-    @dash_app
-    def view(self, poi=None):
+    def view(self, poi=None, mode="inline"):
         if poi is not None:
             poi_dict = self.tags2featvalue(self.check(poi))
         else:
@@ -220,7 +219,8 @@ class Schema(Serializable, Buildable):
                 ]
             )
 
-        app = dash.Dash(
+        applauncher, kwargs = get_dash(mode=mode)
+        app = applauncher(  # dash.Dash(
             __name__,
             assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
         )
@@ -256,10 +256,9 @@ class Schema(Serializable, Buildable):
             else:
                 return get_feature_page(pathname.split("/")[1])
 
-        app.run_server()
+        app.run_server(**kwargs)
 
-    @dash_app
-    def compare(self, other, pthresh=0.05):
+    def compare(self, other, pthresh=0.05, mode="inline"):
         def drift_cell(feat_name):
             self_feat = self.features[feat_name]
             other_feat = other.features[feat_name]
@@ -320,7 +319,8 @@ class Schema(Serializable, Buildable):
                 ]
             )
 
-        app = dash.Dash(
+        applauncher, kwargs = get_dash(mode=mode)
+        app = applauncher(  # dash.Dash(
             __name__,
             assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
         )
@@ -362,4 +362,4 @@ class Schema(Serializable, Buildable):
             else:
                 return get_feature_page(pathname.split("/")[1])
 
-        app.run_server()
+        app.run_server(**kwargs)
