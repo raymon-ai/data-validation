@@ -13,6 +13,7 @@ import rdv
 from rdv.globals import Buildable, SchemaStateException, Serializable
 from rdv.feature import Feature
 from rdv.dash.helpers import windowcloselistener, dash_app
+from rdv.tags import SCHEMA_FEATURE
 
 
 class Schema(Serializable, Buildable):
@@ -56,11 +57,11 @@ class Schema(Serializable, Buildable):
 
     @features.setter
     def features(self, value):
-        if isinstance(value, list) and all(isinstance(comp, Feature) for feat in value):
+        if isinstance(value, list) and all(isinstance(feat, Feature) for feat in value):
             # Convert to dict
             self._features = {c.name: c for c in value}
 
-        elif isinstance(value, dict) and all(isinstance(comp, Feature) for feat in value.values()):
+        elif isinstance(value, dict) and all(isinstance(feat, Feature) for feat in value.values()):
             self._features = value
         else:
             raise ValueError(f"features must be a list[Feature] or dict[str, Feature]")
@@ -141,13 +142,17 @@ class Schema(Serializable, Buildable):
 
     """Other Methods"""
 
+    def set_schema_group(self, tags):
+        for feature_tag in tags:
+            feature_tag.group = self.group_idfr
+
     def check(self, data, convert_json=True):
         tags = []
         if self.is_built():
             for feature in self.features.values():
-                tag = feature.check(data)
-                tag.group = self.group_idfr
-                tags.extend(tag)
+                feature_tags = feature.check(data)
+                self.set_schema_group(feature_tags)
+                tags.extend(feature_tags)
         else:
             raise SchemaStateException(f"Cannot check data on an unbuilt schema. Check whether all features are built.")
         if convert_json:
@@ -157,8 +162,20 @@ class Schema(Serializable, Buildable):
     def drop_feature(self, name):
         self.features = [c for c in self.features.values() if c.name != name]
 
+    def tags2featvalue(self, tags):
+        tags_dict = {}
+        for tag in tags:
+            if tag["type"] == SCHEMA_FEATURE:
+                tags_dict[tag["name"]] = tag["value"]
+        return tags_dict
+
     @dash_app
     def view(self, poi=None):
+        if poi is not None:
+            poi_dict = self.tags2featvalue(self.check(poi))
+        else:
+            poi_dict = {}
+
         def get_feature_page(feature_name):
             return html.Div(
                 id="feature-page-div",
@@ -177,7 +194,7 @@ class Schema(Serializable, Buildable):
                     html.Td(
                         dcc.Graph(
                             id=f"{feat.name}-prev",
-                            figure=feat.plot(size=(400, 150), hist=False),
+                            figure=feat.plot(size=(400, 150), poi=poi_dict.get(feat.name, None), hist=False),
                             config={"displayModeBar": False},
                         )
                     ),
@@ -223,6 +240,112 @@ class Schema(Serializable, Buildable):
                                 html.Span(self.name, className="codelike-flex"),
                                 ", Version:",
                                 html.Span(self.version, className="codelike-flex"),
+                            ],
+                            className="my-3",
+                        ),
+                        html.Div(id="page-content"),
+                    ],
+                ),
+            ],
+        )
+
+        @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
+        def display_page(pathname):
+            if pathname == "/":
+                return get_feature_table()
+            else:
+                return get_feature_page(pathname.split("/")[1])
+
+        app.run_server()
+
+    @dash_app
+    def compare(self, other, pthresh=0.05):
+        def drift_cell(feat_name):
+            self_feat = self.features[feat_name]
+            other_feat = other.features[feat_name]
+            _, pvalue, drift = self_feat.stats.test_drift(other_feat.stats, pthresh=pthresh)
+            if drift:
+                return html.Span(className="Label mr-1 Label--red", children=f"{pvalue:.2E}")
+            else:
+                return html.Span(className="Label mr-1 Label--green", children=f"{pvalue:.2E}")
+
+        def get_feature_page(feature_name):
+            return html.Div(
+                id="feature-page-div",
+                children=[
+                    dcc.Graph(
+                        id="feature-graph",
+                        figure=other.features[feature_name].compare(
+                            size=(400, 150), other=other.features[feature_name]
+                        ),
+                    ),
+                    dcc.Link("Back", href=f"/"),
+                ],
+                className="my-3",
+            )
+
+        def feature2row(feat):
+            return html.Tr(
+                [
+                    html.Td(dcc.Link(feat.name, href=f"/{feat.name}")),
+                    html.Td(feat.__class__.__name__, className="codelike-content"),
+                    html.Td(drift_cell(feat.name), className="codelike-content"),
+                    html.Td(
+                        dcc.Graph(
+                            id=f"{feat.name}-prev",
+                            figure=feat.compare(size=(400, 150), other=other.features[feat.name]),
+                            config={"displayModeBar": False},
+                        )
+                    ),
+                ]
+            )
+
+        def get_feature_table():
+            return html.Table(
+                children=[
+                    html.Thead(
+                        className="schema-tablehead",
+                        children=[
+                            html.Tr(
+                                [
+                                    html.Td("Feature", className="schema-name-column"),
+                                    html.Td("Type", className="schema-type-column"),
+                                    html.Td("H0 pvalue", className="schema-h0-column"),
+                                    html.Td("Indicator", className="schema-preview-column"),
+                                ]
+                            )
+                        ],
+                    ),
+                    html.Tbody(children=[feature2row(feat) for feat in self.features.values()]),
+                ]
+            )
+
+        app = dash.Dash(
+            __name__,
+            assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
+        )
+        app.title = f"Schema compare"
+        app.layout = html.Div(
+            className="schema-container",
+            children=[
+                dcc.Location(id="url", refresh=False),
+                windowcloselistener(app),
+                html.Div(
+                    className="my-5",
+                    children=[
+                        html.H1(app.title, className="my-3"),
+                        html.H3(
+                            [
+                                "Schema",
+                                html.Span(self.name, className="codelike-flex"),
+                                ", Version:",
+                                html.Span(self.version, className="codelike-flex"),
+                                html.Span("(self)", className="codelike-flex"),
+                                " vs Schema",
+                                html.Span(other.name, className="codelike-flex"),
+                                ", Version:",
+                                html.Span(other.version, className="codelike-flex"),
+                                html.Span("(other)", className="codelike-flex"),
                             ],
                             className="my-3",
                         ),

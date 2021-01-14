@@ -5,15 +5,7 @@ import numpy as np
 from pathlib import Path
 from pydoc import locate
 from rdv.schema import Schema
-from rdv.feature import (
-    FloatFeature,
-    IntFeature,
-    CategoricFeature,
-    NumericStats,
-    CategoricStats,
-    construct_components,
-)
-from rdv.extractors.structured import ElementExtractor
+from rdv.feature import construct_features
 
 pd.set_option("display.max_rows", 500)
 
@@ -29,7 +21,7 @@ def print_status(scehma):
     print(f"Schema built? {schema.is_built()}")
 
 
-components = construct_components(all_data.dtypes)
+components = construct_features(all_data.dtypes)
 schema = Schema(features=components)
 schema.save("houses-cheap-empty.json")
 print_status(schema)
@@ -50,9 +42,10 @@ tags
 # %%
 
 # %%
-data = all_data["MasVnrType"]
-data
+# schema.view()
 
-# %%
-schema.configure(data=all_data)
+#%%
+schema.view(poi=row)
+#%%
+row
 # %%

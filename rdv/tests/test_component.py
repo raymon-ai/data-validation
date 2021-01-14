@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 import rdv
-from rdv.feature import construct_components
+from rdv.feature import construct_features
 from rdv.feature import CategoricFeature, FloatFeature
 from rdv.schema import Schema
 from rdv.globals import SchemaStateException, DataException
@@ -20,7 +20,7 @@ def test_constuct_components():
         "num2": list(range(0, 20, 2)),
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     assert len(components) == 4
     assert isinstance(components[0], FloatFeature)
     assert isinstance(components[1], CategoricFeature)
@@ -36,7 +36,7 @@ def test_compile_unconfigured_numeric():
         "num2": list(range(0, 20, 2)),
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     try:
         schema.build(data=df)
@@ -52,7 +52,7 @@ def test_configure():
         "cat1": ["a"] * 5 + ["b"] * 5,
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     schema.configure(data=df)
     components = schema.components
@@ -76,7 +76,7 @@ def test_conmpile():
         "cat1": ["a"] * 5 + ["b"] * 5,
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     schema.configure(data=df)
     schema.compile(data=df)
@@ -101,7 +101,7 @@ def test_all_nan():
         "cat1": [np.nan] * 10,
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     try:
         schema.configure(data=df)

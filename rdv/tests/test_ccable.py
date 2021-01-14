@@ -29,7 +29,7 @@ def test_component_jcr():
     comp_restored = FloatFeature()
     comp_restored.load_jcr(comp_jcr)
     for attr in FloatFeature._attrs:
-        assert getattr(comp, attr) == getattr(comp_restored, attr)
+        assert getattr(feat, attr) == getattr(comp_restored, attr)
 
 
 def test_schema_jcr():

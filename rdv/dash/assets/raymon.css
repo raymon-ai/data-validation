@@ -1,5 +1,5 @@
 .schema-container {
-    width: 800px;
+    width: 1000px;
     margin: 0 auto;
 }
 
@@ -25,6 +25,13 @@
 }
 
 .schema-type-column{
+  width: 200px;
+  min-width: 100px;
+  padding-left: 5px;
+  padding-right: 5px;
+}
+
+.schema-h0-column{
   width: 200px;
   min-width: 100px;
   padding-left: 5px;

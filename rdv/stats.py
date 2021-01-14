@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
-from scipy.stats import wasserstein_distance
+from scipy.stats import chisquare, ks_2samp
+from abc import ABC, abstractmethod
 
 from rdv.globals import (
     Buildable,
@@ -9,7 +10,17 @@ from rdv.globals import (
 )
 
 
-class NumericStats(Serializable, Buildable):
+class Stats(Serializable, Buildable, ABC):
+    @abstractmethod
+    def sample(self, n):
+        raise NotImplementedError
+
+    @abstractmethod
+    def test_drift(self, other):
+        raise NotImplementedError
+
+
+class NumericStats(Stats):
 
     _attrs = ["min", "max", "mean", "std", "pinv", "percentiles"]
 
@@ -147,8 +158,36 @@ class NumericStats(Serializable, Buildable):
     def is_built(self):
         return all(getattr(self, attr) is not None for attr in self._attrs)
 
+    """Testing and sampling functions"""
 
-class CategoricStats(Serializable, Buildable):
+    def test_drift(self, other, pthresh=0.05):
+        sample_self = self.sample(n=10000)
+        sample_other = other.sample(n=10000)
+        stat, pvalue = ks_2samp(data1=sample_self, data2=sample_other, alternative="two-sided", mode="auto")
+        drift = pvalue < pthresh
+        return stat, pvalue, drift
+
+    def sample(self, n=1000, dtype="float"):
+        # Sample floats in range 0 - len(percentiles)
+        samples = np.random.random(n) * 100
+
+        # We will lineraly interpolate the sample between the percentiles, so get their integer floor and ceil percentile, and the relative diztance from the floor (between 0 and 1)
+        floor_percentiles = np.floor(samples).astype("uint8")
+        ceil_percentiles = np.ceil(samples).astype("uint8")
+        percentiles_alpha = samples - np.floor(samples)
+
+        percentiles = np.array(self.percentiles)
+        px = percentiles[floor_percentiles] * (1 - percentiles_alpha) + percentiles[ceil_percentiles] * (
+            percentiles_alpha
+        )
+
+        if dtype == "int":
+            return px.astype(np.int)
+        else:
+            return px
+
+
+class CategoricStats(Stats):
 
     _attrs = ["domain_counts", "pinv", "samplesize"]
 
@@ -221,3 +260,43 @@ class CategoricStats(Serializable, Buildable):
 
     def is_built(self):
         return all(getattr(self, attr) is not None for attr in self._attrs)
+
+    """Testing and sampling functions"""
+
+    def test_drift(self, other, pthresh=0.05):
+        domain_f1, domain_f2, full_domain = equalize_domains(self.domain_counts, other.domain_counts)
+        sample_size = min(self.samplesize, other.samplesize)
+        sampled_1 = self.sample_counts(domain_f1, keys=full_domain, n=sample_size)
+        sampled_2 = self.sample_counts(domain_f2, keys=full_domain, n=sample_size)
+
+        stat, pvalue = chisquare(f_obs=sampled_1, f_exp=sampled_2)
+        drift = pvalue < pthresh
+        return stat, pvalue, drift
+
+    def sample(self, n):
+        domain = sorted(list(self.domain_counts.keys()))
+        # Let's be absolutely sure the domain is always in the same order
+        p = [self.domain_counts[k] for k in domain]
+        return np.random.choice(a=domain, size=n, p=p)
+
+    def sample_counts(self, domain_freq, keys, n=1000):
+        domain = sorted(list(keys))
+        # Le's be absolutely sure the domain is always in the same order
+        p = [domain_freq.get(k, 0) for k in domain]
+        counts = (np.array(p) * (n - len(domain))).astype("int")
+        counts += 1  # make sure there are no zeros
+        return counts
+
+
+def add_missing(domain_counts, full_domain):
+    for key in full_domain:
+        if key not in domain_counts:
+            domain_counts[key] = 0
+    return domain_counts
+
+
+def equalize_domains(a, b):
+    full_domain = sorted(list(set(set(a.keys()) | set(b.keys()))))
+    a = add_missing(a, full_domain)
+    b = add_missing(b, full_domain)
+    return a, b, full_domain

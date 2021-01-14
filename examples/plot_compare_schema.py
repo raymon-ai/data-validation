@@ -7,7 +7,7 @@ import numpy as np
 from pathlib import Path
 from pydoc import locate
 from rdv.schema import Schema
-from rdv.feature import IntFeature, FloatFeature, CategoricFeature, construct_components
+from rdv.feature import IntFeature, FloatFeature, CategoricFeature, construct_features
 from rdv.extractors.structured import ElementExtractor
 
 pd.set_option("display.max_rows", 500)
@@ -176,7 +176,7 @@ def compare_schema(schema_a, schema_b):
 
 def create_schema(fpath, name):
     all_data = pd.read_csv(fpath).drop(["Id", "SalePrice"], axis="columns")
-    components = construct_components(all_data.dtypes)
+    components = construct_features(all_data.dtypes)
     schema = Schema(features=components, name=name)
     schema.configure(data=all_data)
     schema.compile(data=all_data)

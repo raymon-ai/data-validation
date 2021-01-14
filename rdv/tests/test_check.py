@@ -4,7 +4,7 @@ import pandas as pd
 import numpy as np
 
 import rdv
-from rdv.feature import construct_components
+from rdv.feature import construct_features
 from rdv.feature import CategoricFeature, FloatFeature
 from rdv.schema import Schema
 from rdv.globals import SchemaStateException, DataException
@@ -17,7 +17,7 @@ def test_conmpile_nan():
         "cat1": ["a"] * 5 + ["b"] * 5,
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     schema.configure(data=df)
     schema.compile(data=df)
@@ -36,7 +36,7 @@ def test_conmpile_nan():
         "cat1": ["a"] * 5 + ["b"] * 5,
     }
     df = pd.DataFrame(data=cols)
-    components = construct_components(dtypes=df.dtypes)
+    components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     schema.configure(data=df)
     schema.compile(data=df)

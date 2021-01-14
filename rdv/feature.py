@@ -5,12 +5,8 @@ from abc import ABC, abstractmethod
 import numpy as np
 import pandas as pd
 from plotly import graph_objects as go
-from scipy.stats import chisquare, ks_2samp
 import plotly.express as px
 from plotly.subplots import make_subplots
-
-
-PLOTLY_COLORS = px.colors.qualitative.Plotly
 
 from rdv.globals import (
     Buildable,
@@ -19,10 +15,13 @@ from rdv.globals import (
     DataException,
     SchemaStateException,
 )
-from rdv.stats import CategoricStats, NumericStats
+from rdv.stats import CategoricStats, NumericStats, equalize_domains
 from rdv.tags import Tag, SCHEMA_ERROR, SCHEMA_FEATURE
 from rdv.extractors.structured import ElementExtractor
 from rdv.extractors import NoneExtractor
+
+PLOTLY_COLORS = px.colors.qualitative.Plotly
+HIST_N_SAMPLES = 1000
 
 
 class Feature(Serializable, Buildable, ABC):
@@ -103,8 +102,23 @@ class Feature(Serializable, Buildable, ABC):
         return str(self)
 
     @abstractmethod
-    def plot(self, poi, size, hist):
+    def plot(self, poi, size, secondary):
         pass
+
+    @abstractmethod
+    def compare(self, other, size=(800, 500)):
+        pass
+
+    def layout_settings(self, size):
+        return dict(
+            margin=dict(l=0, r=0, t=50, b=0),
+            height=size[1],
+            width=size[0],
+            template="plotly_white",
+            # title_text=f"cdf for {self.name}",
+            xaxis_title=self.name,
+            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
+        )
 
 
 class FloatFeature(Feature):
@@ -164,26 +178,18 @@ class FloatFeature(Feature):
     def __str__(self):
         return f"FloatFeature(name={self.name}, extractor={self.extractor})"
 
-    def plot(self, poi=None, size=(800, 500), hist=True):
+    def plot(self, poi=None, size=(800, 500), secondary=True):
         if not self.is_built():
             raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
         fig = go.Figure()
 
         # fig = go.Figure()
-        fig.add_trace(get_cdf(self.stats.percentiles))
-        if hist:
-            fig.add_trace(get_histogram(self.stats.percentiles))
+        fig.add_trace(plot_cdf(self.stats.percentiles))
+        if secondary:
+            fig.add_trace(plot_histogram(self.stats.sample(n=HIST_N_SAMPLES)))
 
         fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
-        fig.update_layout(
-            margin=dict(l=0, r=0, t=50, b=0),
-            height=size[1],
-            width=size[0],
-            template="plotly_white",
-            # title_text=f"cdf for {self.name}",
-            xaxis_title=self.name,
-            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
-        )
+        fig.update_layout(**self.layout_settings(size))
 
         if poi and (isinstance(poi, float) or isinstance(poi, int)):
             fig.add_shape(
@@ -195,6 +201,40 @@ class FloatFeature(Feature):
                 line=dict(color=PLOTLY_COLORS[-1], width=1),
                 name="poi",
             )
+        return fig
+
+    def compare(self, other, size=(800, 500)):
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(
+                x=self.stats.percentiles,
+                y=list(
+                    range(
+                        len(
+                            self.stats.percentiles,
+                        )
+                    )
+                ),
+                mode="lines",
+                name="self",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=other.stats.percentiles,
+                y=list(
+                    range(
+                        len(
+                            other.stats.percentiles,
+                        )
+                    )
+                ),
+                mode="lines",
+                name="other",
+            )
+        )
+        fig.update_layout(**self.layout_settings(size))
+
         return fig
 
 
@@ -255,26 +295,18 @@ class IntFeature(Feature):
     def __str__(self):
         return f"IntFeature(name={self.name}, extractor={self.extractor})"
 
-    def plot(self, poi=None, size=(800, 500), hist=True):
+    def plot(self, poi=None, size=(800, 500), secondary=True):
         if not self.is_built():
             raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
         fig = go.Figure()
 
         # fig = go.Figure()
-        fig.add_trace(get_cdf(self.stats.percentiles))
-        if hist:
-            fig.add_trace(get_histogram(self.stats.percentiles))
+        fig.add_trace(plot_cdf(self.stats.percentiles))
+        if secondary:
+            fig.add_trace(plot_histogram(self.stats.sample(n=HIST_N_SAMPLES)))
 
         fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
-        fig.update_layout(
-            margin=dict(l=0, r=0, t=50, b=0),
-            height=size[1],
-            width=size[0],
-            template="plotly_white",
-            # title_text=f"cdf for {self.name}",
-            xaxis_title=self.name,
-            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
-        )
+        fig.update_layout(**self.layout_settings(size))
 
         if poi and (isinstance(poi, float) or isinstance(poi, int)):
             fig.add_shape(
@@ -286,6 +318,40 @@ class IntFeature(Feature):
                 line=dict(color=PLOTLY_COLORS[-1], width=1),
                 name="poi",
             )
+        return fig
+
+    def compare(self, other, size=(800, 500)):
+        fig = go.Figure()
+        fig.add_trace(
+            go.Scatter(
+                x=self.stats.percentiles,
+                y=list(
+                    range(
+                        len(
+                            self.stats.percentiles,
+                        )
+                    )
+                ),
+                mode="lines",
+                name=f"self",
+            )
+        )
+        fig.add_trace(
+            go.Scatter(
+                x=other.stats.percentiles,
+                y=list(
+                    range(
+                        len(
+                            other.stats.percentiles,
+                        )
+                    )
+                ),
+                mode="lines",
+                name=f"other",
+            )
+        )
+        fig.update_layout(**self.layout_settings(size))
+
         return fig
 
 
@@ -344,7 +410,7 @@ class CategoricFeature(Feature):
     def __str__(self):
         return f"CategoricFeature(name={self.name}, extractor={self.extractor})"
 
-    def plot(self, poi=None, size=(800, 500), hist=True):
+    def plot(self, poi=None, size=(800, 500), secondary=True):
         if not self.is_built():
             raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
 
@@ -353,20 +419,12 @@ class CategoricFeature(Feature):
         p = [self.stats.domain_counts[k] * 100 for k in domain]
         cdf = np.cumsum(p).astype("int")
         fig = go.Figure()
-        fig.add_trace(go.Scatter(x=domain, y=cdf, name="cdf"))
-        if hist:
-            fig.add_trace(go.Bar(x=domain, y=p, name="value freq"))
+        fig.add_trace(go.Bar(x=domain, y=p, name="value freq"))
+        if secondary:
+            fig.add_trace(go.Scatter(x=domain, y=cdf, name="cdf"))
 
         # fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
-        fig.update_layout(
-            margin=dict(l=0, r=0, t=50, b=0),
-            height=size[1],
-            width=size[0],
-            template="plotly_white",
-            # title_text=f"cdf for {self.name}",
-            xaxis_title=self.name,
-            legend=dict(orientation="h", yanchor="bottom", y=1, xanchor="left", x=0),
-        )
+        fig.update_layout(**self.layout_settings(size))
 
         if poi and isinstance(poi, str):
             fig.add_shape(
@@ -380,62 +438,24 @@ class CategoricFeature(Feature):
             )
         return fig
 
-    # def plot(self, poi=None):
-    #     if not self.is_built():
-    #         raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
-
-    #     domain = sorted(list(self.stats.domain_counts.keys()))
-    #     colors = [PLOTLY_COLORS[0] if e != poi else PLOTLY_COLORS[-1] for e in domain]
-    #     # Let's be absolutely sure the domain is always in the same order
-    #     p = [self.stats.domain_counts[k] for k in domain]
-    #     cdf = np.cumsum(p).astype("int")
-    #     fig = go.Figure()
-    #     fig.add_trace(go.Bar(x=domain, y=p, marker_color=colors, name="value freq"))
-    #     fig.add_trace(go.Scatter(x=domain, y=cdf, name="cdf"))
-
-    #     fig.update_layout(
-    #         # height=500,
-    #         # width=800,
-    #         title_text=f"Value frequencies for {self.name}",
-    #         xaxis_title="Category",
-    #         yaxis_title="pdf",
-    #     )
-
-    #     return fig
-
-    def plot_compare(self, other):
+    def compare(self, other, size=(800, 500)):
         def get_bartrace(domain_counts, name):
             return go.Bar(x=list(domain_counts.keys()), y=list(domain_counts.values()), name=name)
 
-        domain_f1, domain_f2, full_domain = equalize_domains(self.stats.domain_counts, other.stats.domain_counts)
+        domain_f1, domain_f2, _ = equalize_domains(a=self.stats.domain_counts, b=other.stats.domain_counts)
 
         fig = go.Figure()
         fig.add_trace(get_bartrace(domain_f1, name="self"))
         fig.add_trace(get_bartrace(domain_f2, name="other"))
         # ddof = (len(domain) - 1) ** 2
-        stat, pvalue = self.drift(other)
+        # stat, pvalue = self.stats.test_drift(other.stats)
         # If pvalue small enough -> H0 does not hold -> drift
-        fig.update_layout(
-            # height=500,
-            # width=800,
-            title_text=f"stat: {stat}, pvalue: {pvalue}",
-            xaxis_title="Category",
-            yaxis_title="pdf",
-        )
+        fig.update_layout(**self.layout_settings(size))
 
         return fig
 
-    def drift(self, other):
-        domain_f1, domain_f2, full_domain = equalize_domains(self.stats.domain_counts, other.stats.domain_counts)
-        sample_size = min(self.stats.samplesize, other.stats.samplesize)
-        sampled_1 = sample_counts(domain_f1, keys=full_domain, n=sample_size)
-        sampled_2 = sample_counts(domain_f2, keys=full_domain, n=sample_size)
 
-        stat, pvalue = chisquare(f_obs=sampled_1, f_exp=sampled_2)
-        return stat, pvalue
-
-
-def construct_components(dtypes):
+def construct_features(dtypes):
     components = []
     for key in dtypes.index:
         # Check type: Numeric or categoric
@@ -454,56 +474,9 @@ def construct_components(dtypes):
     return components
 
 
-# Helper functions # TODO: move somewhere
-def add_missing(domain_counts, full_domain):
-    for key in full_domain:
-        if key not in domain_counts:
-            domain_counts[key] = 0
-    return domain_counts
-
-
-def equalize_domains(a, b):
-    full_domain = sorted(list(set(set(a.keys()) | set(b.keys()))))
-    a = add_missing(a, full_domain)
-    b = add_missing(b, full_domain)
-    return a, b, full_domain
-
-
-def normalize(d):
-    total = sum(d.values())
-    return {k: v / total for k, v in d.items()}
-
-
-def sample_counts(domain_freq, keys, n=1000):
-    domain = sorted(list(keys))
-    # Le's be absolutely sure the domain is always in the same order
-    p = [domain_freq[k] for k in domain]
-    counts = (np.array(p) * (n - len(domain))).astype("int")
-    counts += 1  # make sure there are no zeros
-    return counts
-
-
-def sample_cdf(percentiles, n_samples, dtype="float"):
-    percentiles = np.array(percentiles)
-    # Sample floats in range 0 - len(percentiles)
-    samples = np.random.random(n_samples) * 100
-
-    # We will lineraly interpolate the sample between the percentiles, so get their integer floor and ceil percentile, and the relative diztance from the floor (between 0 and 1)
-    floor_percentiles = np.floor(samples).astype("int")
-    ceil_percentiles = np.ceil(samples).astype("int")
-    percentiles_alpha = samples - np.floor(samples)
-
-    px = percentiles[floor_percentiles] * (1 - percentiles_alpha) + percentiles[ceil_percentiles] * (percentiles_alpha)
-
-    if dtype == "int":
-        return px.astype(np.int)
-    else:
-        return px
-
-
-def get_histogram(percentiles, dtype="float"):
-    px = sample_cdf(percentiles=percentiles, n_samples=1000, dtype=dtype)
-    hist, edges = np.histogram(px, bins=100, range=(percentiles[0], percentiles[-1]))
+def plot_histogram(samples, range=None, dtype="float"):
+    # px = sample_cdf(percentiles=percentiles, n_samples=1000, dtype=dtype)
+    hist, edges = np.histogram(samples, bins=100, range=range)
     hist = hist / hist.sum() * 100
     widths = np.diff(edges)
     bin_centers = (edges[:-1] + edges[1:]) / 2
@@ -511,5 +484,5 @@ def get_histogram(percentiles, dtype="float"):
     return go.Bar(x=bin_centers, y=hist, width=widths, name="histogram")
 
 
-def get_cdf(percentiles):
+def plot_cdf(percentiles):
     return go.Scatter(x=percentiles, y=list(range(len(percentiles))), name="cdf")
