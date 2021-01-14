@@ -4,8 +4,8 @@ import pandas as pd
 import numpy as np
 
 import rdv
-from rdv.component import construct_components
-from rdv.component import CategoricComponent, FloatComponent
+from rdv.feature import construct_components
+from rdv.feature import CategoricFeature, FloatFeature
 from rdv.schema import Schema
 from rdv.globals import SchemaStateException, DataException
 from rdv.stats import NumericStats, CategoricStats
@@ -18,7 +18,7 @@ def test_conmpile_nan():
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
-    schema = Schema(components=components)
+    schema = Schema(features=components)
     schema.configure(data=df)
     schema.compile(data=df)
     components = schema.components
@@ -37,7 +37,7 @@ def test_conmpile_nan():
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
-    schema = Schema(components=components)
+    schema = Schema(features=components)
     schema.configure(data=df)
     schema.compile(data=df)
     components = schema.components

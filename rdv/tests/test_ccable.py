@@ -1,7 +1,7 @@
 import pytest
 import json
 from rdv.schema import Schema
-from rdv.component import FloatComponent, NumericStats
+from rdv.feature import FloatFeature, NumericStats
 from rdv.extractors.vision.similarity import FixedSubpatchSimilarity
 
 
@@ -23,12 +23,12 @@ def test_stats_partial_none():
 
 
 def test_component_jcr():
-    comp = FloatComponent()
+    comp = FloatFeature()
     comp_jcr = comp.to_jcr()
     jsonstr = json.dumps(comp_jcr)
-    comp_restored = FloatComponent()
+    comp_restored = FloatFeature()
     comp_restored.load_jcr(comp_jcr)
-    for attr in FloatComponent._attrs:
+    for attr in FloatFeature._attrs:
         assert getattr(comp, attr) == getattr(comp_restored, attr)
 
 
@@ -37,8 +37,8 @@ def test_schema_jcr():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
-    schema = Schema(name="Testing", version="1.0.0", components=[component, component])
+    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
+    schema = Schema(name="Testing", version="1.0.0", features=[component, component])
     schema_jcr = schema.to_jcr()
     assert len(schema_jcr["components"]) == 2
     jsonstr = json.dumps(schema_jcr)  # Should not throw an error
@@ -79,7 +79,7 @@ def test_fsps_extractor_ccable():
 
 
 def test_component_ccable():
-    component = FloatComponent(name="testcomponent")
+    component = FloatFeature(name="testcomponent")
 
     assert not component.is_configured()
     assert not component.is_compiled()
@@ -88,7 +88,7 @@ def test_component_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=10)
-    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
     assert not component.is_compiled()
 
@@ -96,14 +96,14 @@ def test_component_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
+    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
     assert component.is_configured()
     assert component.is_compiled()
 
 
 def test_schema_ccable():
-    component = FloatComponent(name="testcomponent")
-    schema = Schema(name="Testing", version="1.0.0", components=[component])
+    component = FloatFeature(name="testcomponent")
+    schema = Schema(name="Testing", version="1.0.0", features=[component])
     assert not schema.is_configured()
     assert not schema.is_compiled()
 
@@ -111,8 +111,8 @@ def test_schema_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=10)
-    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
-    schema = Schema(name="Testing", version="1.0.0", components=[component])
+    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
+    schema = Schema(name="Testing", version="1.0.0", features=[component])
 
     assert schema.is_configured()
     assert not schema.is_compiled()
@@ -121,8 +121,8 @@ def test_schema_ccable():
         patch={"x0": 0, "y0": 0, "x1": 64, "y1": 64}, refs=["adf8d224cb8786cc"], nrefs=1
     )
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
-    schema = Schema(name="Testing", version="1.0.0", components=[component, component])
+    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
+    schema = Schema(name="Testing", version="1.0.0", features=[component, component])
 
     assert schema.is_configured()
     assert schema.is_compiled()

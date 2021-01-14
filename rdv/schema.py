@@ -11,22 +11,22 @@ from dash.dependencies import Input, Output
 
 import rdv
 from rdv.globals import Buildable, SchemaStateException, Serializable
-from rdv.component import Component
+from rdv.feature import Feature
 from rdv.dash.helpers import windowcloselistener, dash_app
 
 
 class Schema(Serializable, Buildable):
-    _attrs = ["name", "version", "components"]
+    _attrs = ["name", "version", "features"]
 
-    def __init__(self, name="default", version="0.0.0", components=[]):
+    def __init__(self, name="default", version="0.0.0", features=[]):
 
         self._name = None
         self._version = None
-        self._components = {}
+        self._features = {}
 
         self.name = str(name)
         self.version = str(version)
-        self.components = components
+        self.features = features
 
     """Serializable interface"""
 
@@ -51,47 +51,47 @@ class Schema(Serializable, Buildable):
         self._version = value
 
     @property
-    def components(self):
-        return self._components
+    def features(self):
+        return self._features
 
-    @components.setter
-    def components(self, value):
-        if isinstance(value, list) and all(isinstance(comp, Component) for comp in value):
+    @features.setter
+    def features(self, value):
+        if isinstance(value, list) and all(isinstance(comp, Feature) for comp in value):
             # Convert to dict
-            self._components = {c.name: c for c in value}
+            self._features = {c.name: c for c in value}
 
-        elif isinstance(value, dict) and all(isinstance(comp, Component) for comp in value.values()):
-            self._components = value
+        elif isinstance(value, dict) and all(isinstance(comp, Feature) for comp in value.values()):
+            self._features = value
         else:
-            raise ValueError(f"components must be a list[Component] or dict[str, Component]")
+            raise ValueError(f"features must be a list[Feature] or dict[str, Feature]")
 
     def to_jcr(self):
         jcr = {
             "name": self.name,
             "version": self.version,
-            "components": [],
+            "features": [],
         }
-        components = []
-        for comp in self.components.values():
-            components.append({"component_class": comp.class2str(), "component": comp.to_jcr()})
-        jcr["components"] = components
+        features = []
+        for comp in self.features.values():
+            features.append({"feature_class": comp.class2str(), "feature": comp.to_jcr()})
+        jcr["features"] = features
         return jcr
 
     @classmethod
     def from_jcr(cls, jcr):
         name = jcr["name"]
         version = jcr["version"]
-        components = []
-        for comp_dict in jcr["components"]:
-            classpath = comp_dict["component_class"]
-            comp_jcr = comp_dict["component"]
+        features = []
+        for comp_dict in jcr["features"]:
+            classpath = comp_dict["feature_class"]
+            comp_jcr = comp_dict["feature"]
             compclass = locate(classpath)
             if compclass is None:
                 NameError("Could not locate classpath")
-            component = compclass.from_jcr(comp_jcr)
-            components.append(component)
+            feature = compclass.from_jcr(comp_jcr)
+            features.append(feature)
 
-        return cls(name=name, version=version, components=components)
+        return cls(name=name, version=version, features=features)
 
     def save(self, fpath):
         with open(fpath, "w") as f:
@@ -109,22 +109,22 @@ class Schema(Serializable, Buildable):
         # check wheter there are no extractors that require config
         require_config = self.get_unconfigured()
         if len(require_config) > 0:
-            raise SchemaStateException(f"Some schema component extractors require configuration.")
+            raise SchemaStateException(f"Some schema feature extractors require configuration.")
         # Build the schema
-        for comp in self.components.values():
+        for comp in self.features.values():
             # Compile stats
             comp.build(data)
 
     def is_built(self):
-        return all(comp.is_built() for comp in self.components.values())
+        return all(comp.is_built() for comp in self.features.values())
 
     """Configurable extractors support"""
 
     def get_unconfigured(self):
         unconfigureds = []
-        for component in self.components.values():
-            if component.requires_config():
-                unconfigureds.append(component)
+        for feature in self.features.values():
+            if feature.requires_config():
+                unconfigureds.append(feature)
         return unconfigureds
 
     def configure(self, data):
@@ -140,33 +140,31 @@ class Schema(Serializable, Buildable):
     def check(self, data, convert_json=True):
         tags = []
         if self.is_built():
-            for component in self.components.values():
-                tag = component.check(data)
+            for feature in self.features.values():
+                tag = feature.check(data)
                 tags.extend(tag)
         else:
-            raise SchemaStateException(
-                f"Cannot check data on an unbuilt schema. Check whether all components are built."
-            )
+            raise SchemaStateException(f"Cannot check data on an unbuilt schema. Check whether all features are built.")
         if convert_json:
             tags = [t.to_jcr() for t in tags]
         return tags
 
-    def drop_component(self, name):
-        self.components = [c for c in self.components.values() if c.name != name]
+    def drop_feature(self, name):
+        self.features = [c for c in self.features.values() if c.name != name]
 
     @dash_app
     def view(self, poi=None):
-        def get_component_page(component_name):
+        def get_feature_page(feature_name):
             return html.Div(
-                id="component-page-div",
+                id="feature-page-div",
                 children=[
-                    dcc.Graph(id="component-graph", figure=self.components[component_name].plot()),
+                    dcc.Graph(id="feature-graph", figure=self.features[feature_name].plot()),
                     dcc.Link("Back", href=f"/"),
                 ],
                 className="my-3",
             )
 
-        def component2row(comp):
+        def feature2row(comp):
             return html.Tr(
                 [
                     html.Td(dcc.Link(comp.name, href=f"/{comp.name}")),
@@ -181,7 +179,7 @@ class Schema(Serializable, Buildable):
                 ]
             )
 
-        def get_component_table():
+        def get_feature_table():
             return html.Table(
                 children=[
                     html.Thead(
@@ -189,14 +187,14 @@ class Schema(Serializable, Buildable):
                         children=[
                             html.Tr(
                                 [
-                                    html.Td("Component", className="schema-name-column"),
+                                    html.Td("Feature", className="schema-name-column"),
                                     html.Td("Type", className="schema-type-column"),
                                     html.Td("Indicator", className="schema-preview-column"),
                                 ]
                             )
                         ],
                     ),
-                    html.Tbody(children=[component2row(comp) for comp in self.components.values()]),
+                    html.Tbody(children=[feature2row(comp) for comp in self.features.values()]),
                 ]
             )
 
@@ -232,8 +230,8 @@ class Schema(Serializable, Buildable):
         @app.callback(Output("page-content", "children"), [Input("url", "pathname")])
         def display_page(pathname):
             if pathname == "/":
-                return get_component_table()
+                return get_feature_table()
             else:
-                return get_component_page(pathname.split("/")[1])
+                return get_feature_page(pathname.split("/")[1])
 
         app.run_server()

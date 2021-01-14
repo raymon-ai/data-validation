@@ -3,7 +3,7 @@
     "version": "0.0.0",
     "components": [
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "MSSubClass",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -123,7 +123,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "MSZoning",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -144,7 +144,7 @@
             }
         },
         {
-            "component_class": "rdv.component.FloatComponent",
+            "component_class": "rdv.feature.FloatFeature",
             "component": {
                 "name": "LotFrontage",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -264,7 +264,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "LotArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -384,7 +384,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Street",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -402,7 +402,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Alley",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -420,7 +420,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "LotShape",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -440,7 +440,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "LandContour",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -460,7 +460,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Utilities",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -478,7 +478,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "LotConfig",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -499,7 +499,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "LandSlope",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -518,7 +518,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Neighborhood",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -542,16 +542,16 @@
                         "Crawfor": 0.02721774193548387,
                         "SWISU": 0.02217741935483871,
                         "MeadowV": 0.017137096774193547,
-                        "BrDale": 0.016129032258064516,
                         "Timber": 0.016129032258064516,
+                        "BrDale": 0.016129032258064516,
                         "ClearCr": 0.014112903225806451,
                         "NridgHt": 0.012096774193548387,
                         "NPkVill": 0.009072580645161291,
                         "Blmngtn": 0.007056451612903226,
                         "Veenker": 0.005040322580645161,
-                        "StoneBr": 0.0020161290322580645,
                         "Blueste": 0.0020161290322580645,
-                        "NoRidge": 0.0020161290322580645
+                        "NoRidge": 0.0020161290322580645,
+                        "StoneBr": 0.0020161290322580645
                     },
                     "pinv": 0.0,
                     "samplesize": 992
@@ -559,7 +559,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Condition1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -584,7 +584,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Condition2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -605,7 +605,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "BldgType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -626,7 +626,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "HouseStyle",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -650,7 +650,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "OverallQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -770,7 +770,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "OverallCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -890,7 +890,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "YearBuilt",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1010,7 +1010,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "YearRemodAdd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1130,7 +1130,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "RoofStyle",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1151,7 +1151,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "RoofMatl",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1163,10 +1163,10 @@
                         "CompShg": 0.9868951612903226,
                         "Tar&Grv": 0.006048387096774193,
                         "WdShake": 0.0020161290322580645,
-                        "Membran": 0.0010080645161290322,
+                        "ClyTile": 0.0010080645161290322,
                         "Roll": 0.0010080645161290322,
                         "Metal": 0.0010080645161290322,
-                        "ClyTile": 0.0010080645161290322,
+                        "Membran": 0.0010080645161290322,
                         "WdShngl": 0.0010080645161290322
                     },
                     "pinv": 0.0,
@@ -1175,7 +1175,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Exterior1st",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1195,8 +1195,8 @@
                         "Stucco": 0.021169354838709676,
                         "AsbShng": 0.020161290322580645,
                         "BrkComm": 0.0020161290322580645,
-                        "AsphShn": 0.0010080645161290322,
-                        "CBlock": 0.0010080645161290322
+                        "CBlock": 0.0010080645161290322,
+                        "AsphShn": 0.0010080645161290322
                     },
                     "pinv": 0.0,
                     "samplesize": 992
@@ -1204,7 +1204,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Exterior2nd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1219,14 +1219,14 @@
                         "HdBoard": 0.16330645161290322,
                         "Plywood": 0.10383064516129033,
                         "Wd Shng": 0.03225806451612903,
-                        "Stucco": 0.02217741935483871,
                         "CmentBd": 0.02217741935483871,
+                        "Stucco": 0.02217741935483871,
                         "AsbShng": 0.019153225806451613,
                         "BrkFace": 0.015120967741935484,
                         "Brk Cmn": 0.007056451612903226,
                         "ImStucc": 0.005040322580645161,
-                        "Stone": 0.0030241935483870967,
                         "AsphShn": 0.0030241935483870967,
+                        "Stone": 0.0030241935483870967,
                         "CBlock": 0.0010080645161290322
                     },
                     "pinv": 0.0,
@@ -1235,7 +1235,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "MasVnrType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1255,7 +1255,7 @@
             }
         },
         {
-            "component_class": "rdv.component.FloatComponent",
+            "component_class": "rdv.feature.FloatFeature",
             "component": {
                 "name": "MasVnrArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1375,7 +1375,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "ExterQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1395,7 +1395,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "ExterCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1416,7 +1416,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Foundation",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1438,7 +1438,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "BsmtQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1458,7 +1458,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "BsmtCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1478,7 +1478,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "BsmtExposure",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1498,7 +1498,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "BsmtFinType1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1520,7 +1520,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "BsmtFinSF1",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1640,7 +1640,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "BsmtFinType2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1662,7 +1662,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "BsmtFinSF2",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1782,7 +1782,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "BsmtUnfSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -1902,7 +1902,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "TotalBsmtSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2022,7 +2022,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Heating",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2044,7 +2044,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "HeatingQC",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2065,7 +2065,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "CentralAir",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2083,7 +2083,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Electrical",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2104,7 +2104,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "1stFlrSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2224,7 +2224,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "2ndFlrSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2344,7 +2344,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "LowQualFinSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2464,7 +2464,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "GrLivArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2584,7 +2584,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "BsmtFullBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2704,7 +2704,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "BsmtHalfBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2824,7 +2824,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "FullBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -2944,7 +2944,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "HalfBath",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3064,7 +3064,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "BedroomAbvGr",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3184,7 +3184,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "KitchenAbvGr",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3304,7 +3304,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "KitchenQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3324,7 +3324,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "TotRmsAbvGrd",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3444,7 +3444,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Functional",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3456,8 +3456,8 @@
                         "Typ": 0.9173387096774194,
                         "Min2": 0.029233870967741934,
                         "Min1": 0.023185483870967742,
-                        "Maj1": 0.012096774193548387,
                         "Mod": 0.012096774193548387,
+                        "Maj1": 0.012096774193548387,
                         "Maj2": 0.005040322580645161,
                         "Sev": 0.0010080645161290322
                     },
@@ -3467,7 +3467,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "Fireplaces",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3587,7 +3587,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "FireplaceQu",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3608,7 +3608,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "GarageType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3630,7 +3630,7 @@
             }
         },
         {
-            "component_class": "rdv.component.FloatComponent",
+            "component_class": "rdv.feature.FloatFeature",
             "component": {
                 "name": "GarageYrBlt",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3750,7 +3750,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "GarageFinish",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3769,7 +3769,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "GarageCars",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -3889,7 +3889,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "GarageArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4009,7 +4009,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "GarageQual",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4030,7 +4030,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "GarageCond",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4051,7 +4051,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "PavedDrive",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4070,7 +4070,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "WoodDeckSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4190,7 +4190,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "OpenPorchSF",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4310,7 +4310,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "EnclosedPorch",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4430,7 +4430,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "3SsnPorch",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4550,7 +4550,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "ScreenPorch",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4670,7 +4670,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "PoolArea",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4790,7 +4790,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "PoolQC",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4799,8 +4799,8 @@
                 },
                 "stats": {
                     "domain_counts": {
-                        "Ex": 0.3333333333333333,
                         "Gd": 0.3333333333333333,
+                        "Ex": 0.3333333333333333,
                         "Fa": 0.3333333333333333
                     },
                     "pinv": 0.9969758064516129,
@@ -4809,7 +4809,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "Fence",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4829,7 +4829,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "MiscFeature",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4848,7 +4848,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "MiscVal",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -4968,7 +4968,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "MoSold",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -5088,7 +5088,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "YrSold",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -5208,7 +5208,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "SaleType",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -5233,7 +5233,7 @@
             }
         },
         {
-            "component_class": "rdv.component.CategoricComponent",
+            "component_class": "rdv.feature.CategoricFeature",
             "component": {
                 "name": "SaleCondition",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",
@@ -5255,7 +5255,7 @@
             }
         },
         {
-            "component_class": "rdv.component.IntComponent",
+            "component_class": "rdv.feature.IntFeature",
             "component": {
                 "name": "SalePrice",
                 "extractor_class": "rdv.extractors.structured.element.ElementExtractor",

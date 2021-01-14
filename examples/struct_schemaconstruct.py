@@ -5,10 +5,10 @@ import numpy as np
 from pathlib import Path
 from pydoc import locate
 from rdv.schema import Schema
-from rdv.component import (
-    FloatComponent,
-    IntComponent,
-    CategoricComponent,
+from rdv.feature import (
+    FloatFeature,
+    IntFeature,
+    CategoricFeature,
     NumericStats,
     CategoricStats,
     construct_components,
@@ -30,7 +30,7 @@ def print_status(scehma):
 
 
 components = construct_components(all_data.dtypes)
-schema = Schema(components=components)
+schema = Schema(features=components)
 schema.save("houses-cheap-empty.json")
 print_status(schema)
 

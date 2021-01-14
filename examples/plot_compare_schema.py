@@ -7,7 +7,7 @@ import numpy as np
 from pathlib import Path
 from pydoc import locate
 from rdv.schema import Schema
-from rdv.component import IntComponent, FloatComponent, CategoricComponent, construct_components
+from rdv.feature import IntFeature, FloatFeature, CategoricFeature, construct_components
 from rdv.extractors.structured import ElementExtractor
 
 pd.set_option("display.max_rows", 500)
@@ -27,13 +27,13 @@ import plotly.graph_objects as go
 
 
 def get_stat_table(component):
-    if isinstance(component, FloatComponent):
+    if isinstance(component, FloatFeature):
         fields = ["min", "max", "mean", "std", "pinv"]
         values = [round(component.stats.to_jcr()[field], 5) for field in fields]
         data = [fields, values]
         table = go.Table(header=dict(values=["Stat", "Value"], align="left"), cells=dict(values=data, align="left"))
         return table
-    elif isinstance(component, CategoricComponent):
+    elif isinstance(component, CategoricFeature):
         fields = ["domain", "pinv"]
         values = [", ".join(component.stats.domain), component.stats.pinv]
         data = [fields, values]
@@ -45,7 +45,7 @@ def get_stat_table(component):
 
 
 def get_dist_plot(component, name, decimals=2):
-    if isinstance(component, FloatComponent):
+    if isinstance(component, FloatFeature):
         stats = component.stats
         edges = np.linspace(start=stats.min, stop=stats.max, num=stats.nbins)
 
@@ -57,7 +57,7 @@ def get_dist_plot(component, name, decimals=2):
         bar = go.Bar(x=x, y=y, name=name, width=width, opacity=0.5)
         return bar
 
-    elif isinstance(component, CategoricComponent):
+    elif isinstance(component, CategoricFeature):
         x = list(component.stats.domain_counts.keys())
         y = list(component.stats.domain_counts.values())
         bar = go.Bar(x=x, y=y, name=name)
@@ -83,7 +83,7 @@ def show_schema(schema):
     fig = make_subplots(rows=nrows, cols=2, specs=[[{"type": "table"}, {"type": "bar"}]] * nrows)
 
     for row, component in enumerate(components):
-        print(f"Component: {component.name}, {type(component)}")
+        print(f"Feature: {component.name}, {type(component)}")
         fig.add_trace(get_stat_table(component), row=row + 1, col=1)
         fig.add_trace(get_dist_plot(component), row=row + 1, col=2)
     fig.update_layout(height=200 * nrows, width=800, title_text=f"Schema {schema.name}")
@@ -110,13 +110,13 @@ def show_schema_figs(schema):
         fig = go.FigureWidget(
             make_subplots(rows=1, cols=2, specs=[[{"type": "table"}, {"type": "bar"}]], column_widths=[0.5, 0.5])
         )
-        print(f"Component: {component.name}, {type(component)}")
+        print(f"Feature: {component.name}, {type(component)}")
         fig.add_trace(get_stat_table(component), row=1, col=1)
         fig.add_trace(get_dist_plot(component, name=schema.name), row=1, col=2)
         fig.update_layout(
             height=500,
             width=800,
-            title_text=f"Component {component.name}",
+            title_text=f"Feature {component.name}",
             legend=dict(
                 yanchor="top",
                 y=0.99,
@@ -165,7 +165,7 @@ def compare_schema(schema_a, schema_b):
         fig.add_trace(get_dist_plot(comp_a, name=schema_a.name), row=1, col=2)
         fig.add_trace(get_dist_plot(comp_b, name=schema_b.name), row=1, col=2)
         fig.add_trace(get_stat_table(comp_b), row=1, col=3)
-        fig.update_layout(height=500, width=1400, title_text=f"Component {comp_a.name}")
+        fig.update_layout(height=500, width=1400, title_text=f"Feature {comp_a.name}")
         figs.append(fig)
 
         # fhtml = fig.to_html(full_html=False, include_plotlyjs='cdn')
@@ -177,7 +177,7 @@ def compare_schema(schema_a, schema_b):
 def create_schema(fpath, name):
     all_data = pd.read_csv(fpath).drop(["Id", "SalePrice"], axis="columns")
     components = construct_components(all_data.dtypes)
-    schema = Schema(components=components, name=name)
+    schema = Schema(features=components, name=name)
     schema.configure(data=all_data)
     schema.compile(data=all_data)
     return schema

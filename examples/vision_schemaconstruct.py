@@ -5,7 +5,7 @@ from PIL import ImageFile
 from pathlib import Path
 from pydoc import locate
 from rdv.schema import Schema
-from rdv.component import FloatComponent, NumericStats
+from rdv.feature import FloatFeature, NumericStats
 from rdv.extractors.vision import FixedSubpatchSimilarity
 from rdv.extractors.vision import AvgIntensity
 from rdv.extractors.vision import Sharpness
@@ -36,8 +36,8 @@ def load_data(dpath, lim):
 def load_full_schema():
     extractor = FixedSubpatchSimilarity(patch=[0, 0, 64, 64], refs=["ae81b596d698da31"])
     stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = FloatComponent(name="testcomponent", extractor=extractor, stats=stats)
-    schema = Schema(name="Testing", version="1.0.0", components=[component, component])
+    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
+    schema = Schema(name="Testing", version="1.0.0", features=[component, component])
     return schema
 
 
@@ -45,10 +45,10 @@ def load_empty_schema():
     schema = Schema(
         name="Testing",
         version="1.0.0",
-        components=[
-            FloatComponent(name="patch_similarity", extractor=FixedSubpatchSimilarity()),
-            FloatComponent(name="sharpness", extractor=Sharpness()),
-            FloatComponent(name="intensity", extractor=AvgIntensity()),
+        features=[
+            FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity()),
+            FloatFeature(name="sharpness", extractor=Sharpness()),
+            FloatFeature(name="intensity", extractor=AvgIntensity()),
         ],
     )
     return schema
@@ -88,7 +88,7 @@ tags
 
 
 #%%
-nc = FloatComponent(name="patch_similarity", extractor=FixedSubpatchSimilarity())
+nc = FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity())
 # %%
 nc.extractor.configure(data=loaded_data)
 # %%

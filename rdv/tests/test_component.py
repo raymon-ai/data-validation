@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 
 import rdv
-from rdv.component import construct_components
-from rdv.component import CategoricComponent, FloatComponent
+from rdv.feature import construct_components
+from rdv.feature import CategoricFeature, FloatFeature
 from rdv.schema import Schema
 from rdv.globals import SchemaStateException, DataException
 from rdv.stats import NumericStats, CategoricStats
@@ -22,10 +22,10 @@ def test_constuct_components():
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
     assert len(components) == 4
-    assert isinstance(components[0], FloatComponent)
-    assert isinstance(components[1], CategoricComponent)
-    assert isinstance(components[2], CategoricComponent)
-    assert isinstance(components[3], FloatComponent)
+    assert isinstance(components[0], FloatFeature)
+    assert isinstance(components[1], CategoricFeature)
+    assert isinstance(components[2], CategoricFeature)
+    assert isinstance(components[3], FloatFeature)
 
 
 def test_compile_unconfigured_numeric():
@@ -37,7 +37,7 @@ def test_compile_unconfigured_numeric():
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
-    schema = Schema(components=components)
+    schema = Schema(features=components)
     try:
         schema.build(data=df)
     except SchemaStateException:
@@ -53,7 +53,7 @@ def test_configure():
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
-    schema = Schema(components=components)
+    schema = Schema(features=components)
     schema.configure(data=df)
     components = schema.components
     assert isinstance(components[0].stats, NumericStats)
@@ -77,7 +77,7 @@ def test_conmpile():
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
-    schema = Schema(components=components)
+    schema = Schema(features=components)
     schema.configure(data=df)
     schema.compile(data=df)
     components = schema.components
@@ -102,13 +102,13 @@ def test_all_nan():
     }
     df = pd.DataFrame(data=cols)
     components = construct_components(dtypes=df.dtypes)
-    schema = Schema(components=components)
+    schema = Schema(features=components)
     try:
         schema.configure(data=df)
     except DataException:
         pass
     else:
-        pytest.fail("Component with all nans should throw a DataException")
+        pytest.fail("Feature with all nans should throw a DataException")
 
 
 # %%

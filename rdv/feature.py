@@ -25,7 +25,7 @@ from rdv.extractors.structured import ElementExtractor
 from rdv.extractors import NoneExtractor
 
 
-class Component(Serializable, Buildable, ABC):
+class Feature(Serializable, Buildable, ABC):
     def __init__(self, name="default_name", extractor=None):
         self.name = str(name)
         if extractor is None:
@@ -107,7 +107,7 @@ class Component(Serializable, Buildable, ABC):
         pass
 
 
-class FloatComponent(Component):
+class FloatFeature(Feature):
     def __init__(self, name="default_name", extractor=None, stats=None):
         super().__init__(name=name, extractor=extractor)
         self._stats = None
@@ -162,11 +162,11 @@ class FloatComponent(Component):
         return cls(name=name, extractor=extractor, stats=stats)
 
     def __str__(self):
-        return f"FloatComponent(name={self.name}, extractor={self.extractor})"
+        return f"FloatFeature(name={self.name}, extractor={self.extractor})"
 
     def plot(self, poi=None, size=(800, 500), hist=True):
         if not self.is_built():
-            raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
+            raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
         fig = go.Figure()
 
         # fig = go.Figure()
@@ -198,7 +198,7 @@ class FloatComponent(Component):
         return fig
 
 
-class IntComponent(Component):
+class IntFeature(Feature):
     def __init__(self, name="default_name", extractor=None, stats=None):
         super().__init__(name=name, extractor=extractor)
         self._stats = None
@@ -253,11 +253,11 @@ class IntComponent(Component):
         return cls(name=name, extractor=extractor, stats=stats)
 
     def __str__(self):
-        return f"IntComponent(name={self.name}, extractor={self.extractor})"
+        return f"IntFeature(name={self.name}, extractor={self.extractor})"
 
     def plot(self, poi=None, size=(800, 500), hist=True):
         if not self.is_built():
-            raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
+            raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
         fig = go.Figure()
 
         # fig = go.Figure()
@@ -289,7 +289,7 @@ class IntComponent(Component):
         return fig
 
 
-class CategoricComponent(Component):
+class CategoricFeature(Feature):
 
     # Domain, domain distribution
     def __init__(self, name="default_name", extractor=None, stats=None):
@@ -342,11 +342,11 @@ class CategoricComponent(Component):
         return cls(name=name, extractor=extractor, stats=stats)
 
     def __str__(self):
-        return f"CategoricComponent(name={self.name}, extractor={self.extractor})"
+        return f"CategoricFeature(name={self.name}, extractor={self.extractor})"
 
     def plot(self, poi=None, size=(800, 500), hist=True):
         if not self.is_built():
-            raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
+            raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
 
         domain = sorted(list(self.stats.domain_counts.keys()))
         # Let's be absolutely sure the domain is always in the same order
@@ -382,7 +382,7 @@ class CategoricComponent(Component):
 
     # def plot(self, poi=None):
     #     if not self.is_built():
-    #         raise SchemaStateException(f"Component {self.name} has not been built. Cannot plot unbuilt components.")
+    #         raise SchemaStateException(f"Feature {self.name} has not been built. Cannot plot unbuilt components.")
 
     #     domain = sorted(list(self.stats.domain_counts.keys()))
     #     colors = [PLOTLY_COLORS[0] if e != poi else PLOTLY_COLORS[-1] for e in domain]
@@ -441,11 +441,11 @@ def construct_components(dtypes):
         # Check type: Numeric or categoric
         extractor = ElementExtractor(element=key)
         if np.issubdtype(dtypes[key], np.floating):
-            component = FloatComponent(name=key, extractor=extractor)
+            component = FloatFeature(name=key, extractor=extractor)
         elif np.issubdtype(dtypes[key], np.integer):
-            component = IntComponent(name=key, extractor=extractor)
+            component = IntFeature(name=key, extractor=extractor)
         elif dtypes[key] == np.dtype("O"):
-            component = CategoricComponent(name=key, extractor=extractor)
+            component = CategoricFeature(name=key, extractor=extractor)
         else:
             raise ValueError(f"dtype {dtypes[key]} not supported.")
 
