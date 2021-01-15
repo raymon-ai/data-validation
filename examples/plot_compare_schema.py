@@ -178,7 +178,6 @@ def create_schema(fpath, name):
     all_data = pd.read_csv(fpath).drop(["Id", "SalePrice"], axis="columns")
     components = construct_features(all_data.dtypes)
     schema = Schema(features=components, name=name)
-    schema.configure(data=all_data)
     schema.compile(data=all_data)
     return schema
 

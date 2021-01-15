@@ -55,40 +55,61 @@ def load_empty_schema():
 
 
 #%%
-schema = load_empty_schema()
+# schema = load_empty_schema()
+# loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
+# schema.configure(data=loaded_data)
+# # %%
+# schema.build(data=load_data(dpath=DATA_PATH, lim=1000))
+# # %%
+# fullschema_path = "schema-compiled.json"
+# schema.save(fullschema_path)
+
+# # %%
+# schema = Schema().load(fullschema_path)
+# tags = schema.check(loaded_data[-1])
+# tags
+
+# # %%
+
+# img_blur = loaded_data[-10].copy().filter(ImageFilter.GaussianBlur(radius=5))
+# img_blur
+# #%%
+# tags = schema.check(img_blur)
+# tags
+# # %%
+# import numpy as np
+
+# img_dark = loaded_data[-20].copy()
+# img_dark = Image.fromarray((np.array(img_dark) - np.array(img_dark) * 0.3).astype(np.uint8))
+# img_dark
+
+# tags = schema.check(img_dark)
+# tags
+
+
+# #%%
+# nc = FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity())
+# # %%
+# nc.extractor.configure(data=loaded_data)
+# %%
+
+
 loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
-schema.configure(data=loaded_data)
-# %%
-schema.build(data=load_data(dpath=DATA_PATH, lim=1000))
-# %%
-fullschema_path = "schema-compiled.json"
-schema.save(fullschema_path)
-
-# %%
-schema = Schema().load(fullschema_path)
-tags = schema.check(loaded_data[-1])
-tags
-
-# %%
-
-img_blur = loaded_data[-10].copy().filter(ImageFilter.GaussianBlur(radius=5))
-img_blur
-#%%
-tags = schema.check(img_blur)
-tags
-# %%
-import numpy as np
-
-img_dark = loaded_data[-20].copy()
-img_dark = Image.fromarray((np.array(img_dark) - np.array(img_dark) * 0.3).astype(np.uint8))
-img_dark
-
-tags = schema.check(img_dark)
-tags
-
+FixedSubpatchSimilarity.configure_interactive(loaded_data=loaded_data, mode="external")
 
 #%%
-nc = FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity())
+import json
+import base64
+
+patch = {"x0": 0, "y0": 0, "x1": 64, "y1": 64}
+
 # %%
-nc.extractor.configure(data=loaded_data)
+enc = base64.b64encode(json.dumps(patch).encode("ascii")).decode("ascii")
+enc
+# %%
+dec = base64.b64decode(enc.encode("ascii")).decode("ascii")
+dec
+# %%
+enc = "IntcbiAgICBcIngwXCI6IDEzMSxcbiAgICBcInkwXCI6IDExNixcbiAgICBcIngxXCI6IDE5NSxcbiAgICBcInkxXCI6IDE4MFxufSI="
+json.loads(base64.b64decode(enc.encode("ascii")).decode("ascii"))
 # %%

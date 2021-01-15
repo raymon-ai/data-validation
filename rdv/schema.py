@@ -1,10 +1,7 @@
 import json
 from pydoc import locate
 from pathlib import Path
-import time
-import webbrowser
-from multiprocessing import Process
-import dash
+
 import dash_core_components as dcc
 import dash_html_components as html
 from dash.dependencies import Input, Output
@@ -12,7 +9,7 @@ from dash.dependencies import Input, Output
 import rdv
 from rdv.globals import Buildable, SchemaStateException, Serializable
 from rdv.feature import Feature
-from rdv.dash.helpers import windowcloselistener, dash_input, get_dash
+from rdv.dash.helpers import get_dash
 from rdv.tags import SCHEMA_FEATURE
 
 
@@ -123,23 +120,6 @@ class Schema(Serializable, Buildable):
     def is_built(self):
         return all(feat.is_built() for feat in self.features.values())
 
-    """Configurable extractors support"""
-
-    def get_unconfigured(self):
-        unconfigureds = []
-        for feature in self.features.values():
-            if feature.requires_config():
-                unconfigureds.append(feature)
-        return unconfigureds
-
-    def configure(self, data):
-        require_config = self.get_unconfigured()
-        for feat in require_config:
-            print(f"Starting configuration wizard for {feat.name} extractor...")
-            feat.extractor.configure(data)
-            print(f"Done.")
-        print(f"Configuration complete.")
-
     """Other Methods"""
 
     def set_schema_group(self, tags):
@@ -229,7 +209,6 @@ class Schema(Serializable, Buildable):
             className="schema-container",
             children=[
                 dcc.Location(id="url", refresh=False),
-                windowcloselistener(app),
                 html.Div(
                     className="my-5",
                     children=[
@@ -329,7 +308,6 @@ class Schema(Serializable, Buildable):
             className="schema-container",
             children=[
                 dcc.Location(id="url", refresh=False),
-                windowcloselistener(app),
                 html.Div(
                     className="my-5",
                     children=[

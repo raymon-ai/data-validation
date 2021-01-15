@@ -46,42 +46,7 @@ class Buildable(ABC):
 
 
 class Configurable(ABC):
+    @classmethod
     @abstractmethod
-    def configure_interactive(self, loaded_data):
+    def configure_interactive(self, loaded_data, mode="inline"):
         raise NotImplementedError
-
-    @abstractmethod
-    def set_config(self, data):
-        raise NotImplementedError
-
-    @abstractmethod
-    def is_configured(self):
-        raise NotImplementedError
-
-    @dash_input
-    def _configure(self, loaded_data):
-        config = self.configure_interactive(loaded_data=loaded_data)
-        return config
-
-    def configure(self, data):
-        config = self._configure(data)
-        print(f"Config received: {config}")
-        if len(config) > 0:
-            self.set_config(config)
-        return config
-
-        # _, output_fpath = tempfile.mkstemp()
-        # print(f"Saving to: {output_fpath}")
-        # # Crease new process
-        # p = Process(
-        #     target=self.configure_interactive,
-        #     args=(data, output_fpath),
-        # )
-        # p.start()
-        # time.sleep(0.5)
-        # webbrowser.open_new("http://127.0.0.1:8050/")
-        # p.join()
-        # # Load saved config and save to extractor
-        # with open(output_fpath, "r") as f:
-        #     loaded = json.load(f)
-        #

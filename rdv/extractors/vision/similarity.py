@@ -1,21 +1,18 @@
+import base64
 import json
-import os
 import random
-import sys
 from pathlib import Path
 
-import dash
 import dash_core_components as dcc
 import dash_html_components as html
 import imagehash
 import numpy as np
 import plotly.graph_objects as go
 import rdv.dash
-from dash.dependencies import Input, Output, State
-from dash.exceptions import PreventUpdate
+from dash.dependencies import Input, Output
+from rdv.dash.helpers import get_dash
 from rdv.extractors import FeatureExtractor
 from rdv.globals import Configurable
-from rdv.dash.helpers import windowcloselistener
 
 
 class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
@@ -23,7 +20,7 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
     _attrs = ["patch", "refs"]
     _patch_keys = ["x0", "y0", "x1", "y1"]
 
-    def __init__(self, patch=None, refs=None, nrefs=10, idfr=None):
+    def __init__(self, patch, refs=None, nrefs=10, idfr=None):
         """[summary]
 
         Args:
@@ -165,10 +162,59 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
     def is_configured(self):
         return isinstance(self.patch, dict) and all(key in self.patch for key in self._patch_keys)
 
-    def configure_interactive(self, loaded_data):
-        config_state = {}
+    @classmethod
+    def configure_interactive(cls, loaded_data, mode="inline"):
+        def render_controls():
+            return html.Div(
+                [
+                    html.H3("Controls", className="Subhead"),
+                    html.Form(
+                        html.Div(
+                            className="form",
+                            children=[
+                                html.Div(
+                                    id="page-controls",
+                                    children=[],
+                                ),
+                                html.Div(
+                                    className="form-group-header",
+                                    children=html.Label("Patch Location:", className="m-2"),
+                                ),
+                                html.Div(
+                                    className="form-group-body",
+                                    children=html.Pre(
+                                        id="patch-config",
+                                        className="m-2 similarity-code-view",
+                                    ),
+                                ),
+                                html.Div(
+                                    className="form-group-body",
+                                    children=html.Div(
+                                        id="extractor-constructor",
+                                        className="m-2 codelike-content",
+                                    ),
+                                ),
+                            ],
+                        ),
+                    ),
+                ],
+                className="col-4 float-left",
+                id="left-column-div",
+            )
 
-        def create_image_fig(active_img_idx, patch, editable=True):
+        def render_img_view():
+            return html.Div(
+                [
+                    html.H3("View", className="Subhead"),
+                    dcc.Graph(
+                        id="graph-image",
+                    ),
+                    html.Div(id="hidden-dummy"),
+                ],
+                className="col-8 float-left",
+            )
+
+        def render_figure(active_img_idx, patch, editable=True):
             active_img = loaded_data[active_img_idx].copy()
             img_width, img_height = active_img.size
 
@@ -186,167 +232,91 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
             )
             fig.update_xaxes(showgrid=False, range=(0, img_width))
             fig.update_yaxes(showgrid=False, scaleanchor="x", range=(img_height, 0))
-
             fig.update_layout(autosize=False, width=800, height=800)
+
             return fig
 
-        def render_patch_page(loaded_data, active_img_idx, state):
-            return html.Div(
-                [
-                    html.Div(
-                        [
-                            html.H2("Controls", className="Subhead Subhead--spacious"),
-                            html.Form(
-                                html.Div(
-                                    className="form",
-                                    children=[
-                                        html.Div(
-                                            className="form-group-header",
-                                            children=html.Label("Select the image to view:"),
-                                        ),
-                                        html.Div(
-                                            className="form-group-body",
-                                            children=dcc.Input(
-                                                id="img-selector",
-                                                type="number",
-                                                value=0,
-                                                min=0,
-                                                max=len(loaded_data) - 1,
-                                                step=1,
-                                                className="m-2",
-                                            ),
-                                        ),
-                                        html.Div(
-                                            className="form-group-header",
-                                            children=html.Label("Patch Location:", className="m-2"),
-                                        ),
-                                        html.Div(
-                                            className="form-group-body",
-                                            children=html.Pre(
-                                                json.dumps(state, indent=4),
-                                                id="raymon-state",
-                                                className="m-2 similarity-code-view",
-                                            ),
-                                        ),
-                                        html.Div(
-                                            className="form-group-header",
-                                            children=html.Label("Patch Shape:", className="m-2"),
-                                        ),
-                                        html.Div(
-                                            className="form-group-body",
-                                            children=html.Pre(
-                                                str(state2shape(state)),
-                                                id="patch-shape",
-                                                className="m-2 similarity-code-view",
-                                            ),
-                                        ),
-                                        html.Button(
-                                            "Save",
-                                            id="patch-setup-complete",
-                                            n_clicks=0,
-                                            className="btn btn-primary m-2",
-                                        ),
-                                        html.Div(id="save-output"),
-                                    ],
-                                ),
-                            ),
-                        ],
-                        className="col-4 float-left",
-                        id="left-column-div",
-                    ),
-                    html.Div(
-                        [
-                            html.H2("View", className="Subhead Subhead--spacious"),
-                            dcc.Graph(
-                                id="graph-image",
-                                figure=create_image_fig(active_img_idx=active_img_idx, patch=state),
-                            ),
-                            html.Div(id="hidden-dummy"),
-                        ],
-                        className="col-8 float-left",
-                    ),
-                ],
-                className="clearfix",
-            )
-
-        def state2shape(state):
-            if state is None:
-                raise PreventUpdate()
-            x0, y0 = state["x0"], state["y0"]
-            x1, y1 = state["x1"], state["y1"]
-            return x1 - x0, y1 - y0
-
-        def register_callbacks(app):
-            @app.callback(
-                Output("save-output", "children"),
-                [Input("patch-setup-complete", "n_clicks")],
-                [State("raymon-state", "children")],
-            )
-            def save_state(n_clicks, state):
-                nonlocal config_state
-                # if n_clicks == 0:
-                #     raise PreventUpdate()
-                config_state = json.loads(state)
-                if n_clicks == 0:
-                    return "Press the save button to save config."
-                else:
-                    return "State saved. Resave to overwite, close window to continue."
-
-            @app.callback(
-                [
-                    Output(component_id="raymon-state", component_property="children"),
-                    Output(component_id="patch-shape", component_property="children"),
-                ],
-                [Input(component_id="graph-image", component_property="relayoutData")],
-            )
-            def update_patch_data(shape_data):
-                if shape_data is None or not "shapes[0].x0" in shape_data:
-                    raise PreventUpdate()
-
-                keys = ["x0", "y0", "x1", "y1"]
-                data = {key: int(shape_data[f"shapes[0].{key}"]) for key in keys}
-                patch_width = int(data["x1"] - data["x0"])
-                patch_height = int(data["y1"] - data["y0"])
-
-                return f"{json.dumps(data, indent=4)}", str((patch_width, patch_height))
-
-            @app.callback(
-                Output(component_id="graph-image", component_property="figure"),
-                [Input(component_id="img-selector", component_property="value")],
-                [State("raymon-state", "children")],
-            )
-            def swap_img(active_image_idx, state):
-                if state is None:
-                    raise PreventUpdate()
-                if isinstance(state, str):
-                    state = json.loads(state)
-                active_image_idx = int(active_image_idx)
-
-                return create_image_fig(active_img_idx=active_image_idx, patch=state)
-
-        app = dash.Dash(
+        applauncher, kwargs = get_dash(mode=mode)
+        app = applauncher(  # dash.Dash(
             "Data Schema Config",
-            # external_stylesheets=["https://codepen.io/chriddyp/pen/bWLwgP.css"],
             assets_folder=str((Path(rdv.dash.__file__) / "../assets").resolve()),
         )
-        register_callbacks(app)
         app.layout = html.Div(
             [
                 dcc.Location(id="url", refresh=False),
-                windowcloselistener(app),
-                html.H1(f"Configuring extractor {self.idfr}", className="pagehead"),
                 html.Div(
-                    render_patch_page(
-                        loaded_data=loaded_data,
-                        active_img_idx=0,
-                        state={"x0": 0, "y0": 0, "x1": 64, "y1": 64},
-                    ),
-                    className="clearfix gutter-md-spacious",
+                    [
+                        html.H1(f"Configuring extractor {cls.__name__}", className="pagehead mb-5"),
+                        html.Div(
+                            [
+                                render_controls(),
+                                render_img_view(),
+                            ],
+                            className="clearfix",
+                        ),
+                    ],
+                    className="gutter-md-spacious",
                 ),
             ],
             id="page-body",
-            className="p-5 schema-container ",
+            className="schema-container",
         )
-        app.title = f"Configuring component {self.idfr}"
-        app.run_server(debug=False)
-        return config_state
+        app.title = f"Configuring component {cls.__name__}"
+
+        @app.callback(
+            [
+                Output(component_id="patch-config", component_property="children"),
+                Output(component_id="extractor-constructor", component_property="children"),
+            ],
+            [Input(component_id="graph-image", component_property="relayoutData")],
+        )
+        def update_patch_data(shape_data):
+            if shape_data is None or not "shapes[0].x0" in shape_data:
+                # raise PreventUpdate()
+                data = {"x0": 0, "y0": 0, "x1": 64, "y1": 64}
+            else:
+                keys = ["x0", "y0", "x1", "y1"]
+                data = {key: int(shape_data[f"shapes[0].{key}"]) for key in keys}
+
+            return f"{json.dumps(data, indent=4)}", f"{cls.__name__}(patch={data})"
+
+        def parse_imgidx(pathname):
+            if pathname == "/":
+                img_idx = 0
+            else:
+                img_idx = int(pathname.split("/")[-1])
+            return img_idx
+
+        @app.callback(
+            Output("graph-image", "figure"),
+            [Input("url", "pathname"), Input("url", "search")],
+            # [State("patch-config", "children")],
+        )
+        def render_img(pathname, search):
+
+            if len(search) == 0:
+                patch = {"x0": 0, "y0": 0, "x1": 64, "y1": 64}
+            else:
+                patchenc = search.split("patch=")[1]
+                patch = json.loads(base64.b64decode(patchenc.encode("ascii")).decode("ascii"))
+
+            img_idx = parse_imgidx(pathname)
+            return render_figure(active_img_idx=img_idx, patch=patch)
+
+        @app.callback(
+            Output("page-controls", "children"),
+            [Input("url", "pathname"), Input("patch-config", "children")],
+        )
+        def update_controls(pathname, patch):
+            img_idx = parse_imgidx(pathname)
+            if patch is None:
+                patch = json.dumps(None)
+            patchenc = base64.b64encode(patch.encode("ascii")).decode("ascii")
+
+            return [
+                html.Button(dcc.Link("Prev", href=f"/{img_idx-1}?patch={patchenc}"), className="btn btn-sm m-2"),
+                f"Image: {img_idx} / {len(loaded_data)}",
+                html.Button(dcc.Link("Next", href=f"/{img_idx+1}?patch={patchenc}"), className="btn btn-sm m-2"),
+            ]
+
+        app.run_server(debug=True, **kwargs)
