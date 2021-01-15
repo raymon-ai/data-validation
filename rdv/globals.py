@@ -6,7 +6,6 @@ import webbrowser
 from multiprocessing import Process
 
 from abc import ABC, abstractmethod
-from rdv.dash.helpers import dash_input
 
 
 class SchemaStateException(Exception):

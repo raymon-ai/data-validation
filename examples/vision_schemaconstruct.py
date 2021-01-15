@@ -32,21 +32,16 @@ def load_data(dpath, lim):
     return images
 
 
+loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
+# FixedSubpatchSimilarity.configure_interactive(loaded_data=loaded_data, mode="external")
+
 # %%
-def load_full_schema():
-    extractor = FixedSubpatchSimilarity(patch=[0, 0, 64, 64], refs=["ae81b596d698da31"])
-    stats = NumericStats(min=0, max=1, nbins=2, mean=0.8, std=0.2, pinv=0.1, hist=[10, 10])
-    component = FloatFeature(name="testcomponent", extractor=extractor, stats=stats)
-    schema = Schema(name="Testing", version="1.0.0", features=[component, component])
-    return schema
-
-
 def load_empty_schema():
     schema = Schema(
         name="Testing",
         version="1.0.0",
         features=[
-            FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity()),
+            FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity(patch=[93, 65, 232, 221])),
             FloatFeature(name="sharpness", extractor=Sharpness()),
             FloatFeature(name="intensity", extractor=AvgIntensity()),
         ],
@@ -54,62 +49,32 @@ def load_empty_schema():
     return schema
 
 
+schema = load_empty_schema()
+schema.build(data=load_data(dpath=DATA_PATH, lim=1000))
+# %%
+fullschema_path = "schema-compiled.json"
+schema.save(fullschema_path)
+
+# %%
+schema = Schema().load(fullschema_path)
+tags = schema.check(loaded_data[-1])
+tags
+
+# %%
+
+img_blur = loaded_data[-10].copy().filter(ImageFilter.GaussianBlur(radius=5))
+img_blur
 #%%
-# schema = load_empty_schema()
-# loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
-# schema.configure(data=loaded_data)
-# # %%
-# schema.build(data=load_data(dpath=DATA_PATH, lim=1000))
-# # %%
-# fullschema_path = "schema-compiled.json"
-# schema.save(fullschema_path)
-
-# # %%
-# schema = Schema().load(fullschema_path)
-# tags = schema.check(loaded_data[-1])
-# tags
-
-# # %%
-
-# img_blur = loaded_data[-10].copy().filter(ImageFilter.GaussianBlur(radius=5))
-# img_blur
-# #%%
-# tags = schema.check(img_blur)
-# tags
-# # %%
-# import numpy as np
-
-# img_dark = loaded_data[-20].copy()
-# img_dark = Image.fromarray((np.array(img_dark) - np.array(img_dark) * 0.3).astype(np.uint8))
-# img_dark
-
-# tags = schema.check(img_dark)
-# tags
-
-
-# #%%
-# nc = FloatFeature(name="patch_similarity", extractor=FixedSubpatchSimilarity())
-# # %%
-# nc.extractor.configure(data=loaded_data)
+tags = schema.check(img_blur)
+tags
 # %%
+import numpy as np
 
+img_dark = loaded_data[-20].copy()
+img_dark = Image.fromarray((np.array(img_dark) - np.array(img_dark) * 0.3).astype(np.uint8))
+img_dark
 
-loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
-FixedSubpatchSimilarity.configure_interactive(loaded_data=loaded_data, mode="external")
+tags = schema.check(img_dark)
+tags
 
-#%%
-import json
-import base64
-
-patch = {"x0": 0, "y0": 0, "x1": 64, "y1": 64}
-
-# %%
-enc = base64.b64encode(json.dumps(patch).encode("ascii")).decode("ascii")
-enc
-# %%
-dec = base64.b64decode(enc.encode("ascii")).decode("ascii")
-dec
-# %%
-enc = "IntcbiAgICBcIngwXCI6IDEzMSxcbiAgICBcInkwXCI6IDExNixcbiAgICBcIngxXCI6IDE5NSxcbiAgICBcInkxXCI6IDE4MFxufSI="
-json.loads(base64.b64decode(enc.encode("ascii")).decode("ascii"))
 # %%

@@ -108,10 +108,7 @@ class Schema(Serializable, Buildable):
     """Buildable Interface"""
 
     def build(self, data):
-        # check wheter there are no extractors that require config
-        require_config = self.get_unconfigured()
-        if len(require_config) > 0:
-            raise SchemaStateException(f"Some schema feature extractors require configuration.")
+
         # Build the schema
         for feat in self.features.values():
             # Compile stats
@@ -173,7 +170,7 @@ class Schema(Serializable, Buildable):
                     html.Td(
                         dcc.Graph(
                             id=f"{feat.name}-prev",
-                            figure=feat.plot(size=(400, 150), poi=poi_dict.get(feat.name, None), hist=False),
+                            figure=feat.plot(size=(400, 150), poi=poi_dict.get(feat.name, None), secondary=False),
                             config={"displayModeBar": False},
                         )
                     ),
@@ -253,9 +250,7 @@ class Schema(Serializable, Buildable):
                 children=[
                     dcc.Graph(
                         id="feature-graph",
-                        figure=other.features[feature_name].compare(
-                            size=(400, 150), other=other.features[feature_name]
-                        ),
+                        figure=other.features[feature_name].compare(other=other.features[feature_name]),
                     ),
                     dcc.Link("Back", href=f"/"),
                 ],

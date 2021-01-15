@@ -47,14 +47,14 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
 
     @patch.setter
     def patch(self, value):
-        if value is None:
-            self._patch = None
-            return
 
-        if not isinstance(value, dict):
-            raise ValueError(f"patch must be a dict, not {type(value)}")
+        if isinstance(value, dict):
+            self._patch = {key: value[key] for key in self._patch_keys}
+        elif isinstance(value, list) and len(value) == 4:
+            self._patch = {key: value[i] for i, key in enumerate(self._patch_keys)}
+        else:
+            raise ValueError(f"patch must be a dict or list, not {type(value)}")
         # make sure the correct keys are there
-        self._patch = {key: value[key] for key in self._patch_keys}
         print(f"Patch set to: {self._patch} for {self}")
 
     @property
@@ -149,7 +149,7 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
         self.refs = refs
 
     def is_built(self):
-        return True
+        return len(self.refs) == self.nrefs
 
     def __str__(self):
         return f"{self.class2str()} ({self.idfr})"
@@ -271,14 +271,15 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
             [Input(component_id="graph-image", component_property="relayoutData")],
         )
         def update_patch_data(shape_data):
+            keys = ["x0", "y0", "x1", "y1"]
+
             if shape_data is None or not "shapes[0].x0" in shape_data:
                 # raise PreventUpdate()
                 data = {"x0": 0, "y0": 0, "x1": 64, "y1": 64}
             else:
-                keys = ["x0", "y0", "x1", "y1"]
                 data = {key: int(shape_data[f"shapes[0].{key}"]) for key in keys}
 
-            return f"{json.dumps(data, indent=4)}", f"{cls.__name__}(patch={data})"
+            return f"{json.dumps(data, indent=4)}", f"{cls.__name__}(patch={[data[k] for k in keys]})"
 
         def parse_imgidx(pathname):
             if pathname == "/":
