@@ -250,7 +250,7 @@ class Schema(Serializable, Buildable):
                 children=[
                     dcc.Graph(
                         id="feature-graph",
-                        figure=other.features[feature_name].compare(other=other.features[feature_name]),
+                        figure=self.features[feature_name].compare(other=other.features[feature_name]),
                     ),
                     dcc.Link("Back", href=f"/"),
                 ],

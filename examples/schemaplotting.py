@@ -31,10 +31,10 @@ schema_cheap = build_schema(cheap_data, name="cheap-houses")
 schema_exp = build_schema(exp_data, name="exp-houses")
 
 #%%
-schema_cheap.view(mode="external")
+# schema_cheap.view(mode="external")
 
-#%%
-schema_cheap.view(poi=exp_data.iloc[0, :])
+# #%%
+# schema_cheap.view(poi=exp_data.iloc[0, :])
 
 
 # %%
