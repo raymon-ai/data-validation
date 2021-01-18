@@ -1,13 +1,12 @@
 
 # Raymon Data Validation Library
+
 ![Build](https://github.com/raymon-ai/data-validation/workflows/build/badge.svg)
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 <a href="https://github.com/raymon-ai/data-validation/blob/master/LICENSE.md"><img alt="License" src="https://img.shields.io/github/license/raymon-ai/data-validation"></a>
 <a href="#"><img alt="PyPI" src="https://img.shields.io/pypi/v/rdv"></a>
 
-## At a glance
-RDV allows you to easily specify data schemas at train time, to be used to validate production data.
-  
+RDV allows you to easily specify data schemas at train time, to be used to validate production data and track data and model health metrics.
 
 ## What?
 RDV (Raymon Data Validation) is a library to validate data in ML / AI systems. Checking whether incoming data is according to expectations is important because invalid data may be processed by the system without the system failing, resulting in unreliable results. RDV integrates with the rest of the [Raymon.ai](https://raymon.ai) system, but can be used standalone and is open source.
@@ -15,7 +14,16 @@ RDV (Raymon Data Validation) is a library to validate data in ML / AI systems. C
 RDV provides currently offers (limited) out-of-the-box data validation functionality for structured and vision data. The goal is to extend this functionality and to provide a flexible framework where users can plug in their own components. An overview of available functionality and the roadmap can be found below. Additional features to bo added to the roadmap can be requested in the [issues](https://github.com/raymon-ai/data-validation/issues).
 
 ## Why?
-As a data scientist, you are responsible for the correctness and reliability of your systems. However, this correctness not only deplends on how good you or your team can apply fancy algorithms, but also on the data your system receives from clients. This data can be corrupted, distributions may have changed since training your model (data drift) or the relationship between features and targets may have changed (concept drift / covariate shift). 'Bad' data might be processed without raising errors, but the results will be unreliable and less accurate (model drift). RDV basially offers you a framework to easiliy validate your data and predictions so that bad data can be surfaced, owners cna be notified and approriate action can be taken.
+As a data scientist or ML engineer, you are responsible for the correctness and reliability of your systems. However, this correctness not only depends on how good you or your team can apply fancy algorithms, but also on the data your system receives from clients. This data can be corrupted, distributions may have changed since training your model (data drift) or the relationship between features and targets may have changed (concept drift / covariate shift). 'Bad' data might be processed without raising errors, but the results will be unreliable and less accurate (model drift). RDV basially offers you a framework to easiliy validate your data and predictions so that bad data can be surfaced, owners cna be notified and approriate action can be taken.
+
+## How?
+RDV allows you to easily specify data schemas at train time, to be used to validate production data.
+
+- A schema is composed out of multiple features.
+- These features are calculated from data by feature extractors. The simplest case is selecting a certain feature from structured data like in the example above, but this can be any feature extractor like an image sharpness, or an outlier score.
+- Every schema feature stores a reference to this feature extractor. 
+- When building a schema, the specified feature is extracted from all data points and statistics about this feature (min, max, mean, distribution) are saved in a `Stats` object, which is saved in every feature component of the schema.
+
 
 
 ## Installation and Usage
@@ -23,7 +31,9 @@ As a data scientist, you are responsible for the correctness and reliability of 
 ### Installation
 RDV can be installed from PyPI
 
-```pip install rdv```
+```bash
+pip install rdv
+```
 
 ### Schema building
 
@@ -92,13 +102,5 @@ schema_exp.build(data=exp_data)
 schema.compare(schema_exp)
 ```
 ![Schema view](docs/images/compareschema.png "Comparing schemas looks like this.")
-
-## How?
-- A schema is composed out of multiple features.
-- These features are calculated from data by feature extractors. The simplest case is selecting a certain feature from structured data like in the example above, but this can be any feature extractor like an image sharpness, or an outlier score.
-- Every schema feature stores a reference to this feature extractor. 
-- When building a schema, the specified feature is extracted from all data points and statistics about this feature (min, max, mean, distribution) are saved in a `Stats` object, which is saved in every feature component of the schema.
-
-
 
 
