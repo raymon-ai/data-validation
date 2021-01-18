@@ -19,8 +19,6 @@ LIM = 150
 
 
 #%%
-
-
 def load_data(dpath, lim):
     files = dpath.glob("*.jpeg")
     images = []
@@ -33,7 +31,6 @@ def load_data(dpath, lim):
 
 
 loaded_data = load_data(dpath=DATA_PATH, lim=LIM)
-# FixedSubpatchSimilarity.configure_interactive(loaded_data=loaded_data, mode="external")
 
 # %%
 def load_empty_schema():
