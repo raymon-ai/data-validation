@@ -8,9 +8,9 @@ from dash.dependencies import Input, Output
 
 import rdv
 from rdv.globals import Buildable, SchemaStateException, Serializable
-from rdv.feature import Feature
 from rdv.dash.helpers import get_dash
 from rdv.tags import SCHEMA_FEATURE
+from rdv.feature import Feature
 
 
 class Schema(Serializable, Buildable):
@@ -119,6 +119,9 @@ class Schema(Serializable, Buildable):
 
     """Other Methods"""
 
+    def __str__(self):
+        return f'Schema(name="{self.name}", version="{self.version}"'
+
     def set_schema_group(self, tags):
         for feature_tag in tags:
             feature_tag.group = self.group_idfr
@@ -207,7 +210,7 @@ class Schema(Serializable, Buildable):
             children=[
                 dcc.Location(id="url", refresh=False),
                 html.Div(
-                    className="my-5",
+                    className="m-5",
                     children=[
                         html.H1(app.title, className="my-3"),
                         html.H3(
@@ -304,7 +307,7 @@ class Schema(Serializable, Buildable):
             children=[
                 dcc.Location(id="url", refresh=False),
                 html.Div(
-                    className="my-5",
+                    className="m-5",
                     children=[
                         html.H1(app.title, className="my-3"),
                         html.H3(

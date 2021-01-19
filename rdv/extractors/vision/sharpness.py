@@ -16,7 +16,7 @@ class Sharpness(FeatureExtractor):
         img = data
         img = img.convert("L")
         filtered = img.filter(ImageFilter.Kernel((3, 3), (0, 1, 0, 1, -4, 1, 0, 1, 0), scale=1, offset=0))
-        return float(np.array(filtered).var())
+        return float(np.array(filtered).mean())  # .var())
 
     """Serializable inteface """
 

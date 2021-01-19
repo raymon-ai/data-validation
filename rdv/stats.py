@@ -161,8 +161,8 @@ class NumericStats(Stats):
     """Testing and sampling functions"""
 
     def test_drift(self, other, pthresh=0.05):
-        sample_self = self.sample(n=10000)
-        sample_other = other.sample(n=10000)
+        sample_self = self.sample(n=1000)
+        sample_other = other.sample(n=1000)
         stat, pvalue = ks_2samp(data1=sample_self, data2=sample_other, alternative="two-sided", mode="auto")
         drift = pvalue < pthresh
         return stat, pvalue, drift

@@ -6,23 +6,27 @@
 <a href="https://github.com/raymon-ai/data-validation/blob/master/LICENSE.md"><img alt="License" src="https://img.shields.io/github/license/raymon-ai/data-validation"></a>
 <a href="#"><img alt="PyPI" src="https://img.shields.io/pypi/v/rdv"></a>
 
-RDV allows you to easily specify data schemas at train time, to be used to validate production data and track data and model health metrics.
+
 
 ## What?
-RDV (Raymon Data Validation) is a library to validate data in ML / AI systems. Checking whether incoming data is according to expectations is important because invalid data may be processed by the system without the system failing, resulting in unreliable results. RDV integrates with the rest of the [Raymon.ai](https://raymon.ai) system, but can be used standalone and is open source.
+RDV (Raymon Data Validation) is a library to validate data in ML / AI systems. RDV allows you to easily specify data schemas that capture the characteristics of your train data. These schemas can then be used to validate incoming production data and track data and model health metrics.
 
-RDV provides currently offers (limited) out-of-the-box data validation functionality for structured and vision data. The goal is to extend this functionality and to provide a flexible framework where users can plug in their own components. An overview of available functionality and the roadmap can be found below. Additional features to bo added to the roadmap can be requested in the [issues](https://github.com/raymon-ai/data-validation/issues).
+RDV provides currently offers basic data validation functionality for structured and vision data, but we aim to further extend this functionality to other fields. RDVs current main purpose is to provide users a framework in whcih they can easily plugin their own functionlaity to integrate with the rest of the Raymon.ai system, but it can be used standalone and is open source.
+
+An overview of available functionality and the roadmap can be found below. Additional features to bo added to the roadmap can be requested in the [issues](https://github.com/raymon-ai/data-validation/issues).
 
 ## Why?
-As a data scientist or ML engineer, you are responsible for the correctness and reliability of your systems. However, this correctness not only depends on how good you or your team can apply fancy algorithms, but also on the data your system receives from clients. This data can be corrupted, distributions may have changed since training your model (data drift) or the relationship between features and targets may have changed (concept drift / covariate shift). 'Bad' data might be processed without raising errors, but the results will be unreliable and less accurate (model drift). RDV basially offers you a framework to easiliy validate your data and predictions so that bad data can be surfaced, owners cna be notified and approriate action can be taken.
+As a data scientist or ML engineer, you are responsible for the correctness and reliability of your systems. However, this correctness not only depends on how good you or your team can apply fancy algorithms, but also on the data your system receives from clients, which you may have little control over. Data can be corrupted, input distributions may evolve (data drift) or the relationship between features and targets may have changed (concept drift / covariate shift). 'Bad' data might be processed without raising errors, but the results will be unreliable and less accurate (model degredation). Catching these issues may be hard without the right tooling. RDV basially offers you a framework to easiliy validate your data and predictions so that bad data can be surfaced, owners cna be notified and approriate action can be taken.
 
 ## How?
-RDV allows you to easily specify data schemas at train time, to be used to validate production data.
 
-- A schema is composed out of multiple features.
-- These features are calculated from data by feature extractors. The simplest case is selecting a certain feature from structured data like in the example above, but this can be any feature extractor like an image sharpness, or an outlier score.
+- A schema is composed out of one or multiple features.
+- These features are calculated from data by feature extractors. The simplest case is selecting a certain feature from structured data like in the example below, but this can be any feature extractor like an image sharpness, or an outlier score.
 - Every schema feature stores a reference to this feature extractor. 
-- When building a schema, the specified feature is extracted from all data points and statistics about this feature (min, max, mean, distribution) are saved in a `Stats` object, which is saved in every feature component of the schema.
+- When building a schema, the specified features are extracted from all data points and statistics about these features (min, max, mean, distribution) are saved .
+- The schema can be loaded in production systems to check incoming data.
+
+![Schema building flow](docs/images/flow.png "Schema building flow")
 
 
 

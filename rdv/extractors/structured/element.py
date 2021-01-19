@@ -1,8 +1,10 @@
 from PIL import Image
 import numpy as np
 
+
 from rdv.extractors import FeatureExtractor
 from rdv.globals import DataException
+from rdv.feature import IntFeature, FloatFeature, CategoricFeature
 
 
 class ElementExtractor(FeatureExtractor):
@@ -50,3 +52,22 @@ class ElementExtractor(FeatureExtractor):
 
     def __str__(self):
         return f"{self.__class__.__name__}(element={self.element})"
+
+
+def construct_features(dtypes):
+    components = []
+    for key in dtypes.index:
+        # Check type: Numeric or categoric
+        extractor = ElementExtractor(element=key)
+        if np.issubdtype(dtypes[key], np.floating):
+            component = FloatFeature(name=key, extractor=extractor)
+        elif np.issubdtype(dtypes[key], np.integer):
+            component = IntFeature(name=key, extractor=extractor)
+        elif dtypes[key] == np.dtype("O"):
+            component = CategoricFeature(name=key, extractor=extractor)
+        else:
+            raise ValueError(f"dtype {dtypes[key]} not supported.")
+
+        components.append(component)
+
+    return components

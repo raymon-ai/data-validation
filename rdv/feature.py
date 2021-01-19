@@ -17,7 +17,6 @@ from rdv.globals import (
 )
 from rdv.stats import CategoricStats, NumericStats, equalize_domains
 from rdv.tags import Tag, SCHEMA_ERROR, SCHEMA_FEATURE
-from rdv.extractors.structured import ElementExtractor
 from rdv.extractors import NoneExtractor
 
 PLOTLY_COLORS = px.colors.qualitative.Plotly
@@ -188,9 +187,9 @@ class FloatFeature(Feature):
         if secondary:
             fig.add_trace(plot_histogram(self.stats.sample(n=HIST_N_SAMPLES)))
 
-        fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
         fig.update_layout(**self.layout_settings(size))
-
+        range_min, range_max = self.stats.percentiles[0], self.stats.percentiles[-1]
+        print(f"POI: {poi}")
         if poi and (isinstance(poi, float) or isinstance(poi, int)):
             fig.add_shape(
                 type="line",
@@ -201,6 +200,13 @@ class FloatFeature(Feature):
                 line=dict(color=PLOTLY_COLORS[-1], width=1),
                 name="poi",
             )
+            if poi < range_min:
+                range_min = poi
+            if poi > range_max:
+                range_max = poi
+
+        fig.update_xaxes(range=[range_min, range_max])
+
         return fig
 
     def compare(self, other, size=(800, 500)):
@@ -305,9 +311,9 @@ class IntFeature(Feature):
         if secondary:
             fig.add_trace(plot_histogram(self.stats.sample(n=HIST_N_SAMPLES)))
 
-        fig.update_xaxes(range=[self.stats.percentiles[0], self.stats.percentiles[-1]])
         fig.update_layout(**self.layout_settings(size))
-
+        range_min, range_max = self.stats.percentiles[0], self.stats.percentiles[-1]
+        print(f"POI: {poi}")
         if poi and (isinstance(poi, float) or isinstance(poi, int)):
             fig.add_shape(
                 type="line",
@@ -318,6 +324,13 @@ class IntFeature(Feature):
                 line=dict(color=PLOTLY_COLORS[-1], width=1),
                 name="poi",
             )
+            if poi < range_min:
+                range_min = poi
+            if poi > range_max:
+                range_max = poi
+
+        fig.update_xaxes(range=[range_min, range_max])
+
         return fig
 
     def compare(self, other, size=(800, 500)):
@@ -453,25 +466,6 @@ class CategoricFeature(Feature):
         fig.update_layout(**self.layout_settings(size))
 
         return fig
-
-
-def construct_features(dtypes):
-    components = []
-    for key in dtypes.index:
-        # Check type: Numeric or categoric
-        extractor = ElementExtractor(element=key)
-        if np.issubdtype(dtypes[key], np.floating):
-            component = FloatFeature(name=key, extractor=extractor)
-        elif np.issubdtype(dtypes[key], np.integer):
-            component = IntFeature(name=key, extractor=extractor)
-        elif dtypes[key] == np.dtype("O"):
-            component = CategoricFeature(name=key, extractor=extractor)
-        else:
-            raise ValueError(f"dtype {dtypes[key]} not supported.")
-
-        components.append(component)
-
-    return components
 
 
 def plot_histogram(samples, range=None, dtype="float"):
