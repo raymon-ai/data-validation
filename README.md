@@ -30,7 +30,7 @@ As a data scientist or ML engineer, you are responsible for the correctness and 
 
 
 
-## Installation and Usage
+## Installation 
 
 ### Installation
 RDV can be installed from PyPI
@@ -38,6 +38,9 @@ RDV can be installed from PyPI
 ```bash
 pip install rdv
 ```
+
+## Usage
+This section gives a brief overview of how to use RDV. See [the examples](https://github.com/raymon-ai/data-validation/tree/master/examples) and [docs](https://github.com/raymon-ai/data-validation/tree/master/docs) for more info.
 
 ### Schema building
 
@@ -70,7 +73,7 @@ Which will output a list of tags, which can be the feature values or data errors
   'name': 'MSZoning',
   'value': 'RL',
   'group': 'cheap-houses@0.0.0'},
-  # This is an error: teh "Alley" feature is NaN
+  # This is an error: the "Alley" feature is NaN
  {'type': 'schema-error',
   'name': 'Alley-err',
   'value': 'Value NaN',
@@ -107,4 +110,21 @@ schema.compare(schema_exp)
 ```
 ![Schema view](docs/images/compareschema.png "Comparing schemas looks like this.")
 
+## Available extractors
 
+### Structured Data
+| Name                                                                                                                | Description                                                                                                                                         |
+| ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [ElementExtractor](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/structured/element.py)   | Simply extracts one element from a feature array.                                                                                                   |
+| [KMeansOutlierScorer](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/structured/kmeans.py) | Given an numeric vector, calculates an outlier score based on kmeans clustering of the training data. [Reference](https://arxiv.org/abs/2002.10445) |
+
+
+### Vision Data
+| Name                                                                                                                    | Description                                                                                                                                    |
+| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
+| [AvgIntensity](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/intensity.py)             | Simply extracts the average of an input image. array.                                                                                          |
+| [AvgIntensity](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/intensity.py)             | Extracts the blurryness / sharpness of an image. array.                                                                                        |
+| [FixedSubpatchSimilarity](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/similarity.py) | Calculates how similar a fixed part of an image is to a reference. Useful to detect camera shift when a fixed object should always be in view. |
+| [DN2OutlierScorer](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/dn2.py)               | Given an image, calculates an outlier score based on kmeans clustering of the training data. [Reference](https://arxiv.org/abs/2002.10445)     |
+
+## Extractors roadmap
