@@ -6,3 +6,5 @@ dev**
 dist
 .coverage
 htmlcov
+
+examples/*.json
