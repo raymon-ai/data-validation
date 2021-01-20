@@ -1,13 +1,6 @@
 name: test-build-deploy
 on: push
 jobs:
-  lint:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-python@v2
-      - uses: psf/black@stable
-
   test-build-publish-ubuntu:
     runs-on: ubuntu-latest
     strategy:
@@ -24,6 +17,8 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
+      - name: Black formatting
+        uses: psf/black@stable
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip

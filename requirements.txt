@@ -4,3 +4,6 @@ dash
 numpy
 imagehash
 plotly
+torch
+torchvision
+jupyter-dash

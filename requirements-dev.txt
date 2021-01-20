@@ -5,4 +5,4 @@ pre-commit
 pytest
 wheel
 black
-pip-licenses
+jupyter
