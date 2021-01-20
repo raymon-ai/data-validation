@@ -29,16 +29,14 @@ jobs:
           coverage-badge -o coverage.svg
           ls -al
       - name: Push badge
-        uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
-        env:
-          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
-        with:
-          source_file: "coverage.svg"
-          destination_repo: "raymon-ai/badges"
-          destination_folder: "rdv"
-          user_email: "hello@raymon.ai"
-          user_name: "github-action"
-          commit_message: "Updating coverage badge."
+        run: |
+          ls -al
+          git clone https://.:${{ secrets.GITHUB_TOKEN }}@github.com/raymon-ai/badges.git badges
+          rm badges/rdv/coverage.svg
+          mv coverage.svg badges/rdv/coverage.svg
+          git add badges
+          git commit -m "Automatic publish from rdv"
+          git push badges master
       - name: Build package
         run: |
           python setup.py bdist bdist_wheel
