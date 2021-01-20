@@ -1,0 +1,68 @@
+name: build
+on:
+  push:
+    branches:
+      - master
+  # pull_request:
+  #   branches:
+  #     - master
+  push:
+    tags:
+      - "v*"
+  release:
+    types: [released]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-python@v2
+      - uses: psf/black@stable
+
+  test-build-publish-ubuntu:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.7, 3.8]
+    env:
+      TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
+      TWINE_PASSWORD: ""
+      TWINE_REPOSITORY_URL: ${{ secrets.TWINE_REPOSITORY_URL }}
+      MIN_COVERAGE: 20
+    steps:
+      - uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
+      - name: Test with pytest
+        run: |
+          coverage run -m pytest
+          coverage-badge -o coverage.svg
+      - name: Pushe badge
+        uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
+        with:
+          source_file: "coverage.svg"
+          destination_repo: "raymon-ai/badges"
+          destination_folder: "rdv"
+          user_email: "hello@raymon.ai"
+          user_name: "github-action"
+          commit_message: "Updating coverage badge."
+      - name: build package
+        run: |
+          python setup.py bdist bdist_wheel
+      - name: Push to fury
+        run: twine upload dist/* --skip-existing
+      - name: Publish package to PyPI
+        # if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
+        uses: pypa/gh-action-pypi-publish@master
+        with:
+          user: __token__
+          password: ${{ secrets.PYPI_TOKEN }}
