@@ -27,7 +27,7 @@ jobs:
         run: |
           coverage run -m pytest
           coverage-badge -o coverage.svg
-      - name: Pushe badge
+      - name: Push badge
         uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
         env:
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
@@ -38,7 +38,7 @@ jobs:
           user_email: "hello@raymon.ai"
           user_name: "github-action"
           commit_message: "Updating coverage badge."
-      - name: build package
+      - name: Build package
         run: |
           python setup.py bdist bdist_wheel
       - name: Push to fury
