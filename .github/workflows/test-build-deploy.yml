@@ -1,5 +1,7 @@
 name: test-build-deploy
-on: push
+on:
+  push:
+    branches: master
 jobs:
   test-build-publish-ubuntu:
     runs-on: ubuntu-latest
@@ -31,7 +33,7 @@ jobs:
           git config --local user.email "hello@raymon.ai"
           git config --local user.name "github-actions[bot]"
           git add coverage.svg
-          git commit -m "Adding bdges"
+          git commit -m "Adding coverage badge"
       - name: Push badge
         uses: ad-m/github-push-action@master
         with:
