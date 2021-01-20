@@ -394,7 +394,10 @@ class CategoricFeature(Feature):
             raise DataException(f"stats for a NumericComponant should be of type CategoricStats, not {type(value)}")
 
     def feature2tag(self, feature):
-        return Tag(name=self.name, value=feature, type=SCHEMA_FEATURE)
+        if isinstance(feature, str) or not np.isnan(feature):
+            return Tag(name=self.name, value=feature, type=SCHEMA_FEATURE)
+        else:
+            return None
 
     def check_invalid(self, feature):
         tagname = f"{self.name}-err"

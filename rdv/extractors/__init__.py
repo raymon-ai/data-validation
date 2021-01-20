@@ -46,7 +46,7 @@ class NoneExtractor(FeatureExtractor):
     def build(self, data):
         pass
 
-    def is_built(self, data):
+    def is_built(self):
         return True
 
     def extract_feature(self, data):

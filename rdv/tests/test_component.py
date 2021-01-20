@@ -5,8 +5,8 @@ import pandas as pd
 import numpy as np
 
 import rdv
-from rdv.feature import construct_features
-from rdv.feature import CategoricFeature, FloatFeature
+from rdv.extractors.structured import construct_features
+from rdv.feature import CategoricFeature, FloatFeature, IntFeature
 from rdv.schema import Schema
 from rdv.globals import SchemaStateException, DataException
 from rdv.stats import NumericStats, CategoricStats
@@ -17,57 +17,15 @@ def test_constuct_components():
         "num1": list(range(10)),
         "cat1": ["a"] * 5 + ["b"] * 5,
         "cat2": ["c"] * 5 + ["d"] * 5,
-        "num2": list(range(0, 20, 2)),
+        "num2": [0.2] * 10,
     }
     df = pd.DataFrame(data=cols)
     components = construct_features(dtypes=df.dtypes)
     assert len(components) == 4
-    assert isinstance(components[0], FloatFeature)
+    assert isinstance(components[0], IntFeature)
     assert isinstance(components[1], CategoricFeature)
     assert isinstance(components[2], CategoricFeature)
     assert isinstance(components[3], FloatFeature)
-
-
-def test_compile_unconfigured_numeric():
-    cols = {
-        "num1": list(range(10)),
-        "cat1": ["a"] * 5 + ["b"] * 5,
-        "cat2": ["c"] * 5 + ["d"] * 5,
-        "num2": list(range(0, 20, 2)),
-    }
-    df = pd.DataFrame(data=cols)
-    components = construct_features(dtypes=df.dtypes)
-    schema = Schema(features=components)
-    try:
-        schema.build(data=df)
-    except SchemaStateException:
-        pass
-    else:
-        pytest.fail("Compilation of unconfigured schema should fail")
-
-
-def test_configure():
-    cols = {
-        "num1": list(range(10)),
-        "cat1": ["a"] * 5 + ["b"] * 5,
-    }
-    df = pd.DataFrame(data=cols)
-    components = construct_features(dtypes=df.dtypes)
-    schema = Schema(features=components)
-    schema.configure(data=df)
-    components = schema.components
-    assert isinstance(components[0].stats, NumericStats)
-    assert components[0].stats.min == 0
-    assert components[0].stats.max == 9
-    assert components[0].stats.mean is None
-    assert components[0].is_configured()
-    assert not components[0].is_compiled()
-
-    assert isinstance(components[1].stats, CategoricStats)
-    assert sorted(components[1].stats.domain) == sorted(["a", "b"])
-    assert components[1].stats.pinv is None
-    assert components[1].is_configured()
-    assert not components[1].is_compiled()
 
 
 def test_conmpile():
@@ -78,21 +36,21 @@ def test_conmpile():
     df = pd.DataFrame(data=cols)
     components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
-    schema.configure(data=df)
-    schema.compile(data=df)
-    components = schema.components
-    assert isinstance(components[0].stats, NumericStats)
-    assert components[0].stats.min == 0
-    assert components[0].stats.max == 9
-    assert components[0].stats.mean == 4.5
-    assert components[0].is_configured()
-    assert components[0].is_compiled()
+    assert not schema.is_built()
+    schema.build(data=df)
+    components = schema.features
+    assert isinstance(components["num1"].stats, NumericStats)
+    assert components["num1"].stats.min == 0
+    assert components["num1"].stats.max == 9
+    assert components["num1"].stats.mean == 4.5
+    assert components["num1"].is_built()
 
-    assert isinstance(components[1].stats, CategoricStats)
-    assert sorted(components[1].stats.domain) == sorted(["a", "b"])
-    assert components[1].stats.pinv == 0
-    assert components[1].is_configured()
-    assert components[1].is_compiled()
+    assert isinstance(components["cat1"].stats, CategoricStats)
+    assert sorted(components["cat1"].stats.domain_counts.keys()) == sorted(["a", "b"])
+    assert components["cat1"].stats.pinv == 0
+    assert components["cat1"].is_built()
+
+    assert schema.is_built()
 
 
 def test_all_nan():
@@ -104,8 +62,8 @@ def test_all_nan():
     components = construct_features(dtypes=df.dtypes)
     schema = Schema(features=components)
     try:
-        schema.configure(data=df)
-    except DataException:
+        schema.build(data=df)
+    except ValueError:
         pass
     else:
         pytest.fail("Feature with all nans should throw a DataException")

@@ -149,7 +149,7 @@ class FixedSubpatchSimilarity(FeatureExtractor, Configurable):
         self.refs = refs
 
     def is_built(self):
-        return len(self.refs) == self.nrefs
+        return self.refs is not None and len(self.refs) == self.nrefs
 
     def __str__(self):
         return f"{self.class2str()} ({self.idfr})"
