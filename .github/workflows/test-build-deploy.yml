@@ -5,7 +5,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.7, 3.8]
+        python-version: [3.8]
     env:
       TWINE_USERNAME: ${{ secrets.TWINE_USERNAME }}
       TWINE_PASSWORD: ""
@@ -27,6 +27,7 @@ jobs:
         run: |
           coverage run -m pytest
           coverage-badge -o coverage.svg
+          ls -al
       - name: Push badge
         uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
         env:

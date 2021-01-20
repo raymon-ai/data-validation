@@ -12,7 +12,7 @@
 ## What?
 RDV (Raymon Data Validation) is a library to validate data in ML / AI systems. RDV allows you to easily specify data schemas that capture the characteristics of your train data. These schemas can then be used to validate incoming production data and track data and model health metrics.
 
-RDV provides currently offers basic data validation functionality for structured and vision data, but we aim to further extend this functionality to other fields. RDVs current main purpose is to provide users a framework in whcih they can easily plugin their own functionlaity to integrate with the rest of the Raymon.ai system, but it can be used standalone and is open source.
+RDV provides currently offers basic data validation functionality for structured and vision data, but we aim to further extend this functionality to other fields. RDVs current main purpose is to provide users a framework in which they can easily plugin their own functionlaity to integrate with the rest of the Raymon.ai system, but it can be used standalone and is open source.
 
 An overview of available functionality and the roadmap can be found below. Additional features to bo added to the roadmap can be requested in the [issues](https://github.com/raymon-ai/data-validation/issues).
 
