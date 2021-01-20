@@ -9,10 +9,13 @@ from rdv.globals import (
 class FeatureExtractor(Serializable, Buildable, ABC):
     @abstractmethod
     def extract_feature(self, data):
-        """Extracts a feature from the data.
+        """Extracts a feature from a data instance.
 
-        Args:
-            data (Object): [description]
+        Parameters
+        ----------
+        data : any
+            The data instance you want to extract a feature from. The type is up to you.
+
         """
         raise NotImplementedError
 
