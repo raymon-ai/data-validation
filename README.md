@@ -110,21 +110,23 @@ schema.compare(schema_exp)
 ```
 ![Schema view](docs/images/compareschema.png "Comparing schemas looks like this.")
 
-## Available extractors
+## Available feature extractors
 
 ### Structured Data
-| Name                                                                                                                | Description                                                                                                                                         |
-| ------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [ElementExtractor](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/structured/element.py)   | Simply extracts one element from a feature array.                                                                                                   |
+| Name | Description   |
+| ---- | ---- |
+| [ElementExtractor](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/structured/element.py)   | Simply extracts one element from a feature array. |                                                                                                 |
 | [KMeansOutlierScorer](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/structured/kmeans.py) | Given an numeric vector, calculates an outlier score based on kmeans clustering of the training data. [Reference](https://arxiv.org/abs/2002.10445) |
 
 
 ### Vision Data
-| Name                                                                                                                    | Description                                                                                                                                    |
-| ----------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- |
-| [AvgIntensity](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/intensity.py)             | Simply extracts the average of an input image. array.                                                                                          |
-| [Sharpness](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/sharpness.py)                | Extracts the sharpness of an image. array.                                                                                                     |
+| Name   | Description   |
+| ---- | ---- |
+| [AvgIntensity](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/intensity.py)   | Extracts the average of an input image.  |
+| [Sharpness](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/sharpness.py)      | Extracts the sharpness of an image.   |
 | [FixedSubpatchSimilarity](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/similarity.py) | Calculates how similar a fixed part of an image is to a reference. Useful to detect camera shift when a fixed object should always be in view. |
-| [DN2OutlierScorer](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/dn2.py)               | Given an image, calculates an outlier score based on kmeans clustering of the training data. [Reference](https://arxiv.org/abs/2002.10445)     |
+| [DN2OutlierScorer](https://github.com/raymon-ai/data-validation/blob/master/rdv/extractors/vision/dn2.py)   | Given an image, calculates an outlier score based on kmeans clustering of the training data. [Reference](https://arxiv.org/abs/2002.10445) |
+
+
 
 ## Extractors roadmap
