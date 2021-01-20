@@ -1,4 +1,4 @@
-name: build
+name: test-build-deploy
 on:
   push:
     branches:
@@ -11,7 +11,6 @@ on:
       - "v*"
   release:
     types: [released]
-
 jobs:
   lint:
     runs-on: ubuntu-latest
