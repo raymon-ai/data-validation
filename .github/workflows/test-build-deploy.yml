@@ -12,18 +12,7 @@ jobs:
       TWINE_REPOSITORY_URL: ${{ secrets.TWINE_REPOSITORY_URL }}
       MIN_COVERAGE: 20
     steps:
-      - name: Clone RDV
-        uses: actions/checkout@v2
-        with:
-          path: rdv
-      - name: Clone badges
-        uses: actions/checkout@v2
-        with:
-          repository: raymon-ai/badges
-          path: badges
-      - name: cd into rdv
-        run: |
-          cd rdv
+      - uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
@@ -38,15 +27,16 @@ jobs:
         run: |
           coverage run -m pytest
           coverage-badge -o coverage.svg
-      - name: Push badge
-        run: |
           ls -al
-          cd ../badges
-          rm -rf rdv/coverage.svg
-          mv ../rdv/coverage.svg rdv/coverage.svg
-          git add badges
-          git commit -m "Automatic publish from rdv"
-          git push badges master
+          git config --local user.email "hello@raymon.ai"
+          git config --local user.name "github-actions[bot]"
+          git add coverage.svg
+          git commit -m "Adding bdges"
+      - name: Push badge
+        uses: ad-m/github-push-action@master
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref }}
       - name: Build package
         run: |
           python setup.py bdist bdist_wheel

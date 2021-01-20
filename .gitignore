@@ -8,5 +8,5 @@ dist
 htmlcov
 
 examples/*.json
-coverage.svg
+# coverage.svg
 build/
