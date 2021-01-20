@@ -27,6 +27,7 @@ jobs:
           pip install -r requirements-dev.txt
       - name: Test with pytest
         run: |
+          rm -rf coverage.svg
           coverage run -m pytest
           coverage-badge -o coverage.svg
           ls -al
