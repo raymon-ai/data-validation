@@ -32,9 +32,7 @@ jobs:
           coverage-badge -o coverage.svg
           COVERAGE_RESULT=`coverage report | grep TOTAL | awk '{print $NF}' | sed 's/%//g'`
           echo "Coverage: ${COVERAGE_RESULT}"
-          if [[ $COVERAGE_RESULT -gt $MIN_COVERAGE ]]; then
-            echo ::set-output name=coverage_result::$COVERAGE_RESULT
-          else
+          if [[ $COVERAGE_RESULT -le $MIN_COVERAGE ]]; then
               echo "#################################################"
               echo "Code coverage below allowed threshold ($COVERAGE_RESULT<$MIN_COVERAGE)"
               exit 1
