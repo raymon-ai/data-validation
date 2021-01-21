@@ -40,7 +40,7 @@ jobs:
           git config --local user.email "hello@raymon.ai"
           git config --local user.name "github-actions[bot]"
           git add coverage.svg
-          git commit -m "Adding coverage badge"
+          git diff-index --quiet HEAD || git commit -m "Adding coverage badge"
       - name: Push badge
         uses: ad-m/github-push-action@master
         with:
