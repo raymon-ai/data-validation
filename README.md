@@ -49,8 +49,7 @@ Let's take the example of structured data. Creating a schema for a certain dataf
 ```python
 import pandas as pd
 from rdv.schema import Schema
-from rdv.feature import construct_features
-
+from rdv.extractors.structured import construct_features
 # Load some data
 cheap_data = pd.read_csv("./data_sample/subset-cheap.csv").drop("Id", axis="columns")
 # Build a schema
