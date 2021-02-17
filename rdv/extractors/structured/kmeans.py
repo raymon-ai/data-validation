@@ -88,7 +88,7 @@ class KMeansOutlierScorer(FeatureExtractor):
 
     def build(self, data):
         data = np.array(data).astype(np.float64)
-        km = KMeans(n_clusters=16)
+        km = KMeans(n_clusters=self.k)
         km.fit(data)
         clusters = km.cluster_centers_
         self.clusters = clusters

@@ -51,7 +51,7 @@ class DN2OutlierScorer(KMeansOutlierScorer):
         for batchidx, batchtf in enumerate(dataloader):
             # batchtf = self.tfs(batch)
             features = self.mobilenet(batchtf).detach()  # .numpy()
-            startidx = batchidx * 16
+            startidx = batchidx * batch_size
             stopidx = startidx + len(features)
             embeddings[startidx:stopidx, :] = features
 
