@@ -1,5 +1,6 @@
 import numpy as np
 import torch
+import base64
 import torchvision.models as models
 from torch.utils.data import DataLoader, Dataset
 from torchvision import transforms
@@ -29,12 +30,19 @@ class ImageDataset(Dataset):
 
 
 class DN2OutlierScorer(KMeansOutlierScorer):
-    def __init__(self, k=16, clusters=None, dist="euclidean"):
+    def __init__(self, k=16, size=None, clusters=None, dist="euclidean"):
         super().__init__(k=k, clusters=clusters, dist=dist)
         self.mobilenet = models.mobilenet_v2(pretrained=True).eval()
-        self.tfs = transforms.Compose(
-            [transforms.ToTensor(), transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])]
-        )
+        self.size = size
+        tfs = [
+            transforms.ToTensor(),
+            transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+        ]
+        if size is not None:
+            tfs.append(
+                transforms.Resize(size=size),
+            )
+        self.tfs = transforms.Compose(tfs)
 
     def extract_feature(self, data):
         if not isinstance(data, Image.Image):
@@ -51,10 +59,26 @@ class DN2OutlierScorer(KMeansOutlierScorer):
         for batchidx, batchtf in enumerate(dataloader):
             # batchtf = self.tfs(batch)
             features = self.mobilenet(batchtf).detach()  # .numpy()
-            startidx = batchidx * 16
+            startidx = batchidx * batch_size
             stopidx = startidx + len(features)
             embeddings[startidx:stopidx, :] = features
 
         embeddings = embeddings[embeddings.abs().sum(axis=1) != 0]
         embeddings = embeddings.numpy()
         super().build(data=embeddings)
+
+    """Serializable interface"""
+
+    def to_jcr(self):
+        data = super().to_jcr()
+        data["size"] = self.size
+        return data
+
+    @classmethod
+    def from_jcr(cls, jcr):
+        k = jcr["k"]
+        b64 = jcr["clusters"]
+        dist = jcr["dist"]
+        size = jcr["size"]
+        clusters = np.frombuffer(base64.decodebytes(b64.encode()), dtype=np.float64).reshape((k, -1))
+        return cls(k=k, size=size, clusters=clusters, dist=dist)
