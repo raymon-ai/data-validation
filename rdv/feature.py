@@ -56,7 +56,7 @@ class Feature(Serializable, Buildable, ABC):
 
     def extract_features(self, loaded_data):
         features = []
-        if isinstance(loaded_data, pd.DataFrame):
+        if isinstance(loaded_data, pd.DataFrame) or isinstance(loaded_data, np.ndarray):
             features = self.extractor.extract_feature(loaded_data)
         elif isinstance(loaded_data, Iterable):
             for data in loaded_data:
