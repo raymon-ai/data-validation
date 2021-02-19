@@ -5,7 +5,7 @@ import pandas as pd
 import numpy as np
 
 import rdv
-from rdv.extractors.structured import construct_features
+from rdv.extractors.structured import construct_features, ElementExtractor
 from rdv.feature import CategoricFeature, FloatFeature, IntFeature
 from rdv.schema import Schema
 from rdv.globals import SchemaStateException, DataException
@@ -28,7 +28,7 @@ def test_constuct_components():
     assert isinstance(components[3], FloatFeature)
 
 
-def test_conmpile():
+def test_compile():
     cols = {
         "num1": list(range(10)),
         "cat1": ["a"] * 5 + ["b"] * 5,
@@ -49,6 +49,22 @@ def test_conmpile():
     assert sorted(components["cat1"].stats.domain_counts.keys()) == sorted(["a", "b"])
     assert components["cat1"].stats.pinv == 0
     assert components["cat1"].is_built()
+
+    assert schema.is_built()
+
+
+def test_compile_one():
+    arr = np.array([1, 2, 3, 4, 5])[None, :]
+    schema = Schema(
+        features=[FloatFeature(name="predicted_price", extractor=ElementExtractor(element=0))],
+    )
+    assert not schema.is_built()
+    schema.build(data=arr)
+    components = schema.features
+    assert isinstance(components["predicted_price"].stats, NumericStats)
+    assert components["predicted_price"].stats.min == 1
+    assert components["predicted_price"].stats.max == 5
+    assert components["predicted_price"].is_built()
 
     assert schema.is_built()
 
