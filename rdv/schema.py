@@ -56,7 +56,7 @@ class Schema(Serializable, Buildable):
     def features(self, value):
         if isinstance(value, list) and all(isinstance(feat, Feature) for feat in value):
             # Convert to dict
-            self._features = {c.name: c for c in value}
+            self._features = {c.name.lower(): c for c in value}
 
         elif isinstance(value, dict) and all(isinstance(feat, Feature) for feat in value.values()):
             self._features = value
@@ -81,7 +81,7 @@ class Schema(Serializable, Buildable):
 
     @classmethod
     def from_jcr(cls, jcr):
-        name = jcr["name"]
+        name = jcr["name"].lower()
         version = jcr["version"]
         features = []
         for comp_dict in jcr["features"]:
@@ -89,7 +89,7 @@ class Schema(Serializable, Buildable):
             comp_jcr = comp_dict["feature"]
             compclass = locate(classpath)
             if compclass is None:
-                NameError("Could not locate classpath")
+                raise NameError(f"Could not locate classpath {compclass}")
             feature = compclass.from_jcr(comp_jcr)
             features.append(feature)
 

@@ -39,7 +39,7 @@ class Feature(Serializable, Buildable, ABC):
 
     def to_jcr(self):
         data = {
-            "name": self.name,
+            "name": self.name.lower(),
             "extractor_class": self.extractor.class2str(),
             "extractor_state": self.extractor.to_jcr(),
             "stats": self.stats.to_jcr(),
@@ -150,7 +150,7 @@ class FloatFeature(Feature):
             return None
 
     def check_invalid(self, feature):
-        tagname = f"{self.name}-err"
+        tagname = f"{self.name}-error"
         if feature is None:
             return Tag(name=tagname, value="Value None", type=SCHEMA_ERROR)
         elif np.isnan(feature):
@@ -171,7 +171,7 @@ class FloatFeature(Feature):
 
         extractor = extr_class.from_jcr(jcr["extractor_state"])
         stats = NumericStats.from_jcr(jcr["stats"])
-        name = jcr["name"]
+        name = jcr["name"].lower()
         return cls(name=name, extractor=extractor, stats=stats)
 
     def __str__(self):
@@ -274,7 +274,7 @@ class IntFeature(Feature):
             return None
 
     def check_invalid(self, feature):
-        tagname = f"{self.name}-err"
+        tagname = f"{self.name}-error"
         if feature is None:
             return Tag(name=tagname, value="Value None", type=SCHEMA_ERROR)
         elif np.isnan(feature):

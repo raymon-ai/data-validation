@@ -22,9 +22,9 @@ class Stats(Serializable, Buildable, ABC):
 
 class NumericStats(Stats):
 
-    _attrs = ["min", "max", "mean", "std", "pinv", "percentiles"]
+    _attrs = ["min", "max", "mean", "std", "pinv", "percentiles", "samplesize"]
 
-    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, percentiles=None):
+    def __init__(self, min=None, max=None, mean=None, std=None, pinv=None, percentiles=None, samplesize=None):
 
         self.min = min
         self.max = max
@@ -32,6 +32,7 @@ class NumericStats(Stats):
         self.std = std
         self.pinv = pinv
         self.percentiles = percentiles
+        self.samplesize = samplesize
 
     """MIN"""
 
@@ -117,7 +118,7 @@ class NumericStats(Stats):
     @samplesize.setter
     def samplesize(self, value):
         if value is np.nan:
-            raise DataException("stats.pinv cannot be NaN")
+            raise DataException("stats.samplesize cannot be NaN")
         self._samplesize = value
 
     """Serializable Interface"""
@@ -132,7 +133,7 @@ class NumericStats(Stats):
     def from_jcr(cls, jcr):
         d = {}
         for attr in cls._attrs:
-            d[attr] = jcr[attr]
+            d[attr] = jcr.get(attr, None)
         return cls(**d)
 
     """Buildable Interface"""
@@ -234,7 +235,7 @@ class CategoricStats(Stats):
     @samplesize.setter
     def samplesize(self, value):
         if value is np.nan:
-            raise DataException("stats.pinv cannot be NaN")
+            raise DataException("stats.samplesize cannot be NaN")
         self._samplesize = value
 
     def to_jcr(self):
@@ -248,7 +249,7 @@ class CategoricStats(Stats):
     def from_jcr(cls, jcr):
         d = {}
         for attr in cls._attrs:
-            d[attr] = jcr[attr]
+            d[attr] = jcr.get(attr, None)
         return cls(**d)
 
     def build(self, data):
