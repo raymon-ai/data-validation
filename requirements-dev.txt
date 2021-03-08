@@ -7,3 +7,4 @@ pytest
 wheel
 black
 jupyter
+bump2version
